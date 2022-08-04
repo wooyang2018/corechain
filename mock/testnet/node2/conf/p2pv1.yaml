@@ -1,0 +1,20 @@
+# p2p network mock
+
+# Module is the name of p2p module plugin.(p2pv1 | p2pv2)
+module: p2pv1
+# Port the p2p network listened
+port: 37102
+# Address multiaddr string
+address: /ip4/127.0.0.1/tcp/37102
+# IsTls mock the node use tls secure transparent
+isTls: false
+# BootNodes mock the bootNodes the node to connect
+bootNodes:
+  - "127.0.0.1:37101"
+staticNodes:
+  corechain:
+    - "127.0.0.1:37101"
+    - "127.0.0.1:37102"
+    - "127.0.0.1:37103"
+# service name
+serviceName: localhost

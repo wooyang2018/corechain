@@ -1,0 +1,43 @@
+syntax = "proto3";
+option optimize_for = LITE_RUNTIME;
+option go_package = "github.com/wooyang2018/corechain/protos";
+
+import "contract.proto";
+
+package protos;
+
+// service provided by chain code, called by xchain
+service NativeCode {
+  rpc Call(NativeCallRequest) returns (NativeCallResponse);
+  rpc Ping(PingRequest) returns (PingResponse);
+}
+
+// xchain syscall service
+service Syscall {
+  // KV service
+  rpc PutObject(PutRequest) returns (PutResponse);
+  rpc GetObject(GetRequest) returns (GetResponse);
+  rpc DeleteObject(DeleteRequest) returns (DeleteResponse);
+  rpc NewIterator(IteratorRequest) returns (IteratorResponse);
+
+  // Chain service
+  rpc QueryTx(QueryTxRequest) returns (QueryTxResponse);
+  rpc QueryBlock(QueryBlockRequest) returns (QueryBlockResponse);
+  rpc Transfer(TransferRequest) returns (TransferResponse);
+  rpc ContractCall(ContractCallRequest) returns (ContractCallResponse);
+  rpc CrossContractQuery(CrossContractQueryRequest) returns (CrossContractQueryResponse);
+  rpc GetAccountAddresses(GetAccountAddressesRequest) returns (GetAccountAddressesResponse);
+
+  // Heartbeat
+  rpc Ping(PingRequest) returns (PingResponse);
+
+  // Post log
+  rpc PostLog(PostLogRequest) returns (PostLogResponse);
+
+  rpc GetCallArgs(GetCallArgsRequest) returns (CallArgs);
+  rpc SetOutput(SetOutputRequest) returns (SetOutputResponse);
+
+  // Send Event
+  rpc EmitEvent(EmitEventRequest) returns (EmitEventResponse);
+} 
+

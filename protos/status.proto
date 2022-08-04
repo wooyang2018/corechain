@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+import "contract.proto";
+
+option go_package = "github.com/wooyang2018/corechain/protos";
+
+package protos;
+
+message Transactions {
+    repeated Transaction txs = 1;
+}
+
+message TxInfo {
+    // 当前状态
+    TransactionStatus status = 1;
+    // 离主干末端的距离（如果在主干上)
+    int64 distance = 2;
+    Transaction tx = 3;
+}
+
+message BlockInfo {
+    BlockStatus status = 1;
+    InternalBlock block = 2;
+}
+
+message ChainStatus {
+    LedgerMeta ledger_meta = 1;
+    UtxoMeta utxo_meta = 2;
+    InternalBlock block = 3;
+    repeated string branch_ids = 4;
+}
+
+message SystemStatus {
+    ChainStatus chain_status = 1;
+    repeated string peer_urls = 2;
+}
+
+message TipStatus {
+    bool is_trunk_tip = 1;
+}
+
+message BlockID {
+    string bcname = 1;
+    bytes blockid = 2;
+    // if need content
+    bool need_content = 3;
+}
+
+message ConsensusStatus {
+    string version = 1;
+    string consensus_name = 2;
+    string start_height = 3;
+    string validators_info = 4;
+}
+
+message GetBlockHeaderRequest {
+    string bcname = 1;
+    int64 height = 2;
+    int64 size = 3;
+}
+
+message GetBlockHeaderResponse {
+    repeated InternalBlock blocks = 1;
+}
+
+message GetBlockTxsRequest {
+    string bcname = 1; 
+    bytes blockid = 2;
+    repeated int32 txs = 3;
+}
+
+message GetBlockTxsResponse {
+    repeated Transaction txs = 4;
+}
