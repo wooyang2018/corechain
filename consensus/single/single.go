@@ -22,7 +22,7 @@ func init() {
 	consensus.Register("single", NewSingleConsensus)
 }
 
-// SingleConsensus single为单点出块的共识逻辑
+// SingleConsensus 单点出块的共识逻辑
 type SingleConsensus struct {
 	ctx    base.ConsensusCtx
 	status *SingleStatus
@@ -30,7 +30,7 @@ type SingleConsensus struct {
 }
 
 // NewSingleConsensus 初始化实例
-func NewSingleConsensus(cctx base.ConsensusCtx, cCfg base.ConsensusConfig) base.CommonConsensus {
+func NewSingleConsensus(cctx base.ConsensusCtx, ccfg base.ConsensusConfig) base.CommonConsensus {
 	if cctx.XLog == nil {
 		return nil
 	}
@@ -42,22 +42,20 @@ func NewSingleConsensus(cctx base.ConsensusCtx, cCfg base.ConsensusConfig) base.
 		cctx.XLog.Error("Single::NewSingleConsensus::Ledger in context is nil")
 		return nil
 	}
-	if cCfg.ConsensusName != "single" {
-		cctx.XLog.Error("Single::NewSingleConsensus::consensus name in config is wrong", "name", cCfg.ConsensusName)
+	if ccfg.ConsensusName != "single" {
+		cctx.XLog.Error("Single::NewSingleConsensus::consensus name in config is wrong", "name", ccfg.ConsensusName)
 		return nil
 	}
 
-	config, err := buildConfigs([]byte(cCfg.Config))
+	config, err := buildConfigs([]byte(ccfg.Config))
 	if err != nil {
 		cctx.XLog.Error("Single::NewSingleConsensus::single parse config", "error", err)
 		return nil
 	}
-
-	// newHeight取上一共识的最高值
 	status := &SingleStatus{
-		startHeight: cCfg.StartHeight,
-		newHeight:   cCfg.StartHeight - 1,
-		index:       cCfg.Index,
+		startHeight: ccfg.StartHeight,
+		newHeight:   ccfg.StartHeight - 1,
+		index:       ccfg.Index,
 		config:      config,
 	}
 	single := &SingleConsensus{
@@ -65,11 +63,10 @@ func NewSingleConsensus(cctx base.ConsensusCtx, cCfg base.ConsensusConfig) base.
 		config: config,
 		status: status,
 	}
+
 	return single
 }
 
-// CompeteMaster 返回是否为矿工以及是否需要进行SyncBlock
-// 该函数返回两个bool，第一个表示是否当前应当出块，第二个表示是否当前需要向其他节点同步区块
 func (s *SingleConsensus) CompeteMaster(height int64) (bool, bool, error) {
 	time.Sleep(time.Duration(s.config.Period) * time.Millisecond)
 
@@ -81,8 +78,6 @@ func (s *SingleConsensus) CompeteMaster(height int64) (bool, bool, error) {
 	return false, false, nil
 }
 
-// CheckMinerMatch 查看block是否合法
-// ATTENTION: TODO: 上层需要先检查VerifyMerkle(block)
 func (s *SingleConsensus) CheckMinerMatch(ctx xctx.Context, block ledger.BlockHandle) (bool, error) {
 	// 检查区块的区块头是否hash正确
 	bid, err := block.MakeBlockId()
@@ -100,7 +95,7 @@ func (s *SingleConsensus) CheckMinerMatch(ctx xctx.Context, block ledger.BlockHa
 		return false, err
 	}
 	//验证签名
-	//1 验证一下签名和公钥是不是能对上
+	//1 验证签名和公钥是否匹配
 	k, err := s.ctx.Crypto.GetEcdsaPublicKeyFromJsonStr(block.GetPublicKey())
 	if err != nil {
 		ctx.GetLog().Warn("Single::CheckMinerMatch::get ecdsa from block error", "error", err)
@@ -133,12 +128,10 @@ func (s *SingleConsensus) ProcessBeforeMiner(height, timestamp int64) ([]byte, [
 	return nil, nil, nil
 }
 
-// CalculateBlock 矿工挖矿时共识需要做的工作
 func (s *SingleConsensus) CalculateBlock(block ledger.BlockHandle) error {
 	return nil
 }
 
-// ProcessConfirmBlock 用于确认块后进行相应的处理
 func (s *SingleConsensus) ProcessConfirmBlock(block ledger.BlockHandle) error {
 	return nil
 }
@@ -148,17 +141,14 @@ func (s *SingleConsensus) GetConsensusStatus() (base.ConsensusStatus, error) {
 	return s.status, nil
 }
 
-// 共识实例的挂起逻辑
 func (s *SingleConsensus) Stop() error {
 	return nil
 }
 
-// 共识实例的启动逻辑
 func (s *SingleConsensus) Start() error {
 	return nil
 }
 
-// Single共识没有用到区块存储信息, 故返回空
 func (s *SingleConsensus) ParseConsensusStorage(block ledger.BlockHandle) (interface{}, error) {
 	return nil, nil
 }

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 )
 
 var (
@@ -22,23 +22,23 @@ const (
 	StatusErr        = 500
 )
 
-func NewContractOKResponse(json []byte) *contract.Response {
-	return &contract.Response{
+func NewContractOKResponse(json []byte) *base.Response {
+	return &base.Response{
 		Status:  StatusOK,
 		Message: "success",
 		Body:    json,
 	}
 }
 
-func NewContractErrResponse(msg string) *contract.Response {
-	return &contract.Response{
+func NewContractErrResponse(msg string) *base.Response {
+	return &base.Response{
 		Status:  StatusErr,
 		Message: msg,
 	}
 }
 
-func NewContractBadResponse(msg string) *contract.Response {
-	return &contract.Response{
+func NewContractBadResponse(msg string) *base.Response {
+	return &base.Response{
 		Status:  StatusBadRequest,
 		Message: msg,
 	}

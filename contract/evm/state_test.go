@@ -13,6 +13,12 @@ func TestNewStateManager(t *testing.T) {
 		Method:       "initialize",
 	})
 
-	st.UpdateAccount(nil)
-	st.RemoveAccount(crypto.Address{})
+	err := st.UpdateAccount(nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = st.RemoveAccount(crypto.Address{})
+	if err != nil {
+		t.Fatal(err)
+	}
 }

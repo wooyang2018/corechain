@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/wooyang2018/corechain/contract"
+	contractBase "github.com/wooyang2018/corechain/contract/base"
 	engineBase "github.com/wooyang2018/corechain/engines/base"
 	"github.com/wooyang2018/corechain/ledger"
 	"github.com/wooyang2018/corechain/ledger/base"
@@ -129,7 +129,7 @@ func (p *paraChainContract) handleRefreshChain(ctx engineBase.TaskContext) error
 	return p.doStopChain(args.BcName)
 }
 
-func (p *paraChainContract) createChain(ctx contract.KContext) (*contract.Response, error) {
+func (p *paraChainContract) createChain(ctx contractBase.KContext) (*contractBase.Response, error) {
 	if p.BcName != p.ChainCtx.EngCtx.EngCfg.RootChain {
 		return nil, ErrUnAuthorized
 	}
@@ -180,18 +180,18 @@ func (p *paraChainContract) createChain(ctx contract.KContext) (*contract.Respon
 		return newContractErrResponse(internalServerErr, err.Error()), err
 	}
 
-	delta := contract.Limits{
+	delta := contractBase.Limits{
 		XFee: p.MinNewChainAmount,
 	}
 	ctx.AddResourceUsed(delta)
 
-	return &contract.Response{
+	return &contractBase.Response{
 		Status: success,
 		Body:   []byte("CreateBlockChain success"),
 	}, nil
 }
 
-func (p *paraChainContract) stopChain(ctx contract.KContext) (*contract.Response, error) {
+func (p *paraChainContract) stopChain(ctx contractBase.KContext) (*contractBase.Response, error) {
 	// 1. 查看输入参数是否正确
 	if p.BcName != p.ChainCtx.EngCtx.EngCfg.RootChain {
 		return nil, ErrUnAuthorized
@@ -232,12 +232,12 @@ func (p *paraChainContract) stopChain(ctx contract.KContext) (*contract.Response
 		return newContractErrResponse(internalServerErr, err.Error()), err
 	}
 
-	delta := contract.Limits{
+	delta := contractBase.Limits{
 		XFee: p.MinNewChainAmount,
 	}
 	ctx.AddResourceUsed(delta)
 
-	return &contract.Response{
+	return &contractBase.Response{
 		Status: success,
 		Body:   []byte("StopBlockChain success"),
 	}, nil
@@ -297,7 +297,7 @@ type Group struct {
 }
 
 // methodEditGroup 控制平行链对应的权限管理，被称为平行链群组or群组，旨在向外提供平行链权限信息
-func (p *paraChainContract) editGroup(ctx contract.KContext) (*contract.Response, error) {
+func (p *paraChainContract) editGroup(ctx contractBase.KContext) (*contractBase.Response, error) {
 	group := &Group{}
 	group, err := loadGroupArgs(ctx.Args(), group)
 	if err != nil {
@@ -354,18 +354,18 @@ func (p *paraChainContract) editGroup(ctx contract.KContext) (*contract.Response
 		return newContractErrResponse(internalServerErr, err.Error()), err
 	}
 
-	delta := contract.Limits{
+	delta := contractBase.Limits{
 		XFee: p.MinNewChainAmount,
 	}
 	ctx.AddResourceUsed(delta)
-	return &contract.Response{
+	return &contractBase.Response{
 		Status: success,
 		Body:   []byte("Edit Group success"),
 	}, nil
 }
 
 // methodGetGroup 平行链群组读方法
-func (p *paraChainContract) getGroup(ctx contract.KContext) (*contract.Response, error) {
+func (p *paraChainContract) getGroup(ctx contractBase.KContext) (*contractBase.Response, error) {
 	group := &Group{}
 	group, err := loadGroupArgs(ctx.Args(), group)
 	if err != nil {
@@ -383,7 +383,7 @@ func (p *paraChainContract) getGroup(ctx contract.KContext) (*contract.Response,
 	if !isContain(group.Admin, ctx.Initiator()) && !isContain(group.Identities, ctx.Initiator()) {
 		return newContractErrResponse(unAuthorized, ErrUnAuthorized.Error()), nil
 	}
-	return &contract.Response{
+	return &contractBase.Response{
 		Status: success,
 		Body:   groupBytes,
 	}, nil
@@ -433,8 +433,8 @@ func isContain(items []string, item string) bool {
 	return false
 }
 
-func newContractErrResponse(status int, msg string) *contract.Response {
-	return &contract.Response{
+func newContractErrResponse(status int, msg string) *contractBase.Response {
+	return &contractBase.Response{
 		Status:  status,
 		Message: msg,
 	}

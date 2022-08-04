@@ -1,4 +1,4 @@
-package contract
+package base
 
 type KernRegistry interface {
 	RegisterKernMethod(contract, method string, handler KernMethod)
@@ -27,4 +27,30 @@ type KContext interface {
 
 	// 合约异步事件调用
 	EmitAsyncTask(event string, args interface{}) error
+}
+
+const (
+	// StatusOK is used when contract successfully ends.
+	StatusOK = 200
+	// StatusErrorThreshold is the status dividing line for the normal operation of the contract
+	StatusErrorThreshold = 400
+	// StatusError is used when contract fails.
+	StatusError = 500
+)
+
+// VMContext define context interface
+type VMContext interface {
+	Invoke(method string, args map[string][]byte) (*Response, error)
+	ResourceUsed() Limits
+	Release() error
+}
+
+// Response is the result of the contract run
+type Response struct {
+	// Status 用于反映合约的运行结果的错误码
+	Status int `json:"status"`
+	// Message 用于携带一些有用的debug信息
+	Message string `json:"message"`
+	// Data 字段用于存储合约执行的结果
+	Body []byte `json:"body"`
 }

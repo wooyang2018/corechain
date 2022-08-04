@@ -91,11 +91,11 @@ func TestRunNominateCandidate(t *testing.T) {
 	l.SetConsensusStorage(5, SetTdposStorage(2, nil))
 	l.SetConsensusStorage(6, SetTdposStorage(3, nil))
 	// 3. 构造nominate存储
-	l.SetSnapshot(tdposBucket, []byte(nominate_key), NominateKey2())
+	l.SetSnapshot(posBucket, []byte(nominate_key), NominateKey2())
 	// 4. 构造vote存储
-	l.SetSnapshot(tdposBucket, []byte(vote_prefix+"TeyyPLpp9L7QAcxHangtcHTu7HUZ6iydY"), VoteKey1())
-	l.SetSnapshot(tdposBucket, []byte(vote_prefix+"SmJG3rH2ZzYQ9ojxhbRCPwFiE9y6pD1Co"), VoteKey2())
-	l.SetSnapshot(tdposBucket, []byte(vote_prefix+"akf7qunmeaqb51Wu418d6TyPKp4jdLdpV"), VoteKey3())
+	l.SetSnapshot(posBucket, []byte(vote_prefix+"TeyyPLpp9L7QAcxHangtcHTu7HUZ6iydY"), VoteKey1())
+	l.SetSnapshot(posBucket, []byte(vote_prefix+"SmJG3rH2ZzYQ9ojxhbRCPwFiE9y6pD1Co"), VoteKey2())
+	l.SetSnapshot(posBucket, []byte(vote_prefix+"akf7qunmeaqb51Wu418d6TyPKp4jdLdpV"), VoteKey3())
 
 	i := NewTdposConsensus(*cctx, getConfig(getTdposConsensusConf()))
 	tdpos, _ := i.(*tdposConsensus)
@@ -127,11 +127,11 @@ func TestRunRevokeCandidate(t *testing.T) {
 	l.SetConsensusStorage(5, SetTdposStorage(2, nil))
 	l.SetConsensusStorage(6, SetTdposStorage(3, nil))
 	// 3. 构造nominate存储
-	l.SetSnapshot(tdposBucket, []byte(nominate_key), NominateKey2())
+	l.SetSnapshot(posBucket, []byte(nominate_key), NominateKey2())
 	// 4. 构造vote存储
-	l.SetSnapshot(tdposBucket, []byte(vote_prefix+"TeyyPLpp9L7QAcxHangtcHTu7HUZ6iydY"), VoteKey1())
-	l.SetSnapshot(tdposBucket, []byte(vote_prefix+"SmJG3rH2ZzYQ9ojxhbRCPwFiE9y6pD1Co"), VoteKey2())
-	l.SetSnapshot(tdposBucket, []byte(vote_prefix+"akf7qunmeaqb51Wu418d6TyPKp4jdLdpV"), VoteKey3())
+	l.SetSnapshot(posBucket, []byte(vote_prefix+"TeyyPLpp9L7QAcxHangtcHTu7HUZ6iydY"), VoteKey1())
+	l.SetSnapshot(posBucket, []byte(vote_prefix+"SmJG3rH2ZzYQ9ojxhbRCPwFiE9y6pD1Co"), VoteKey2())
+	l.SetSnapshot(posBucket, []byte(vote_prefix+"akf7qunmeaqb51Wu418d6TyPKp4jdLdpV"), VoteKey3())
 
 	i := NewTdposConsensus(*cctx, getConfig(getTdposConsensusConf()))
 	tdpos, _ := i.(*tdposConsensus)
@@ -159,11 +159,11 @@ func TestRunVote(t *testing.T) {
 	l.SetConsensusStorage(5, SetTdposStorage(2, nil))
 	l.SetConsensusStorage(6, SetTdposStorage(3, nil))
 	// 3. 构造nominate存储
-	l.SetSnapshot(tdposBucket, []byte(nominate_key), NominateKey2())
+	l.SetSnapshot(posBucket, []byte(nominate_key), NominateKey2())
 	// 4. 构造vote存储
-	l.SetSnapshot(tdposBucket, []byte(vote_prefix+"TeyyPLpp9L7QAcxHangtcHTu7HUZ6iydY"), VoteKey1())
-	l.SetSnapshot(tdposBucket, []byte(vote_prefix+"SmJG3rH2ZzYQ9ojxhbRCPwFiE9y6pD1Co"), VoteKey2())
-	l.SetSnapshot(tdposBucket, []byte(vote_prefix+"akf7qunmeaqb51Wu418d6TyPKp4jdLdpV"), VoteKey3())
+	l.SetSnapshot(posBucket, []byte(vote_prefix+"TeyyPLpp9L7QAcxHangtcHTu7HUZ6iydY"), VoteKey1())
+	l.SetSnapshot(posBucket, []byte(vote_prefix+"SmJG3rH2ZzYQ9ojxhbRCPwFiE9y6pD1Co"), VoteKey2())
+	l.SetSnapshot(posBucket, []byte(vote_prefix+"akf7qunmeaqb51Wu418d6TyPKp4jdLdpV"), VoteKey3())
 
 	i := NewTdposConsensus(*cctx, getConfig(getTdposConsensusConf()))
 	tdpos, _ := i.(*tdposConsensus)
@@ -190,11 +190,11 @@ func TestRunRevokeVote(t *testing.T) {
 	l.SetConsensusStorage(5, SetTdposStorage(2, nil))
 	l.SetConsensusStorage(6, SetTdposStorage(3, nil))
 	// 3. 构造nominate存储
-	l.SetSnapshot(tdposBucket, []byte(nominate_key), NominateKey2())
+	l.SetSnapshot(posBucket, []byte(nominate_key), NominateKey2())
 	// 4. 构造vote存储
-	l.SetSnapshot(tdposBucket, []byte(vote_prefix+"TeyyPLpp9L7QAcxHangtcHTu7HUZ6iydY"), VoteKey1())
-	l.SetSnapshot(tdposBucket, []byte(vote_prefix+"SmJG3rH2ZzYQ9ojxhbRCPwFiE9y6pD1Co"), VoteKey2())
-	l.SetSnapshot(tdposBucket, []byte(vote_prefix+"akf7qunmeaqb51Wu418d6TyPKp4jdLdpV"), VoteKey3())
+	l.SetSnapshot(posBucket, []byte(vote_prefix+"TeyyPLpp9L7QAcxHangtcHTu7HUZ6iydY"), VoteKey1())
+	l.SetSnapshot(posBucket, []byte(vote_prefix+"SmJG3rH2ZzYQ9ojxhbRCPwFiE9y6pD1Co"), VoteKey2())
+	l.SetSnapshot(posBucket, []byte(vote_prefix+"akf7qunmeaqb51Wu418d6TyPKp4jdLdpV"), VoteKey3())
 
 	i := NewTdposConsensus(*cctx, getConfig(getTdposConsensusConf()))
 	tdpos, _ := i.(*tdposConsensus)

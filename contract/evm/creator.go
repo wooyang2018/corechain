@@ -13,7 +13,7 @@ import (
 	"github.com/hyperledger/burrow/execution/evm"
 	"github.com/hyperledger/burrow/execution/evm/abi"
 	"github.com/hyperledger/burrow/execution/exec"
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/contract/bridge"
 	"github.com/wooyang2018/corechain/protos"
 )
@@ -119,7 +119,7 @@ func (e *evmInstance) Exec() error {
 		return err
 	}
 
-	gas := contract.MaxLimits.Cpu
+	gas := base.MaxLimits.Cpu
 
 	// 如果客户端已经将参数进行了 abi 编码，那么此处不需要再进行编码，而且返回的结果也不需要 abi 解码。否则此处需要将参数 abi 编码同时将结果 abi 解码。
 	needDecodeResp := false
@@ -162,7 +162,7 @@ func (e *evmInstance) Exec() error {
 			return err
 		}
 	}
-	e.gasUsed = uint64(contract.MaxLimits.Cpu) - params.Gas.Uint64()
+	e.gasUsed = uint64(base.MaxLimits.Cpu) - params.Gas.Uint64()
 
 	e.ctx.Output = &protos.Response{
 		Status: 200,
@@ -171,8 +171,8 @@ func (e *evmInstance) Exec() error {
 	return nil
 }
 
-func (e *evmInstance) ResourceUsed() contract.Limits {
-	return contract.Limits{
+func (e *evmInstance) ResourceUsed() base.Limits {
+	return base.Limits{
 		Cpu: int64(e.gasUsed),
 	}
 }
@@ -258,7 +258,7 @@ func (e *evmInstance) deployContract() error {
 		return err
 	}
 
-	gas := contract.MaxLimits.Cpu
+	gas := base.MaxLimits.Cpu
 
 	input := []byte{}
 	jsonEncoded, ok := e.ctx.Args[evmParamJSONEncoded]
@@ -292,7 +292,7 @@ func (e *evmInstance) deployContract() error {
 		return err
 	}
 
-	e.gasUsed = uint64(contract.MaxLimits.Cpu) - params.Gas.Uint64()
+	e.gasUsed = uint64(base.MaxLimits.Cpu) - params.Gas.Uint64()
 
 	e.ctx.Output = &protos.Response{
 		Status: 200,

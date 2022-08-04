@@ -28,16 +28,6 @@ func getPoWConsensusConf() []byte {
 	return []byte(j)
 }
 
-func getDefaultPoWConsensusConf() []byte {
-	j := `{
-        	"defaultTarget": "5",
-        	"adjustHeightGap": "2",
-			"expectedPeriod":  "15",
-			"maxTarget":       "10"
-    	}`
-	return []byte(j)
-}
-
 func prepare(config []byte) (*base.ConsensusCtx, error) {
 	l := mock.NewFakeLedger(config)
 	ps := PoWStorage{
@@ -82,11 +72,11 @@ func TestNewPoWConsensus(t *testing.T) {
 		t.Fatal("NewPoWConsensus check name error")
 	}
 
-	ctx, err = prepare(getDefaultPoWConsensusConf())
+	ctx, err = prepare(getPoWConsensusConf())
 	if err != nil {
 		t.Fatal("prepare error")
 	}
-	conf = getConsensusConf(getDefaultPoWConsensusConf())
+	conf = getConsensusConf(getPoWConsensusConf())
 	i = NewPoWConsensus(*ctx, conf)
 	if i == nil {
 		t.Fatal("NewPoWConsensus error", "conf", conf)
@@ -218,11 +208,11 @@ func TestIsProofed(t *testing.T) {
 		t.Fatal("TestIsProofed error")
 	}
 
-	cctx, err = prepare(getDefaultPoWConsensusConf())
+	cctx, err = prepare(getPoWConsensusConf())
 	if err != nil {
 		t.Fatal("prepare error", err)
 	}
-	conf = getConsensusConf(getDefaultPoWConsensusConf())
+	conf = getConsensusConf(getPoWConsensusConf())
 	i = NewPoWConsensus(*cctx, conf)
 	pow, ok = i.(*PoWConsensus)
 	if !ok {

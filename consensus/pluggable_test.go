@@ -7,7 +7,6 @@ import (
 	"time"
 
 	xctx "github.com/wooyang2018/corechain/common/context"
-
 	"github.com/wooyang2018/corechain/consensus/base"
 	cmock "github.com/wooyang2018/corechain/consensus/mock"
 )
@@ -37,11 +36,6 @@ func NewUpdateArgs() map[string][]byte {
 		"height": []byte(strconv.FormatInt(20, 10)),
 	}
 	return r
-}
-
-func NewUpdateM() map[string]map[string][]byte {
-	a := make(map[string]map[string][]byte)
-	return a
 }
 
 func TestNewPluggableConsensus(t *testing.T) {
@@ -80,7 +74,7 @@ func TestUpdateConsensus(t *testing.T) {
 	if !ok {
 		t.Fatal("Transfer PluggableConsensusImpl error!")
 	}
-	fakeCtx := cmock.NewFakeKContext(NewUpdateArgs(), NewUpdateM())
+	fakeCtx := cmock.NewFakeKContext(NewUpdateArgs(), make(map[string]map[string][]byte))
 	_, err = np.updateConsensus(fakeCtx)
 	if err != nil {
 		t.Fatal(err)

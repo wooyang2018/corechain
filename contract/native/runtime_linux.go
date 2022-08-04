@@ -10,7 +10,7 @@ import (
 
 	"github.com/docker/go-units"
 	docker "github.com/fsouza/go-dockerclient"
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/logger"
 )
 
@@ -39,7 +39,7 @@ type DockerProcess struct {
 	envs     []string
 	mounts   []string
 	// ports    []string
-	cfg *contract.NativeDockerConfig
+	cfg *base.NativeDockerConfig
 
 	id string
 	logger.Logger

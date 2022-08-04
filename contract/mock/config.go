@@ -1,19 +1,19 @@
 package mock
 
 import (
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/logger"
 )
 
-func GetMockContractConfig() *contract.ContractConfig {
+func GetMockContractConfig() *base.ContractConfig {
 	var log, _ = logger.NewLogger("", "contract")
-	return &contract.ContractConfig{
+	return &base.ContractConfig{
 		EnableUpgrade: true,
-		Xkernel: contract.XkernelConfig{
+		Xkernel: base.XkernelConfig{
 			Enable: true,
 			Driver: "default",
 		},
-		Native: contract.NativeConfig{
+		Native: base.NativeConfig{
 			Enable: true,
 			Driver: "native",
 		},

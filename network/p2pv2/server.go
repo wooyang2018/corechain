@@ -35,7 +35,7 @@ const (
 )
 
 func init() {
-	network.Register(ServerName, NewP2PServer)
+	network.Register(ServerName, NewP2PServerV2)
 }
 
 // define errors
@@ -76,8 +76,8 @@ type P2PServerV2 struct {
 
 var _ network.Network = &P2PServerV2{}
 
-// NewP2PServer create P2PServerV2 instance
-func NewP2PServer() network.Network {
+// NewP2PServerV2 create P2PServerV2 instance
+func NewP2PServerV2() network.Network {
 	return &P2PServerV2{}
 }
 

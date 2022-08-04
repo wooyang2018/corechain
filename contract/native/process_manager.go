@@ -7,20 +7,20 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/contract/bridge"
 	"github.com/wooyang2018/corechain/protos"
 )
 
 type processManager struct {
-	cfg       *contract.NativeConfig
+	cfg       *base.NativeConfig
 	basedir   string
 	chainAddr string
 	mutex     sync.Mutex
 	contracts map[string]*contractProcess
 }
 
-func newProcessManager(cfg *contract.NativeConfig, basedir string, chainAddr string) (*processManager, error) {
+func newProcessManager(cfg *base.NativeConfig, basedir string, chainAddr string) (*processManager, error) {
 	return &processManager{
 		cfg:       cfg,
 		basedir:   basedir,

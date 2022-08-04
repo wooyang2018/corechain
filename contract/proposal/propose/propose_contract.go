@@ -7,7 +7,7 @@ import (
 	"math/big"
 	"strconv"
 
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/contract/proposal/utils"
 )
 
@@ -22,7 +22,7 @@ func NewKernContractMethod(bcName string) *KernMethod {
 	return t
 }
 
-func (t *KernMethod) Propose(ctx contract.KContext) (*contract.Response, error) {
+func (t *KernMethod) Propose(ctx base.KContext) (*base.Response, error) {
 
 	// get proposal id
 	proposalID, err := t.getNextProposalID(ctx)
@@ -99,19 +99,19 @@ func (t *KernMethod) Propose(ctx contract.KContext) (*contract.Response, error) 
 		return nil, err
 	}
 
-	delta := contract.Limits{
+	delta := base.Limits{
 		XFee: 100,
 	}
 	ctx.AddResourceUsed(delta)
 
-	return &contract.Response{
+	return &base.Response{
 		Status:  utils.StatusOK,
 		Message: "success",
 		Body:    []byte(proposalID),
 	}, nil
 }
 
-func (t *KernMethod) Vote(ctx contract.KContext) (*contract.Response, error) {
+func (t *KernMethod) Vote(ctx base.KContext) (*base.Response, error) {
 
 	args := ctx.Args()
 	proposalIDBuf := args["proposal_id"]
@@ -174,19 +174,19 @@ func (t *KernMethod) Vote(ctx contract.KContext) (*contract.Response, error) {
 		return nil, err
 	}
 
-	delta := contract.Limits{
+	delta := base.Limits{
 		XFee: 100,
 	}
 	ctx.AddResourceUsed(delta)
 
-	return &contract.Response{
+	return &base.Response{
 		Status:  utils.StatusOK,
 		Message: "success",
 		Body:    nil,
 	}, nil
 }
 
-func (t *KernMethod) Thaw(ctx contract.KContext) (*contract.Response, error) {
+func (t *KernMethod) Thaw(ctx base.KContext) (*base.Response, error) {
 
 	args := ctx.Args()
 	proposalIDBuf := args["proposal_id"]
@@ -240,19 +240,19 @@ func (t *KernMethod) Thaw(ctx contract.KContext) (*contract.Response, error) {
 		return nil, err
 	}
 
-	delta := contract.Limits{
+	delta := base.Limits{
 		XFee: 100,
 	}
 	ctx.AddResourceUsed(delta)
 
-	return &contract.Response{
+	return &base.Response{
 		Status:  utils.StatusOK,
 		Message: "success",
 		Body:    nil,
 	}, nil
 }
 
-func (t *KernMethod) Query(ctx contract.KContext) (*contract.Response, error) {
+func (t *KernMethod) Query(ctx base.KContext) (*base.Response, error) {
 
 	args := ctx.Args()
 	proposalIDBuf := args["proposal_id"]
@@ -271,7 +271,7 @@ func (t *KernMethod) Query(ctx contract.KContext) (*contract.Response, error) {
 		return nil, fmt.Errorf("query proposal failed, error:%s", err.Error())
 	}
 
-	return &contract.Response{
+	return &base.Response{
 		Status:  utils.StatusOK,
 		Message: "success",
 		Body:    proposalResBuf,
@@ -282,7 +282,7 @@ type ProposalID struct {
 	ProposalID string `json:"proposal_id"`
 }
 
-func (t *KernMethod) CheckVoteResult(ctx contract.KContext) (*contract.Response, error) {
+func (t *KernMethod) CheckVoteResult(ctx base.KContext) (*base.Response, error) {
 	args := ctx.Args()
 
 	// 调用权限校验
@@ -312,7 +312,7 @@ func (t *KernMethod) CheckVoteResult(ctx contract.KContext) (*contract.Response,
 		//return nil, fmt.Errorf("proposal status is %s, only a voting proposal could be checked", proposal.Status)
 
 		// 返回nil，是个空交易
-		return &contract.Response{
+		return &base.Response{
 			Status:  utils.StatusException,
 			Message: fmt.Sprintf("proposal status is %s, only a voting proposal could be checked", proposal.Status),
 			Body:    nil,
@@ -360,14 +360,14 @@ func (t *KernMethod) CheckVoteResult(ctx contract.KContext) (*contract.Response,
 		return nil, err
 	}
 
-	return &contract.Response{
+	return &base.Response{
 		Status:  utils.StatusOK,
 		Message: "success",
 		Body:    nil,
 	}, nil
 }
 
-func (t *KernMethod) Trigger(ctx contract.KContext) (*contract.Response, error) {
+func (t *KernMethod) Trigger(ctx base.KContext) (*base.Response, error) {
 	args := ctx.Args()
 
 	// 调用权限校验
@@ -397,7 +397,7 @@ func (t *KernMethod) Trigger(ctx contract.KContext) (*contract.Response, error) 
 		//return nil, fmt.Errorf("proposal status is %s, only a passed proposal could be triggered", proposal.Status)
 
 		// 返回nil，是个空交易
-		return &contract.Response{
+		return &base.Response{
 			Status:  utils.StatusException,
 			Message: fmt.Sprintf("proposal status is %s, only a passed proposal could be triggered", proposal.Status),
 			Body:    nil,
@@ -427,14 +427,14 @@ func (t *KernMethod) Trigger(ctx contract.KContext) (*contract.Response, error) 
 		return nil, err
 	}
 
-	return &contract.Response{
+	return &base.Response{
 		Status:  utils.StatusOK,
 		Message: "success",
 		Body:    nil,
 	}, nil
 }
 
-func (t *KernMethod) getNextProposalID(ctx contract.KContext) (string, error) {
+func (t *KernMethod) getNextProposalID(ctx base.KContext) (string, error) {
 	latestProposalID, err := ctx.Get(utils.GetProposalBucket(), utils.GetProposalIDKey())
 	if err != nil {
 		// 没找到，从1开始
@@ -447,7 +447,7 @@ func (t *KernMethod) getNextProposalID(ctx contract.KContext) (string, error) {
 	}
 }
 
-func (t *KernMethod) unlockGovernTokensForProposal(ctx contract.KContext, proposalID string) error {
+func (t *KernMethod) unlockGovernTokensForProposal(ctx base.KContext, proposalID string) error {
 	startKey := utils.MakeProposalLockPrefix(proposalID)
 	prefix := utils.MakeProposalLockPrefixSeparator(proposalID)
 	endKey := utils.PrefixRange([]byte(prefix))
@@ -475,7 +475,7 @@ func (t *KernMethod) unlockGovernTokensForProposal(ctx contract.KContext, propos
 	return nil
 }
 
-func (t *KernMethod) getProposal(ctx contract.KContext, proposalID string) (*utils.Proposal, error) {
+func (t *KernMethod) getProposal(ctx base.KContext, proposalID string) (*utils.Proposal, error) {
 	proposalKey := utils.MakeProposalKey(proposalID)
 	proposalBuf, err := ctx.Get(utils.GetProposalBucket(), []byte(proposalKey))
 	if err != nil {
@@ -489,7 +489,7 @@ func (t *KernMethod) getProposal(ctx contract.KContext, proposalID string) (*uti
 	return proposal, nil
 }
 
-func (t *KernMethod) updateProposal(ctx contract.KContext, proposalID string, proposal *utils.Proposal) error {
+func (t *KernMethod) updateProposal(ctx base.KContext, proposalID string, proposal *utils.Proposal) error {
 	proposalKey := utils.MakeProposalKey(proposalID)
 	proposalBuf, err := t.unParse(proposal)
 	if err != nil {

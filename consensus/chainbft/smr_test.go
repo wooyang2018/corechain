@@ -15,6 +15,8 @@ import (
 	mockConf "github.com/wooyang2018/corechain/mock/config"
 	mockNet "github.com/wooyang2018/corechain/mock/testnet"
 	"github.com/wooyang2018/corechain/network"
+	_ "github.com/wooyang2018/corechain/network/p2pv1"
+	_ "github.com/wooyang2018/corechain/network/p2pv2"
 	"github.com/wooyang2018/corechain/protos"
 )
 

@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/contract/bridge"
 	"github.com/wooyang2018/corechain/protos"
 )
@@ -12,9 +12,9 @@ import (
 type kcontextImpl struct {
 	ctx     *bridge.Context
 	syscall *bridge.SyscallService
-	contract.StateSandbox
-	contract.ChainCore
-	used, limit contract.Limits
+	base.StateSandbox
+	base.ChainCore
+	used, limit base.Limits
 }
 
 func newKContext(ctx *bridge.Context, syscall *bridge.SyscallService) *kcontextImpl {
@@ -44,15 +44,15 @@ func (k *kcontextImpl) AuthRequire() []string {
 	return k.ctx.AuthRequire
 }
 
-func (k *kcontextImpl) AddResourceUsed(delta contract.Limits) {
+func (k *kcontextImpl) AddResourceUsed(delta base.Limits) {
 	k.used.Add(delta)
 }
 
-func (k *kcontextImpl) ResourceLimit() contract.Limits {
+func (k *kcontextImpl) ResourceLimit() base.Limits {
 	return k.limit
 }
 
-func (k *kcontextImpl) Call(module, contractName, method string, args map[string][]byte) (*contract.Response, error) {
+func (k *kcontextImpl) Call(module, contractName, method string, args map[string][]byte) (*base.Response, error) {
 	var argPairs []*protos.ArgPair
 	for k, v := range args {
 		argPairs = append(argPairs, &protos.ArgPair{
@@ -73,7 +73,7 @@ func (k *kcontextImpl) Call(module, contractName, method string, args map[string
 	if err != nil {
 		return nil, err
 	}
-	return &contract.Response{
+	return &base.Response{
 		Status:  int(resp.Response.GetStatus()),
 		Message: resp.Response.GetMessage(),
 		Body:    resp.Response.GetBody(),

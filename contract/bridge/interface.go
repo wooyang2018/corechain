@@ -1,7 +1,7 @@
 package bridge
 
 import (
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/protos"
 )
 
@@ -9,17 +9,6 @@ type VMConfig interface {
 	DriverName() string
 	IsEnable() bool
 }
-
-// InstanceCreatorConfig configures InstanceCreator
-type InstanceCreatorConfig struct {
-	Basedir        string
-	SyscallService *SyscallService
-	// VMConfig is the config of vm driver
-	VMConfig VMConfig
-}
-
-// NewInstanceCreatorFunc instances a new InstanceCreator from InstanceCreatorConfig
-type NewInstanceCreatorFunc func(config *InstanceCreatorConfig) (InstanceCreator, error)
 
 // ContractCodeProvider provides source code and desc of contract
 type ContractCodeProvider interface {
@@ -40,7 +29,7 @@ type InstanceCreator interface {
 // Instance is a contract virtual machine instance which can run a single contract call
 type Instance interface {
 	Exec() error
-	ResourceUsed() contract.Limits
+	ResourceUsed() base.Limits
 	Release()
 	Abort(msg string)
 }

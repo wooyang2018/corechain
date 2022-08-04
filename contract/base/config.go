@@ -1,4 +1,4 @@
-package contract
+package base
 
 import (
 	"github.com/wooyang2018/corechain/logger"
@@ -130,4 +130,34 @@ func DefaultContractConfig() *ContractConfig {
 			Driver: "evm",
 		},
 	}
+}
+
+// ContextConfig define the config of context
+type ContextConfig struct {
+	State StateSandbox
+
+	Initiator   string
+	AuthRequire []string
+
+	Caller string
+
+	Module       string
+	ContractName string
+
+	ResourceLimits Limits
+
+	// Whether contract can be initialized
+	CanInitialize bool
+
+	// The amount transfer to contract
+	TransferAmount string
+
+	// Contract being called
+	// set by bridge to check recursive contract call
+	ContractSet map[string]bool
+
+	// ContractCodeFromCache control whether fetch contract code from XMCache
+	ContractCodeFromCache bool
+
+	TxInBlock bool
 }

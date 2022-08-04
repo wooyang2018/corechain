@@ -15,10 +15,9 @@ import (
 
 	xconf "github.com/wooyang2018/corechain/common/config"
 	"github.com/wooyang2018/corechain/common/timer"
-	"github.com/wooyang2018/corechain/contract"
+	contractBase "github.com/wooyang2018/corechain/contract/base"
 	_ "github.com/wooyang2018/corechain/contract/evm"
 	_ "github.com/wooyang2018/corechain/contract/kernel"
-	_ "github.com/wooyang2018/corechain/contract/manager"
 	"github.com/wooyang2018/corechain/crypto/client"
 	"github.com/wooyang2018/corechain/ledger"
 	lctx "github.com/wooyang2018/corechain/ledger/context"
@@ -677,17 +676,17 @@ func (l *LedgerAgent) CreateXMReader() ledger.XReader {
 	return l.state.CreateXMReader()
 }
 
-func CreateContract(xmreader ledger.XReader, state *State, envcfg *xconf.EnvConf) (contract.Manager, error) {
+func CreateContract(xmreader ledger.XReader, state *State, envcfg *xconf.EnvConf) (contractBase.Manager, error) {
 	basedir := filepath.Join(envcfg.GenDataAbsPath(envcfg.ChainDir), "corechain")
 
-	mgCfg := &contract.ManagerConfig{
+	mgCfg := &contractBase.ManagerConfig{
 		BCName:   "corechain",
 		Basedir:  basedir,
 		EnvConf:  envcfg,
 		Core:     state,
 		XMReader: xmreader,
 	}
-	contractObj, err := contract.CreateManager("default", mgCfg)
+	contractObj, err := contractBase.CreateManager("default", mgCfg)
 	if err != nil {
 		return nil, fmt.Errorf("create contract manager failed.err:%v", err)
 	}
@@ -695,7 +694,7 @@ func CreateContract(xmreader ledger.XReader, state *State, envcfg *xconf.EnvConf
 	return contractObj, nil
 }
 
-func NewAcl(legAgent *LedgerAgent, cmg contract.Manager) (base.AclManager, error) {
+func NewAcl(legAgent *LedgerAgent, cmg contractBase.Manager) (base.AclManager, error) {
 	aclCtx, err := pctx.NewAclCtx("xuper", legAgent, cmg)
 	if err != nil {
 		return nil, fmt.Errorf("create acl ctx failed.err:%v", err)

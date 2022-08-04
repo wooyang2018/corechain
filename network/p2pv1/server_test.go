@@ -1,6 +1,8 @@
 package p2pv1
 
 import (
+	"testing"
+
 	xctx "github.com/wooyang2018/corechain/common/context"
 	"github.com/wooyang2018/corechain/logger"
 	mockConf "github.com/wooyang2018/corechain/mock/config"
@@ -8,7 +10,6 @@ import (
 	"github.com/wooyang2018/corechain/network"
 	nctx "github.com/wooyang2018/corechain/network/context"
 	"github.com/wooyang2018/corechain/protos"
-	"testing"
 )
 
 const NetConf = "p2pv1s.yaml"
@@ -26,8 +27,7 @@ func startNode1(t *testing.T) {
 
 	node := NewP2PServerV1()
 	if err := node.Init(ctx); err != nil {
-		t.Errorf("server init error: %v", err)
-		return
+		t.Fatalf("server init error: %v", err)
 	}
 	node.Start()
 	ch := make(chan *protos.CoreMessage, 1024)
@@ -54,8 +54,7 @@ func startNode2(t *testing.T) {
 
 	node := NewP2PServerV1()
 	if err := node.Init(ctx); err != nil {
-		t.Errorf("server init error: %v", err)
-		return
+		t.Fatalf("server init error: %v", err)
 	}
 
 	node.Start()
@@ -71,8 +70,7 @@ func startNode3(t *testing.T) {
 
 	node := NewP2PServerV1()
 	if err := node.Init(ctx); err != nil {
-		t.Errorf("server init error: %v", err)
-		return
+		t.Fatalf("server init error: %v", err)
 	}
 
 	node.Start()

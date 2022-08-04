@@ -3,7 +3,7 @@ package bridge
 import (
 	"sync"
 
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/protos"
 )
@@ -15,9 +15,9 @@ type Context struct {
 	// 合约名字
 	ContractName string
 
-	ResourceLimits contract.Limits
+	ResourceLimits base.Limits
 
-	State contract.StateSandbox
+	State base.StateSandbox
 
 	Args map[string][]byte
 
@@ -31,7 +31,7 @@ type Context struct {
 
 	CanInitialize bool
 
-	Core contract.ChainCore
+	Core base.ChainCore
 
 	TransferAmount string
 
@@ -40,7 +40,7 @@ type Context struct {
 	Logger logger.Logger
 
 	// resource used by sub contract call
-	SubResourceUsed contract.Limits
+	SubResourceUsed base.Limits
 
 	// Contract being called
 	// set by bridge to check recursive contract call
@@ -74,12 +74,12 @@ func (c *Context) ExceedDiskLimit() bool {
 }
 
 // ResourceUsed returns the resource used by context
-func (c *Context) ResourceUsed() contract.Limits {
+func (c *Context) ResourceUsed() base.Limits {
 	// 历史原因kernel合约只计算虚拟机的资源消耗
 	if c.Module == string(TypeKernel) {
 		return c.Instance.ResourceUsed()
 	}
-	var total contract.Limits
+	var total base.Limits
 	total.Add(c.Instance.ResourceUsed()).Add(c.SubResourceUsed)
 	total.Add(eventsResourceUsed(c.Events))
 	total.Disk += c.DiskUsed()

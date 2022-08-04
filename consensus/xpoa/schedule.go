@@ -84,7 +84,7 @@ func (s *XPOASchedule) minerScheduling(timestamp int64, length int) (term int64,
 // GetLeader 根据输入的round，计算应有的proposer，实现election接口
 // 该方法主要为了支撑smr扭转和矿工挖矿，在handleReceivedProposal阶段会调用该方法
 func (s *XPOASchedule) GetLeader(round int64) string {
-	// 若该round已经落盘，则直接返回历史信息，eg. 矿工在当前round的情况
+	// 若该round已经落盘，则直接返回历史信息
 	if b, err := s.ledger.QueryBlockHeaderByHeight(round); err == nil {
 		return string(b.GetProposer())
 	}

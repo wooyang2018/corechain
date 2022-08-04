@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/contract/sandbox"
 	"github.com/wooyang2018/corechain/ledger"
 	"github.com/wooyang2018/corechain/protos"
@@ -95,7 +95,7 @@ func newCodeProviderWithCache(xstore stateGetReader) ContractCodeProvider {
 }
 
 func (c *codeProvider) GetContractCode(name string) ([]byte, error) {
-	value, err := c.xstore.Get("contract", contract.ContractCodeKey(name))
+	value, err := c.xstore.Get("contract", base.ContractCodeKey(name))
 	if err != nil {
 		return nil, fmt.Errorf("get contract code for '%s' error:%s", name, err)
 	}
@@ -107,7 +107,7 @@ func (c *codeProvider) GetContractCode(name string) ([]byte, error) {
 }
 
 func (c *codeProvider) GetContractAbi(name string) ([]byte, error) {
-	value, err := c.xstore.Get("contract", contract.ContractAbiKey(name))
+	value, err := c.xstore.Get("contract", base.ContractAbiKey(name))
 	if err != nil {
 		return nil, fmt.Errorf("get contract abi for '%s' error:%s", name, err)
 	}
@@ -119,7 +119,7 @@ func (c *codeProvider) GetContractAbi(name string) ([]byte, error) {
 }
 
 func (c *codeProvider) GetContractCodeDesc(name string) (*protos.WasmCodeDesc, error) {
-	value, err := c.xstore.Get("contract", contract.ContractCodeDescKey(name))
+	value, err := c.xstore.Get("contract", base.ContractCodeDescKey(name))
 	if err != nil {
 		return nil, fmt.Errorf("get contract desc for '%s' error:%s", name, err)
 	}
@@ -137,7 +137,7 @@ func (c *codeProvider) GetContractCodeDesc(name string) (*protos.WasmCodeDesc, e
 }
 
 func (c *codeProvider) GetContractCodeFromCache(name string) ([]byte, error) {
-	value, err := c.xstore.GetUncommited("contract", contract.ContractCodeKey(name)) //合约代码保存在contract中
+	value, err := c.xstore.GetUncommited("contract", base.ContractCodeKey(name)) //合约代码保存在contract中
 	if err != nil {
 		return nil, fmt.Errorf("from cache get contract code for '%s' error:%s", name, err)
 	}
@@ -149,7 +149,7 @@ func (c *codeProvider) GetContractCodeFromCache(name string) ([]byte, error) {
 }
 
 func (c *codeProvider) GetContractAbiFromCache(name string) ([]byte, error) {
-	value, err := c.xstore.GetUncommited("contract", contract.ContractAbiKey(name))
+	value, err := c.xstore.GetUncommited("contract", base.ContractAbiKey(name))
 	if err != nil {
 		return nil, fmt.Errorf("from cache get contract abi for '%s' error:%s", name, err)
 	}

@@ -8,8 +8,6 @@ import (
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/network"
 	nctx "github.com/wooyang2018/corechain/network/context"
-	_ "github.com/wooyang2018/corechain/network/p2pv1"
-	_ "github.com/wooyang2018/corechain/network/p2pv2"
 )
 
 func GetMockEnvConf(paths ...string) (*xconf.EnvConf, error) {

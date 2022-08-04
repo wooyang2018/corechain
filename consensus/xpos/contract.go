@@ -21,12 +21,12 @@ import (
 	"strings"
 
 	"github.com/wooyang2018/corechain/consensus/base"
-	"github.com/wooyang2018/corechain/contract"
+	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/contract/proposal/utils"
 )
 
 // runNominateCandidate 执行提名候选人
-func (tp *tdposConsensus) runNominateCandidate(contractCtx contract.KContext) (*contract.Response, error) {
+func (tp *tdposConsensus) runNominateCandidate(contractCtx contractBase.KContext) (*contractBase.Response, error) {
 	// 1.1 核查nominate合约参数有效性
 	candidateName, err := tp.checkArgs(contractCtx.Args())
 	if err != nil {
@@ -81,7 +81,7 @@ func (tp *tdposConsensus) runNominateCandidate(contractCtx contract.KContext) (*
 	if err := contractCtx.Put(tp.election.bindContractBucket, []byte(nKey), returnBytes); err != nil {
 		return base.NewContractErrResponse(err.Error()), err
 	}
-	delta := contract.Limits{
+	delta := contractBase.Limits{
 		XFee: fee,
 	}
 	contractCtx.AddResourceUsed(delta)
@@ -91,7 +91,7 @@ func (tp *tdposConsensus) runNominateCandidate(contractCtx contract.KContext) (*
 // runRevokeCandidate 执行候选人撤销,仅支持自我撤销
 // 重构后的候选人撤销
 // Args: candidate::候选人钱包地址
-func (tp *tdposConsensus) runRevokeCandidate(contractCtx contract.KContext) (*contract.Response, error) {
+func (tp *tdposConsensus) runRevokeCandidate(contractCtx contractBase.KContext) (*contractBase.Response, error) {
 	// 核查撤销nominate合约参数有效性
 	candidateName, err := tp.checkArgs(contractCtx.Args())
 	if err != nil {
@@ -170,7 +170,7 @@ func (tp *tdposConsensus) runRevokeCandidate(contractCtx contract.KContext) (*co
 	if err := contractCtx.Put(tp.election.bindContractBucket, []byte(nKey), nominateBytes); err != nil {
 		return base.NewContractErrResponse(err.Error()), err
 	}
-	delta := contract.Limits{
+	delta := contractBase.Limits{
 		XFee: fee,
 	}
 	contractCtx.AddResourceUsed(delta)
@@ -180,7 +180,7 @@ func (tp *tdposConsensus) runRevokeCandidate(contractCtx contract.KContext) (*co
 // runVote 执行投票
 // Args: candidate::候选人钱包地址
 //       amount::投票者票数
-func (tp *tdposConsensus) runVote(contractCtx contract.KContext) (*contract.Response, error) {
+func (tp *tdposConsensus) runVote(contractCtx contractBase.KContext) (*contractBase.Response, error) {
 	// 1.1 验证合约参数是否正确
 	candidateName, err := tp.checkArgs(contractCtx.Args())
 	if err != nil {
@@ -242,7 +242,7 @@ func (tp *tdposConsensus) runVote(contractCtx contract.KContext) (*contract.Resp
 	if err := contractCtx.Put(tp.election.bindContractBucket, []byte(voteKey), voteBytes); err != nil {
 		return base.NewContractErrResponse(err.Error()), err
 	}
-	delta := contract.Limits{
+	delta := contractBase.Limits{
 		XFee: fee,
 	}
 	contractCtx.AddResourceUsed(delta)
@@ -253,7 +253,7 @@ func (tp *tdposConsensus) runVote(contractCtx contract.KContext) (*contract.Resp
 // 重构后的候选人撤销
 // Args: candidate::候选人钱包地址
 //       amount: 投票数
-func (tp *tdposConsensus) runRevokeVote(contractCtx contract.KContext) (*contract.Response, error) {
+func (tp *tdposConsensus) runRevokeVote(contractCtx contractBase.KContext) (*contractBase.Response, error) {
 	// 1.1 验证合约参数
 	candidateName, err := tp.checkArgs(contractCtx.Args())
 	if err != nil {
@@ -338,14 +338,14 @@ func (tp *tdposConsensus) runRevokeVote(contractCtx contract.KContext) (*contrac
 	if err := contractCtx.Put(tp.election.bindContractBucket, []byte(voteKey), voteBytes); err != nil {
 		return base.NewContractErrResponse(err.Error()), err
 	}
-	delta := contract.Limits{
+	delta := contractBase.Limits{
 		XFee: fee,
 	}
 	contractCtx.AddResourceUsed(delta)
 	return base.NewContractOKResponse([]byte("ok")), nil
 }
 
-func (tp *tdposConsensus) runGetTdposInfos(contractCtx contract.KContext) (*contract.Response, error) {
+func (tp *tdposConsensus) runGetTdposInfos(contractCtx contractBase.KContext) (*contractBase.Response, error) {
 	// nominate信息
 	nKey := fmt.Sprintf("%s_%d_%s", tp.status.Name, tp.status.Version, nominateKey)
 	res, err := contractCtx.Get(tp.election.bindContractBucket, []byte(nKey))

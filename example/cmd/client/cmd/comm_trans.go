@@ -17,12 +17,12 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/wooyang2018/corechain/contract/base"
 	protos2 "github.com/wooyang2018/corechain/example/protos"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/proto"
 
 	"github.com/wooyang2018/corechain/common/utils"
-	"github.com/wooyang2018/corechain/contract"
 	cryptoClient "github.com/wooyang2018/corechain/crypto/client"
 	"github.com/wooyang2018/corechain/example/service/common"
 	"github.com/wooyang2018/corechain/state/utxo"
@@ -141,7 +141,7 @@ func (c *CommTrans) GenPreExeRes(ctx context.Context) (
 		return nil, nil, fmt.Errorf("PreExe contract response : %v, logid:%s", err, preExeRPCReq.Header.Logid)
 	}
 	for _, res := range preExeRPCRes.Response.Responses {
-		if res.Status >= contract.StatusErrorThreshold {
+		if res.Status >= base.StatusErrorThreshold {
 			return nil, nil, fmt.Errorf("contract error status:%d message:%s", res.Status, res.Message)
 		}
 		fmt.Printf("contract response: %s\n", string(res.Body))

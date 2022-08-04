@@ -5,7 +5,7 @@ import (
 
 	xctx "github.com/wooyang2018/corechain/common/context"
 	"github.com/wooyang2018/corechain/common/timer"
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/ledger"
 	"github.com/wooyang2018/corechain/logger"
 )
@@ -26,11 +26,11 @@ type AclCtx struct {
 	xctx.BaseCtx
 	BcName   string
 	Ledger   LedgerRely
-	Contract contract.Manager
+	Contract base.Manager
 }
 
 //最核心的是账本依赖和合约管理
-func NewAclCtx(bcName string, leg LedgerRely, contract contract.Manager) (*AclCtx, error) {
+func NewAclCtx(bcName string, leg LedgerRely, contract base.Manager) (*AclCtx, error) {
 	if bcName == "" || leg == nil || contract == nil {
 		return nil, fmt.Errorf("new acl ctx failed because param error")
 	}

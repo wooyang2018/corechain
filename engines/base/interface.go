@@ -4,7 +4,7 @@ import (
 	xconf "github.com/wooyang2018/corechain/common/config"
 	xctx "github.com/wooyang2018/corechain/common/context"
 	"github.com/wooyang2018/corechain/consensus/base"
-	"github.com/wooyang2018/corechain/contract"
+	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/contract/proposal/govern"
 	"github.com/wooyang2018/corechain/contract/proposal/propose"
 	ptimer "github.com/wooyang2018/corechain/contract/proposal/timer"
@@ -46,7 +46,7 @@ type Engine interface {
 type ChainRelyAgent interface {
 	CreateLedger() (*ledger.Ledger, error)
 	CreateState(*ledger.Ledger, cryptoBase.CryptoClient) (*state.State, error)
-	CreateContract(ledger.XReader) (contract.Manager, error)
+	CreateContract(ledger.XReader) (contractBase.Manager, error)
 	CreateConsensus() (base.PluggableConsensus, error)
 	CreateCrypto(cryptoType string) (cryptoBase.CryptoClient, error)
 	CreateAcl() (aclBase.AclManager, error)

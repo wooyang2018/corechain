@@ -11,7 +11,7 @@ import (
 	"github.com/wooyang2018/corechain/common/metrics"
 	"github.com/wooyang2018/corechain/common/timer"
 	"github.com/wooyang2018/corechain/common/utils"
-	"github.com/wooyang2018/corechain/contract"
+	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/engines/agent"
 	"github.com/wooyang2018/corechain/engines/base"
 	"github.com/wooyang2018/corechain/engines/miner"
@@ -133,7 +133,7 @@ func (t *Chain) PreExec(ctx xctx.Context, reqs []*protos.InvokeRequest, initiato
 		return &protos.InvokeResponse{}, nil
 	}
 
-	stateConfig := &contract.SandboxConfig{
+	stateConfig := &contractBase.SandboxConfig{
 		XMReader:   t.ctx.State.CreateXMReader(),
 		UTXOReader: t.ctx.State.CreateUtxoReader(),
 	}
@@ -143,11 +143,11 @@ func (t *Chain) PreExec(ctx xctx.Context, reqs []*protos.InvokeRequest, initiato
 		return nil, base.ErrContractNewSandboxFailed
 	}
 
-	contextConfig := &contract.ContextConfig{
+	contextConfig := &contractBase.ContextConfig{
 		State:          sandbox,
 		Initiator:      initiator,
 		AuthRequire:    authRequires,
-		ResourceLimits: contract.MaxLimits,
+		ResourceLimits: contractBase.MaxLimits,
 	}
 
 	gasPrice := t.ctx.State.GetMeta().GetGasPrice()
@@ -207,7 +207,7 @@ func (t *Chain) PreExec(ctx xctx.Context, reqs []*protos.InvokeRequest, initiato
 
 		// request
 		request := *req
-		request.ResourceLimits = contract.ToPbLimits(resourceUsed)
+		request.ResourceLimits = contractBase.ToPbLimits(resourceUsed)
 		requests = append(requests, &request)
 
 		// response

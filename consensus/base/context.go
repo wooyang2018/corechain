@@ -3,7 +3,7 @@ package base
 import (
 	"github.com/wooyang2018/corechain/common/address"
 	xctx "github.com/wooyang2018/corechain/common/context"
-	"github.com/wooyang2018/corechain/contract"
+	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/crypto/client/base"
 	"github.com/wooyang2018/corechain/network"
 )
@@ -14,7 +14,7 @@ type ConsensusCtx struct {
 	BcName   string
 	Address  *address.Address
 	Crypto   base.CryptoClient
-	Contract contract.Manager
+	Contract contractBase.Manager
 	Ledger   LedgerRely
 	Network  network.Network
 }

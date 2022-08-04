@@ -8,7 +8,7 @@ import (
 
 	xctx "github.com/wooyang2018/corechain/common/context"
 	"github.com/wooyang2018/corechain/consensus/base"
-	"github.com/wooyang2018/corechain/contract"
+	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/ledger"
 )
 
@@ -241,7 +241,7 @@ func (pc *PluggableConsensusImpl) proposalArgsUnmarshal(ctxArgs map[string][]byt
 
 // updateConsensus 共识升级，更新原有共识列表，向可插拔共识列表插入新共识，并暂停原共识实例
 // 该方法在trigger高度时被调用，此时共识version需要递增序列
-func (pc *PluggableConsensusImpl) updateConsensus(contractCtx contract.KContext) (*contract.Response, error) {
+func (pc *PluggableConsensusImpl) updateConsensus(contractCtx contractBase.KContext) (*contractBase.Response, error) {
 	// 解析用户合约信息，包括待升级名称name、trigger高度height和待升级配置config
 	cfg, err := pc.proposalArgsUnmarshal(contractCtx.Args())
 	if err != nil {

@@ -18,11 +18,11 @@ const (
 
 	contractNominateCandidate = "nominateCandidate"
 	contractRevokeCandidate   = "revokeNominate"
-	contractVote              = "voteCandidate"
+	contractVoteCandidate     = "voteCandidate"
 	contractRevokeVote        = "revokeVote"
-	contractGetTdposInfos     = "getTdposInfos"
+	contractGetInfo           = "getInfo"
 
-	tdposBucket   = "$tdpos"
+	posBucket     = "$pos"
 	xposBucket    = "$xpos"
 	nominateKey   = "nominate"
 	voteKeyPrefix = "vote_"
@@ -49,8 +49,8 @@ var (
 	ErrNotFound         = errors.New("Key not found")
 )
 
-// tdposConfig 共识机制的配置
-type tdposConfig struct {
+// xposConfig 共识机制的配置
+type xposConfig struct {
 	Version int64 `json:"version,omitempty"`
 	// 每轮选出的候选人个数
 	ProposerNum int64 `json:"proposer_num"`
@@ -83,7 +83,7 @@ func (tp *tdposConsensus) needSync() bool {
 }
 
 // unmarshalTdposConfig 解析tdposConfig
-func unmarshalTdposConfig(input []byte) (*tdposConfig, error) {
+func unmarshalTdposConfig(input []byte) (*xposConfig, error) {
 	xconfig, err := buildConfigs(input)
 	if err != nil {
 		return nil, err
@@ -91,7 +91,7 @@ func unmarshalTdposConfig(input []byte) (*tdposConfig, error) {
 	return xconfig, nil
 }
 
-func buildConfigs(input []byte) (*tdposConfig, error) {
+func buildConfigs(input []byte) (*xposConfig, error) {
 	// 先转为interface{}
 	consCfg := make(map[string]interface{})
 	err := json.Unmarshal(input, &consCfg)
@@ -100,7 +100,7 @@ func buildConfigs(input []byte) (*tdposConfig, error) {
 	}
 
 	// assemble consensus config
-	tdposCfg := &tdposConfig{}
+	tdposCfg := &xposConfig{}
 
 	// int64统一转换
 	int64Map := map[string]int64{

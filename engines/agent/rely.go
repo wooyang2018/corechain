@@ -7,7 +7,7 @@ import (
 	"github.com/wooyang2018/corechain/common/timer"
 	"github.com/wooyang2018/corechain/consensus"
 	cbase "github.com/wooyang2018/corechain/consensus/base"
-	"github.com/wooyang2018/corechain/contract"
+	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/contract/proposal/govern"
 	"github.com/wooyang2018/corechain/contract/proposal/propose"
 	ptimer "github.com/wooyang2018/corechain/contract/proposal/timer"
@@ -92,18 +92,18 @@ func (t *ChainRelyAgentImpl) CreateAcl() (base.AclManager, error) {
 }
 
 // 创建合约实例
-func (t *ChainRelyAgentImpl) CreateContract(xmreader ledger.XReader) (contract.Manager, error) {
+func (t *ChainRelyAgentImpl) CreateContract(xmreader ledger.XReader) (contractBase.Manager, error) {
 	envcfg := t.ctx.EngCtx.EnvCfg
 	basedir := filepath.Join(envcfg.GenDataAbsPath(envcfg.ChainDir), t.ctx.BCName)
 
-	mgCfg := &contract.ManagerConfig{
+	mgCfg := &contractBase.ManagerConfig{
 		BCName:   t.ctx.BCName,
 		Basedir:  basedir,
 		EnvConf:  envcfg,
 		Core:     NewChainCoreAgent(t.ctx),
 		XMReader: xmreader,
 	}
-	contractObj, err := contract.CreateManager("default", mgCfg)
+	contractObj, err := contractBase.CreateManager("default", mgCfg)
 	if err != nil {
 		return nil, fmt.Errorf("create contract manager failed.err:%v", err)
 	}

@@ -3,7 +3,7 @@ package sandbox
 import (
 	"bytes"
 
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/ledger"
 )
 
@@ -186,7 +186,7 @@ type ContractIterator struct {
 	ledger.XIterator
 }
 
-func newContractIterator(xmiter ledger.XIterator) contract.Iterator {
+func newContractIterator(xmiter ledger.XIterator) base.Iterator {
 	return &ContractIterator{
 		XIterator: xmiter,
 	}

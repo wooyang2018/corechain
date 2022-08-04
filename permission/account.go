@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/wooyang2018/corechain/contract"
+	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/permission/base"
 	"github.com/wooyang2018/corechain/protos"
 )
 
-func updateThresholdWithDel(ctx contract.KContext, aksWeight map[string]float64, accountName string) error {
+func updateThresholdWithDel(ctx contractBase.KContext, aksWeight map[string]float64, accountName string) error {
 	for address := range aksWeight {
 		key := base.MakeAK2AccountKey(address, accountName)
 		err := ctx.Del(base.GetAK2AccountBucket(), []byte(key))
@@ -20,7 +20,7 @@ func updateThresholdWithDel(ctx contract.KContext, aksWeight map[string]float64,
 	return nil
 }
 
-func updateThresholdWithPut(ctx contract.KContext, aksWeight map[string]float64, accountName string) error {
+func updateThresholdWithPut(ctx contractBase.KContext, aksWeight map[string]float64, accountName string) error {
 	for address := range aksWeight {
 		key := base.MakeAK2AccountKey(address, accountName)
 		err := ctx.Put(base.GetAK2AccountBucket(), []byte(key), []byte("true"))
@@ -31,7 +31,7 @@ func updateThresholdWithPut(ctx contract.KContext, aksWeight map[string]float64,
 	return nil
 }
 
-func updateAkSetWithDel(ctx contract.KContext, sets map[string]*protos.AkSet, accountName string) error {
+func updateAkSetWithDel(ctx contractBase.KContext, sets map[string]*protos.AkSet, accountName string) error {
 	for _, akSets := range sets {
 		for _, ak := range akSets.GetAks() {
 			key := base.MakeAK2AccountKey(ak, accountName)
@@ -44,7 +44,7 @@ func updateAkSetWithDel(ctx contract.KContext, sets map[string]*protos.AkSet, ac
 	return nil
 }
 
-func updateAkSetWithPut(ctx contract.KContext, sets map[string]*protos.AkSet, accountName string) error {
+func updateAkSetWithPut(ctx contractBase.KContext, sets map[string]*protos.AkSet, accountName string) error {
 	for _, akSets := range sets {
 		for _, ak := range akSets.GetAks() {
 			key := base.MakeAK2AccountKey(ak, accountName)
@@ -57,7 +57,7 @@ func updateAkSetWithPut(ctx contract.KContext, sets map[string]*protos.AkSet, ac
 	return nil
 }
 
-func updateForThreshold(ctx contract.KContext, aksWeight map[string]float64, accountName string, method string) error {
+func updateForThreshold(ctx contractBase.KContext, aksWeight map[string]float64, accountName string, method string) error {
 	switch method {
 	case "Del":
 		return updateThresholdWithDel(ctx, aksWeight, accountName)
@@ -68,7 +68,7 @@ func updateForThreshold(ctx contract.KContext, aksWeight map[string]float64, acc
 	}
 }
 
-func updateForAKSet(ctx contract.KContext, akSets *protos.AkSets, accountName string, method string) error {
+func updateForAKSet(ctx contractBase.KContext, akSets *protos.AkSets, accountName string, method string) error {
 	sets := akSets.GetSets()
 	switch method {
 	case "Del":
@@ -80,7 +80,7 @@ func updateForAKSet(ctx contract.KContext, akSets *protos.AkSets, accountName st
 	}
 }
 
-func update(ctx contract.KContext, aclJSON []byte, accountName string, method string) error {
+func update(ctx contractBase.KContext, aclJSON []byte, accountName string, method string) error {
 	if aclJSON == nil {
 		return nil
 	}
@@ -101,7 +101,7 @@ func update(ctx contract.KContext, aclJSON []byte, accountName string, method st
 	return nil
 }
 
-func UpdateAK2AccountReflection(ctx contract.KContext, aclOldJSON []byte, aclNewJSON []byte, accountName string) error {
+func UpdateAK2AccountReflection(ctx contractBase.KContext, aclOldJSON []byte, aclNewJSON []byte, accountName string) error {
 	if err := update(ctx, aclOldJSON, accountName, "Del"); err != nil {
 		return err
 	}

@@ -7,7 +7,7 @@ import (
 
 	"github.com/emirpasic/gods/trees/redblacktree"
 	"github.com/emirpasic/gods/utils"
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/ledger"
 )
 
@@ -15,7 +15,7 @@ type MemXModel struct {
 	tree *redblacktree.Tree
 }
 
-func XMReaderFromRWSet(rwset *contract.RWSet) ledger.XReader {
+func XMReaderFromRWSet(rwset *base.RWSet) ledger.XReader {
 	m := NewMemXModel()
 	for _, r := range rwset.RSet {
 		m.Put(r.PureData.Bucket, r.PureData.Key, r)

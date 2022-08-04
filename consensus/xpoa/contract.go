@@ -8,12 +8,12 @@ import (
 	"strings"
 
 	"github.com/wooyang2018/corechain/consensus/base"
-	"github.com/wooyang2018/corechain/contract"
+	contractBase "github.com/wooyang2018/corechain/contract/base"
 )
 
 // methodEditValidates 候选人变更，替代原三代合约的add_validates/delete_validates/change_validates三个操作方法
 // Args: validates::候选人钱包地址
-func (x *XPOAConsensus) methodEditValidates(contractCtx contract.KContext) (*contract.Response, error) {
+func (x *XPOAConsensus) methodEditValidates(contractCtx contractBase.KContext) (*contractBase.Response, error) {
 	// 核查变更候选人合约参数有效性
 	txArgs := contractCtx.Args()
 	// 1. 核查发起者的权限
@@ -73,7 +73,7 @@ func (x *XPOAConsensus) methodEditValidates(contractCtx contract.KContext) (*con
 		[]byte(fmt.Sprintf("%d_%s", x.election.consensusVersion, validateKeys)), rawBytes); err != nil {
 		return base.NewContractErrResponse(err.Error()), err
 	}
-	delta := contract.Limits{
+	delta := contractBase.Limits{
 		XFee: FEE,
 	}
 	contractCtx.AddResourceUsed(delta)
@@ -82,7 +82,7 @@ func (x *XPOAConsensus) methodEditValidates(contractCtx contract.KContext) (*con
 
 // methodGetValidates 候选人获取
 // Return: validates::候选人钱包地址
-func (x *XPOAConsensus) methodGetValidates(contractCtx contract.KContext) (*contract.Response, error) {
+func (x *XPOAConsensus) methodGetValidates(contractCtx contractBase.KContext) (*contractBase.Response, error) {
 	var jsonBytes []byte
 	validatesBytes, err := contractCtx.Get(x.election.bindContractBucket,
 		[]byte(fmt.Sprintf("%d_%s", x.election.consensusVersion, validateKeys)))
@@ -97,7 +97,7 @@ func (x *XPOAConsensus) methodGetValidates(contractCtx contract.KContext) (*cont
 	} else {
 		jsonBytes = validatesBytes
 	}
-	delta := contract.Limits{
+	delta := contractBase.Limits{
 		XFee: FEE / 1000,
 	}
 	contractCtx.AddResourceUsed(delta)

@@ -5,7 +5,7 @@ import (
 
 	xctx "github.com/wooyang2018/corechain/common/context"
 	"github.com/wooyang2018/corechain/common/timer"
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/contract/proposal/utils"
 	"github.com/wooyang2018/corechain/ledger"
 	"github.com/wooyang2018/corechain/logger"
@@ -21,10 +21,10 @@ type ProposeCtx struct {
 	xctx.BaseCtx
 	BcName   string
 	Ledger   LedgerRely
-	Contract contract.Manager
+	Contract base.Manager
 }
 
-func NewProposeCtx(bcName string, leg LedgerRely, contract contract.Manager) (*ProposeCtx, error) {
+func NewProposeCtx(bcName string, leg LedgerRely, contract base.Manager) (*ProposeCtx, error) {
 	if bcName == "" || leg == nil || contract == nil {
 		return nil, fmt.Errorf("new propose ctx failed because param error")
 	}

@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/spf13/viper"
-	"github.com/wooyang2018/corechain/contract"
+	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/engines/base"
 )
 
@@ -39,7 +39,7 @@ func NewParaChainManager(ctx *ParaChainCtx) (*Manager, error) {
 	t := NewParaChainContract(ctx.BcName, minNewChainAmount, ctx.ChainCtx)
 	register := ctx.Contract.GetKernRegistry()
 	// 注册合约方法
-	kMethods := map[string]contract.KernMethod{
+	kMethods := map[string]contractBase.KernMethod{
 		"createChain": t.createChain,
 		"editGroup":   t.editGroup,
 		"getGroup":    t.getGroup,

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/contract/proposal/utils"
 	"github.com/wooyang2018/corechain/ledger"
 )
@@ -25,11 +25,11 @@ func NewKernContractMethod(bcName string, NewGovResourceAmount int64, Predistrib
 	return t
 }
 
-func (t *KernMethod) InitGovernTokens(ctx contract.KContext) (*contract.Response, error) {
+func (t *KernMethod) InitGovernTokens(ctx base.KContext) (*base.Response, error) {
 	// 判断是否已经初始化
 	res, err := ctx.Get(utils.GetGovernTokenBucket(), []byte(utils.GetDistributedKey()))
 	if err == nil && string(res) == "true" {
-		return &contract.Response{
+		return &base.Response{
 			Status:  utils.StatusOK,
 			Message: "success",
 			Body:    []byte("Govern tokens has been initialized"),
@@ -76,19 +76,19 @@ func (t *KernMethod) InitGovernTokens(ctx contract.KContext) (*contract.Response
 		return nil, err
 	}
 
-	delta := contract.Limits{
+	delta := base.Limits{
 		XFee: t.NewGovResourceAmount,
 	}
 	ctx.AddResourceUsed(delta)
 
-	return &contract.Response{
+	return &base.Response{
 		Status:  utils.StatusOK,
 		Message: "success",
 		Body:    nil,
 	}, nil
 }
 
-func (t *KernMethod) TransferGovernTokens(ctx contract.KContext) (*contract.Response, error) {
+func (t *KernMethod) TransferGovernTokens(ctx base.KContext) (*base.Response, error) {
 	if ctx.ResourceLimit().XFee < t.NewGovResourceAmount/1000 {
 		return nil, fmt.Errorf("gas not enough, expect no less than %d", t.NewGovResourceAmount/1000)
 	}
@@ -150,19 +150,19 @@ func (t *KernMethod) TransferGovernTokens(ctx contract.KContext) (*contract.Resp
 		return nil, fmt.Errorf("transfer gov tokens failed, update receriver's balance")
 	}
 
-	delta := contract.Limits{
+	delta := base.Limits{
 		XFee: t.NewGovResourceAmount / 1000,
 	}
 	ctx.AddResourceUsed(delta)
 
-	return &contract.Response{
+	return &base.Response{
 		Status:  utils.StatusOK,
 		Message: "success",
 		Body:    nil,
 	}, nil
 }
 
-func (t *KernMethod) LockGovernTokens(ctx contract.KContext) (*contract.Response, error) {
+func (t *KernMethod) LockGovernTokens(ctx base.KContext) (*base.Response, error) {
 	// 调用权限校验
 	if ctx.Caller() != utils.ProposalKernelContract && ctx.Caller() != utils.TDPOSKernelContract && ctx.Caller() != utils.XPOSKernelContract {
 		return nil, fmt.Errorf("caller %s no authority to LockGovernTokens", ctx.Caller())
@@ -205,19 +205,19 @@ func (t *KernMethod) LockGovernTokens(ctx contract.KContext) (*contract.Response
 		return nil, fmt.Errorf("transfer gov tokens failed, update sender's balance")
 	}
 
-	delta := contract.Limits{
+	delta := base.Limits{
 		XFee: t.NewGovResourceAmount / 1000,
 	}
 	ctx.AddResourceUsed(delta)
 
-	return &contract.Response{
+	return &base.Response{
 		Status:  utils.StatusOK,
 		Message: "success",
 		Body:    nil,
 	}, nil
 }
 
-func (t *KernMethod) UnLockGovernTokens(ctx contract.KContext) (*contract.Response, error) {
+func (t *KernMethod) UnLockGovernTokens(ctx base.KContext) (*base.Response, error) {
 	// 调用权限校验
 	if ctx.Caller() != utils.ProposalKernelContract && ctx.Caller() != utils.TDPOSKernelContract && ctx.Caller() != utils.XPOSKernelContract {
 		return nil, fmt.Errorf("caller %s no authority to UnLockGovernTokens", ctx.Caller())
@@ -252,19 +252,19 @@ func (t *KernMethod) UnLockGovernTokens(ctx contract.KContext) (*contract.Respon
 		return nil, fmt.Errorf("transfer gov tokens failed, update sender's balance")
 	}
 
-	delta := contract.Limits{
+	delta := base.Limits{
 		XFee: t.NewGovResourceAmount / 1000,
 	}
 	ctx.AddResourceUsed(delta)
 
-	return &contract.Response{
+	return &base.Response{
 		Status:  utils.StatusOK,
 		Message: "success",
 		Body:    nil,
 	}, nil
 }
 
-func (t *KernMethod) QueryAccountGovernTokens(ctx contract.KContext) (*contract.Response, error) {
+func (t *KernMethod) QueryAccountGovernTokens(ctx base.KContext) (*base.Response, error) {
 	args := ctx.Args()
 	accountBuf := args["account"]
 
@@ -279,14 +279,14 @@ func (t *KernMethod) QueryAccountGovernTokens(ctx contract.KContext) (*contract.
 		return nil, fmt.Errorf("query account gov tokens balance failed, error:%s", err.Error())
 	}
 
-	return &contract.Response{
+	return &base.Response{
 		Status:  utils.StatusOK,
 		Message: "success",
 		Body:    balanceResBuf,
 	}, nil
 }
 
-func (t *KernMethod) TotalSupply(ctx contract.KContext) (*contract.Response, error) {
+func (t *KernMethod) TotalSupply(ctx base.KContext) (*base.Response, error) {
 	key := utils.MakeTotalSupplyKey()
 	totalSupplyBuf, err := ctx.Get(utils.GetGovernTokenBucket(), []byte(key))
 	if err != nil {
@@ -296,7 +296,7 @@ func (t *KernMethod) TotalSupply(ctx contract.KContext) (*contract.Response, err
 	totalSupply := big.NewInt(0)
 	totalSupply.SetString(string(totalSupplyBuf), 10)
 
-	return &contract.Response{
+	return &base.Response{
 		Status:  utils.StatusOK,
 		Message: "success",
 		Body:    []byte(totalSupply.String()),
@@ -304,7 +304,7 @@ func (t *KernMethod) TotalSupply(ctx contract.KContext) (*contract.Response, err
 
 }
 
-func (t *KernMethod) balanceOf(ctx contract.KContext, account string) (*utils.GovernTokenBalance, error) {
+func (t *KernMethod) balanceOf(ctx base.KContext, account string) (*utils.GovernTokenBalance, error) {
 	accountKey := utils.MakeAccountBalanceKey(account)
 	accountBalanceBuf, err := ctx.Get(utils.GetGovernTokenBucket(), []byte(accountKey))
 	if err != nil {

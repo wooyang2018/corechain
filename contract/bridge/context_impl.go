@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 )
 
 const (
@@ -22,15 +22,15 @@ func (c *ContractError) Error() string {
 	return fmt.Sprintf("contract error status:%d message:%s", c.Status, c.Message)
 }
 
-// vmContextImpl 为vm.Context的实现，
+// VMContextImpl 为vm.Context的实现，
 // 它组合了合约内核态数据(ctx)以及用户态的虚拟机数据(instance)
-type vmContextImpl struct {
+type VMContextImpl struct {
 	ctx      *Context
 	instance Instance
 	release  func()
 }
 
-func (v *vmContextImpl) Invoke(method string, args map[string][]byte) (*contract.Response, error) {
+func (v *VMContextImpl) Invoke(method string, args map[string][]byte) (*base.Response, error) {
 	if !v.ctx.CanInitialize && method == initMethod {
 		return nil, errors.New("invalid contract method " + method)
 	}
@@ -53,18 +53,18 @@ func (v *vmContextImpl) Invoke(method string, args map[string][]byte) (*contract
 		}
 	}
 
-	return &contract.Response{
+	return &base.Response{
 		Status:  int(v.ctx.Output.GetStatus()),
 		Message: v.ctx.Output.GetMessage(),
 		Body:    v.ctx.Output.GetBody(),
 	}, nil
 }
 
-func (v *vmContextImpl) ResourceUsed() contract.Limits {
+func (v *VMContextImpl) ResourceUsed() base.Limits {
 	return v.ctx.ResourceUsed()
 }
 
-func (v *vmContextImpl) Release() error {
+func (v *VMContextImpl) Release() error {
 	// release the context of instance
 	v.instance.Release()
 	v.release()

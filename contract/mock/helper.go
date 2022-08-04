@@ -6,7 +6,7 @@ import (
 	"math/big"
 	"os"
 
-	"github.com/wooyang2018/corechain/contract"
+	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/contract/bridge"
 	"github.com/wooyang2018/corechain/contract/sandbox"
 	"github.com/wooyang2018/corechain/ledger"
@@ -23,13 +23,13 @@ const (
 
 type TestHelper struct {
 	basedir    string
-	utxo       *contract.UTXORWSet
+	utxo       *contractBase.UTXORWSet
 	utxoReader sandbox.UtxoReader
 	state      *sandbox.MemXModel
-	manager    contract.Manager
+	manager    contractBase.Manager
 }
 
-func NewTestHelper(cfg *contract.ContractConfig) *TestHelper {
+func NewTestHelper(cfg *contractBase.ContractConfig) *TestHelper {
 	basedir, err := os.MkdirTemp("", "contract-test")
 	if err != nil {
 		panic(err)
@@ -37,7 +37,7 @@ func NewTestHelper(cfg *contract.ContractConfig) *TestHelper {
 
 	state := sandbox.NewMemXModel()
 	core := new(fakeChainCore)
-	m, err := contract.CreateManager("default", &contract.ManagerConfig{
+	m, err := contractBase.CreateManager("default", &contractBase.ManagerConfig{
 		Basedir:  basedir,
 		BCName:   "corechain",
 		Core:     core,
@@ -57,7 +57,7 @@ func NewTestHelper(cfg *contract.ContractConfig) *TestHelper {
 	return th
 }
 
-func (t *TestHelper) Manager() contract.Manager {
+func (t *TestHelper) Manager() contractBase.Manager {
 	return t.manager
 }
 
@@ -68,7 +68,7 @@ func (t *TestHelper) Basedir() string {
 func (t *TestHelper) State() *sandbox.MemXModel {
 	return t.state
 }
-func (t *TestHelper) UTXOState() *contract.UTXORWSet {
+func (t *TestHelper) UTXOState() *contractBase.UTXORWSet {
 	return t.utxo
 }
 
@@ -91,9 +91,9 @@ func (t *TestHelper) initAccount() {
 	t.utxoReader = utxoReader
 }
 
-func (t *TestHelper) Deploy(module, lang, contractName string, bin []byte, args map[string][]byte) (*contract.Response, error) {
+func (t *TestHelper) Deploy(module, lang, contractName string, bin []byte, args map[string][]byte) (*contractBase.Response, error) {
 	m := t.Manager()
-	state, err := m.NewStateSandbox(&contract.SandboxConfig{
+	state, err := m.NewStateSandbox(&contractBase.SandboxConfig{
 		XMReader:   t.State(),
 		UTXOReader: t.utxoReader,
 	})
@@ -101,11 +101,11 @@ func (t *TestHelper) Deploy(module, lang, contractName string, bin []byte, args 
 		return nil, err
 	}
 
-	ctx, err := m.NewContext(&contract.ContextConfig{
+	ctx, err := m.NewContext(&contractBase.ContextConfig{
 		Module:         "xkernel",
 		ContractName:   "$contract",
 		State:          state,
-		ResourceLimits: contract.MaxLimits,
+		ResourceLimits: contractBase.MaxLimits,
 		Initiator:      ContractAccount,
 	})
 	if err != nil {
@@ -143,7 +143,7 @@ func (t *TestHelper) Deploy(module, lang, contractName string, bin []byte, args 
 
 func (t *TestHelper) Upgrade(contractName string, bin []byte) error {
 	m := t.Manager()
-	state, err := m.NewStateSandbox(&contract.SandboxConfig{
+	state, err := m.NewStateSandbox(&contractBase.SandboxConfig{
 		XMReader:   t.State(),
 		UTXOReader: t.utxoReader,
 	})
@@ -151,11 +151,11 @@ func (t *TestHelper) Upgrade(contractName string, bin []byte) error {
 		return err
 	}
 
-	ctx, err := m.NewContext(&contract.ContextConfig{
+	ctx, err := m.NewContext(&contractBase.ContextConfig{
 		Module:         "xkernel",
 		ContractName:   "$contract",
 		State:          state,
-		ResourceLimits: contract.MaxLimits,
+		ResourceLimits: contractBase.MaxLimits,
 	})
 	if err != nil {
 		return err
@@ -170,9 +170,9 @@ func (t *TestHelper) Upgrade(contractName string, bin []byte) error {
 	return err
 }
 
-func (t *TestHelper) Invoke(module, contractName, method string, args map[string][]byte) (*contract.Response, error) {
+func (t *TestHelper) Invoke(module, contractName, method string, args map[string][]byte) (*contractBase.Response, error) {
 	m := t.Manager()
-	state, err := m.NewStateSandbox(&contract.SandboxConfig{
+	state, err := m.NewStateSandbox(&contractBase.SandboxConfig{
 		XMReader:   t.State(),
 		UTXOReader: t.utxoReader,
 	})
@@ -180,11 +180,11 @@ func (t *TestHelper) Invoke(module, contractName, method string, args map[string
 		return nil, err
 	}
 
-	ctx, err := m.NewContext(&contract.ContextConfig{
+	ctx, err := m.NewContext(&contractBase.ContextConfig{
 		Module:         module,
 		ContractName:   contractName,
 		State:          state,
-		ResourceLimits: contract.MaxLimits,
+		ResourceLimits: contractBase.MaxLimits,
 		Initiator:      ContractAccount,
 	})
 	if err != nil {
@@ -202,7 +202,7 @@ func (t *TestHelper) Invoke(module, contractName, method string, args map[string
 	return resp, nil
 }
 
-func (t *TestHelper) Commit(state contract.StateSandbox) {
+func (t *TestHelper) Commit(state contractBase.StateSandbox) {
 	rwset := state.RWSet()
 	txbuf := make([]byte, 32)
 	rand.Read(txbuf)

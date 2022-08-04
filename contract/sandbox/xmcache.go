@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/ledger"
 	"github.com/wooyang2018/corechain/protos"
 	"github.com/wooyang2018/corechain/state/model"
@@ -28,7 +28,7 @@ var (
 )
 
 var (
-	_ contract.StateSandbox = (*XMCache)(nil)
+	_ base.StateSandbox = (*XMCache)(nil)
 )
 
 // UtxoReader manages utxos
@@ -51,7 +51,7 @@ type XMCache struct {
 }
 
 // NewXModelCache new an instance of XModel Cache
-func NewXModelCache(cfg *contract.SandboxConfig) *XMCache {
+func NewXModelCache(cfg *base.SandboxConfig) *XMCache {
 	return &XMCache{
 		model:        cfg.XMReader,
 		inputsCache:  NewMemXModel(),
@@ -153,12 +153,12 @@ func (xc *XMCache) Del(bucket string, key []byte) error {
 
 // Select select all kv from a bucket, can set key range, left closed, right opend
 // When xc.isPenetrate equals true, three-way merge, When xc.isPenetrate equals false, two-way merge
-func (xc *XMCache) Select(bucket string, startKey []byte, endKey []byte) (contract.Iterator, error) {
+func (xc *XMCache) Select(bucket string, startKey []byte, endKey []byte) (base.Iterator, error) {
 	return xc.newXModelCacheIterator(bucket, startKey, endKey)
 }
 
 // newXModelCacheIterator new an instance of XModel Cache iterator
-func (mc *XMCache) newXModelCacheIterator(bucket string, startKey []byte, endKey []byte) (contract.Iterator, error) {
+func (mc *XMCache) newXModelCacheIterator(bucket string, startKey []byte, endKey []byte) (base.Iterator, error) {
 	iter, _ := mc.outputsCache.Select(bucket, startKey, endKey)
 	outputIter := iter
 
@@ -182,11 +182,11 @@ func (mc *XMCache) newXModelCacheIterator(bucket string, startKey []byte, endKey
 }
 
 // GetRWSets get read/write sets
-func (xc *XMCache) RWSet() *contract.RWSet {
+func (xc *XMCache) RWSet() *base.RWSet {
 	readSet := xc.getReadSets()
 	writeSet := xc.getWriteSets()
 
-	return &contract.RWSet{
+	return &base.RWSet{
 		RSet: readSet,
 		WSet: writeSet,
 	}
@@ -220,7 +220,7 @@ func (xc *XMCache) Transfer(from, to string, amount *big.Int) error {
 }
 
 //UTXORWSet returns the inputs and outputs of utxo
-func (xc *XMCache) UTXORWSet() *contract.UTXORWSet {
+func (xc *XMCache) UTXORWSet() *base.UTXORWSet {
 	return xc.utxoSandbox.GetUTXORWSets()
 }
 

@@ -45,7 +45,7 @@ type XPOSSchedule struct {
 }
 
 // NewSchedule 新建schedule实例
-func NewSchedule(xconfig *tdposConfig, log logger.Logger, ledger base.LedgerRely, startHeight int64) *XPOSSchedule {
+func NewSchedule(xconfig *xposConfig, log logger.Logger, ledger base.LedgerRely, startHeight int64) *XPOSSchedule {
 	schedule := &XPOSSchedule{
 		period:             xconfig.Period,
 		blockNum:           xconfig.BlockNum,
@@ -57,7 +57,7 @@ func NewSchedule(xconfig *tdposConfig, log logger.Logger, ledger base.LedgerRely
 		startHeight:        startHeight,
 		consensusName:      "xpos",
 		consensusVersion:   xconfig.Version,
-		bindContractBucket: tdposBucket,
+		bindContractBucket: posBucket,
 		log:                log,
 		ledger:             ledger,
 	}

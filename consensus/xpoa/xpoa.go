@@ -10,8 +10,8 @@ import (
 	"github.com/wooyang2018/corechain/consensus"
 	"github.com/wooyang2018/corechain/consensus/base"
 	"github.com/wooyang2018/corechain/consensus/chainbft"
-	quorum2 "github.com/wooyang2018/corechain/consensus/chainbft/quorum"
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/consensus/chainbft/quorum"
+	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/ledger"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/protos"
@@ -30,8 +30,8 @@ type XPOAConsensus struct {
 	config        *XPOAConfig
 	initTimestamp int64
 	status        *XpoaStatus
-	contract      contract.Manager
-	kMethod       map[string]contract.KernMethod
+	contract      contractBase.Manager
+	kMethod       map[string]contractBase.KernMethod
 	log           logger.Logger
 }
 
@@ -105,7 +105,7 @@ func NewXPOAConsensus(cctx base.ConsensusCtx, cCfg base.ConsensusConfig) base.Co
 		log:           cctx.XLog,
 	}
 
-	xpoaKMethods := map[string]contract.KernMethod{
+	xpoaKMethods := map[string]contractBase.KernMethod{
 		contractEditValidate: xpoa.methodEditValidates,
 		contractGetValidates: xpoa.methodGetValidates,
 	}
@@ -123,7 +123,7 @@ func NewXPOAConsensus(cctx base.ConsensusCtx, cCfg base.ConsensusConfig) base.Co
 func (x *XPOAConsensus) initBFT() error {
 	// create smr/ chained-bft实例, 需要新建CBFTCrypto、pacemaker和saftyrules实例
 	cryptoClient := chainbft.NewCBFTCrypto(x.cctx.Address, x.cctx.Crypto)
-	qcTree := quorum2.InitQCTree(x.status.StartHeight, x.cctx.Ledger, x.cctx.XLog)
+	qcTree := quorum.InitQCTree(x.status.StartHeight, x.cctx.Ledger, x.cctx.XLog)
 	if qcTree == nil {
 		x.log.Error("consensus:xpoa:NewXPOAConsensus: init QCTree err", "startHeight", x.status.StartHeight)
 		return nil
@@ -220,7 +220,7 @@ func (x *XPOAConsensus) CheckMinerMatch(ctx xctx.Context, block ledger.BlockHand
 		return true, nil
 	}
 	// 兼容老的结构
-	justify, err := quorum2.OldQCToNew(conStoreBytes)
+	justify, err := quorum.OldQCToNew(conStoreBytes)
 	if err != nil {
 		ctx.GetLog().Error("consensus:xpoa:CheckMinerMatch: OldQCToNew error.", "logid", ctx.GetLog().GetLogId(), "err", err,
 			"blockId", utils.F(block.GetBlockid()))
@@ -258,9 +258,9 @@ func (x *XPOAConsensus) ProcessBeforeMiner(height, timestamp int64) ([]byte, []b
 		return nil, nil, nil
 	}
 
-	qcQuorumCert, _ := qc.(*quorum2.QuorumCertImpl)
-	oldQC, _ := quorum2.NewToOldQC(qcQuorumCert)
-	storage := quorum2.ConsensusStorage{
+	qcQuorumCert, _ := qc.(*quorum.QuorumCertImpl)
+	oldQC, _ := quorum.NewToOldQC(qcQuorumCert)
+	storage := quorum.ConsensusStorage{
 		Justify: oldQC,
 	}
 	// 重做时还需要装载标定节点TipHeight，复用TargetBits作为回滚记录，便于追块时获取准确快照高度
@@ -287,9 +287,9 @@ func (x *XPOAConsensus) ProcessConfirmBlock(block ledger.BlockHandle) error {
 		x.log.Warn("consensus:xpoa:CheckMinerMatch: parse storage error", "err", err, "blockId", utils.F(block.GetBlockid()))
 		return err
 	}
-	var justify quorum2.QuorumCert
+	var justify quorum.QuorumCert
 	if justifyBytes != nil && block.GetHeight() > x.status.StartHeight {
-		justify, err = quorum2.OldQCToNew(justifyBytes)
+		justify, err = quorum.OldQCToNew(justifyBytes)
 		if err != nil {
 			x.log.Error("consensus:xpoa:ProcessConfirmBlock: OldQCToNew error", "err", err, "blockId", utils.F(block.GetBlockid()))
 			return err
@@ -354,7 +354,7 @@ func (x *XPOAConsensus) ParseConsensusStorage(block ledger.BlockHandle) (interfa
 	if err != nil {
 		return nil, err
 	}
-	justify, err := quorum2.ParseOldQCStorage(b)
+	justify, err := quorum.ParseOldQCStorage(b)
 	if err != nil {
 		return nil, err
 	}
@@ -370,6 +370,6 @@ func (x *XPOAConsensus) GetJustifySigns(block ledger.BlockHandle) []*protos.Quor
 	if err != nil {
 		return nil
 	}
-	signs := quorum2.OldSignToNew(b)
+	signs := quorum.OldSignToNew(b)
 	return signs
 }

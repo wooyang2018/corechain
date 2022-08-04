@@ -9,6 +9,8 @@ import (
 	"github.com/wooyang2018/corechain/consensus/chainbft/quorum"
 	cmock "github.com/wooyang2018/corechain/consensus/mock"
 	mockNet "github.com/wooyang2018/corechain/mock/testnet"
+	_ "github.com/wooyang2018/corechain/network/p2pv1"
+	_ "github.com/wooyang2018/corechain/network/p2pv2"
 	"github.com/wooyang2018/corechain/protos"
 	"google.golang.org/protobuf/proto"
 )
@@ -50,8 +52,7 @@ func prepare(config string) (*base.ConsensusCtx, error) {
 	l := cmock.NewFakeLedger([]byte(config))
 	cctx, err := cmock.NewConsensusCtxWithCrypto(l)
 	cctx.Ledger = l
-	p, ctxN, err := mockNet.NewFakeP2P("node1")
-	p.Init(ctxN)
+	p, _, err := mockNet.NewFakeP2P("node1")
 	cctx.Network = p
 	return cctx, err
 }

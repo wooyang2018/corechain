@@ -10,7 +10,7 @@ import (
 	"math/big"
 	"sort"
 
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/contract/proposal/utils"
 	"github.com/wooyang2018/corechain/protos"
 )
@@ -32,7 +32,7 @@ const (
 type SyscallService struct {
 	ctxmgr *ContextManager
 	bridge *XBridge
-	core   contract.ChainCore
+	core   base.ChainCore
 }
 
 // NewSyscallService instances a new SyscallService
@@ -151,7 +151,7 @@ func (c *SyscallService) ContractCall(ctx context.Context, in *protos.ContractCa
 	}
 
 	currentUsed := nctx.ResourceUsed()
-	limits := new(contract.Limits).Add(nctx.ResourceLimits).Sub(currentUsed)
+	limits := new(base.Limits).Add(nctx.ResourceLimits).Sub(currentUsed)
 	// disk usage is shared between all context
 	limits.Disk = nctx.ResourceLimits.Disk
 
@@ -161,7 +161,7 @@ func (c *SyscallService) ContractCall(ctx context.Context, in *protos.ContractCa
 	}
 
 	nctx.ContractSet[in.GetContract()] = true
-	cfg := &contract.ContextConfig{
+	cfg := &base.ContextConfig{
 		Module:         in.GetModule(),
 		ContractName:   in.GetContract(),
 		State:          nctx.State,
@@ -198,7 +198,7 @@ func (c *SyscallService) ContractCall(ctx context.Context, in *protos.ContractCa
 // CrossContractQuery implements Syscall interface
 func (c *SyscallService) CrossContractQuery(ctx context.Context, in *protos.CrossContractQueryRequest) (*protos.CrossContractQueryResponse, error) {
 	return nil, ErrNotImplementation
-	// nctx, ok := c.ctxmgr.Context(in.GetHeader().Ctxid)
+	// nctx, ok := c.ctxmgr.VMContext(in.GetHeader().Ctxid)
 	// if !ok {
 	// 	return nil, fmt.Errorf("bad ctx id:%d", in.Header.Ctxid)
 	// }

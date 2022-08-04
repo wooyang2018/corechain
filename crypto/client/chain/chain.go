@@ -15,7 +15,6 @@ import (
 	"github.com/wooyang2018/corechain/crypto/common/signature"
 	"github.com/wooyang2018/corechain/crypto/common/types"
 	"github.com/wooyang2018/corechain/crypto/common/utils"
-	"github.com/wooyang2018/corechain/crypto/common/zkp"
 	"github.com/wooyang2018/corechain/crypto/core/aes"
 	"github.com/wooyang2018/corechain/crypto/core/bls_sign"
 	"github.com/wooyang2018/corechain/crypto/core/ecies"
@@ -488,7 +487,7 @@ func (xcc *XchainCryptoClient) SecretRetrieve(shares map[int]*big.Int) ([]byte, 
 // --- 零知识证明算法相关 start ---
 
 // 初始化哈希算法MiMC的参数
-func (xcc *XchainCryptoClient) ZkpSetupMiMC() (*zkp.ZkpInfo, error) {
+func (xcc *XchainCryptoClient) ZkpSetupMiMC() (*mimc.ZkpInfo, error) {
 	return mimc.Setup()
 }
 

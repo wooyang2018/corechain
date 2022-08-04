@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/contract/proposal/utils"
 )
 
@@ -20,7 +20,7 @@ func NewKernContractMethod(bcName string) *KernMethod {
 	return t
 }
 
-func (t *KernMethod) Add(ctx contract.KContext) (*contract.Response, error) {
+func (t *KernMethod) Add(ctx base.KContext) (*base.Response, error) {
 	args := ctx.Args()
 	blockHeightBuf := args["block_height"]
 	triggerBuf := args["trigger"]
@@ -45,19 +45,19 @@ func (t *KernMethod) Add(ctx contract.KContext) (*contract.Response, error) {
 		return nil, err
 	}
 
-	delta := contract.Limits{
+	delta := base.Limits{
 		XFee: 0,
 	}
 	ctx.AddResourceUsed(delta)
 
-	return &contract.Response{
+	return &base.Response{
 		Status:  utils.StatusOK,
 		Message: "success",
 		Body:    nil,
 	}, nil
 }
 
-func (t *KernMethod) Do(ctx contract.KContext) (*contract.Response, error) {
+func (t *KernMethod) Do(ctx base.KContext) (*base.Response, error) {
 	args := ctx.Args()
 	blockHeightBuf := args["block_height"]
 	if blockHeightBuf == nil {
@@ -78,19 +78,19 @@ func (t *KernMethod) Do(ctx contract.KContext) (*contract.Response, error) {
 		t.Trigger(ctx, triggerBuf)
 	}
 
-	delta := contract.Limits{
+	delta := base.Limits{
 		XFee: 0,
 	}
 	ctx.AddResourceUsed(delta)
 
-	return &contract.Response{
+	return &base.Response{
 		Status:  utils.StatusOK,
 		Message: "success",
 		Body:    nil,
 	}, nil
 }
 
-func (t *KernMethod) Trigger(ctx contract.KContext, triggerBuf []byte) {
+func (t *KernMethod) Trigger(ctx base.KContext, triggerBuf []byte) {
 	var trigger utils.TriggerDesc
 	err := json.Unmarshal(triggerBuf, &trigger)
 	if err != nil {
@@ -111,7 +111,7 @@ func (t *KernMethod) Trigger(ctx contract.KContext, triggerBuf []byte) {
 
 }
 
-func (t *KernMethod) getNextTaskID(ctx contract.KContext) (string, error) {
+func (t *KernMethod) getNextTaskID(ctx base.KContext) (string, error) {
 	latestTaskID, err := ctx.Get(utils.GetTimerBucket(), utils.GetTaskIDKey())
 	if err != nil {
 		// 没找到，从1开始

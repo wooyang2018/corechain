@@ -1,10 +1,10 @@
-package manager
+package kernel
 
 import (
 	"fmt"
 	"sync"
 
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 )
 
 type shortcut struct {
@@ -15,20 +15,20 @@ type shortcut struct {
 
 type registryImpl struct {
 	mutex     sync.Mutex
-	methods   map[string]map[string]contract.KernMethod
+	methods   map[string]map[string]base.KernMethod
 	shortcuts map[string]shortcut
 }
 
-func (r *registryImpl) RegisterKernMethod(ctract, method string, handler contract.KernMethod) {
+func (r *registryImpl) RegisterKernMethod(ctract, method string, handler base.KernMethod) {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 
 	if r.methods == nil {
-		r.methods = make(map[string]map[string]contract.KernMethod)
+		r.methods = make(map[string]map[string]base.KernMethod)
 	}
 	contractMap, ok := r.methods[ctract]
 	if !ok {
-		contractMap = make(map[string]contract.KernMethod)
+		contractMap = make(map[string]base.KernMethod)
 		r.methods[ctract] = contractMap
 	}
 	_, ok = contractMap[method]
@@ -72,7 +72,7 @@ func (r *registryImpl) getShortcut(method string) (shortcut, error) {
 	return sc, nil
 }
 
-func (r *registryImpl) GetKernMethod(ctract, method string) (contract.KernMethod, error) {
+func (r *registryImpl) GetKernMethod(ctract, method string) (base.KernMethod, error) {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 	if ctract == "" {

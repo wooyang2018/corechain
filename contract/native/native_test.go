@@ -7,9 +7,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	_ "github.com/wooyang2018/corechain/contract/kernel"
-	_ "github.com/wooyang2018/corechain/contract/manager"
 	"github.com/wooyang2018/corechain/contract/mock"
 )
 
@@ -105,7 +104,7 @@ func TestNativeDocker(t *testing.T) {
 		return
 	}
 	cfg := *contractConfig
-	cfg.Native.Docker = contract.NativeDockerConfig{
+	cfg.Native.Docker = base.NativeDockerConfig{
 		Enable:    true,
 		ImageName: imageName,
 		Cpus:      1,

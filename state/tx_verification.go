@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/wooyang2018/corechain/common/metrics"
-	"github.com/wooyang2018/corechain/contract"
+	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/contract/sandbox"
 	"github.com/wooyang2018/corechain/crypto/client"
 	"github.com/wooyang2018/corechain/ledger"
@@ -570,7 +570,7 @@ func (t *State) verifyTxRWSets(tx *protos.Transaction) (bool, error) {
 		t.log.Error("verifyTxRWSets GenRWSetFromTx error", "err", err)
 		return false, err
 	}
-	rwSet := &contract.RWSet{
+	rwSet := &contractBase.RWSet{
 		RSet: rset,
 		WSet: wset,
 	}
@@ -581,7 +581,7 @@ func (t *State) verifyTxRWSets(tx *protos.Transaction) (bool, error) {
 		return false, err
 	}
 	utxoReader := sandbox.NewUTXOReaderFromInput(utxoInput)
-	sandBoxConfig := &contract.SandboxConfig{
+	sandBoxConfig := &contractBase.SandboxConfig{
 		XMReader:   reader,
 		UTXOReader: utxoReader,
 	}
@@ -596,7 +596,7 @@ func (t *State) verifyTxRWSets(tx *protos.Transaction) (bool, error) {
 		return false, err
 	}
 
-	contextConfig := &contract.ContextConfig{
+	contextConfig := &contractBase.ContextConfig{
 		State:       sandBox,
 		Initiator:   tx.GetInitiator(),
 		AuthRequire: tx.GetAuthRequire(),
@@ -611,7 +611,7 @@ func (t *State) verifyTxRWSets(tx *protos.Transaction) (bool, error) {
 	gasPrice := t.meta.Meta.GetGasPrice()
 
 	for i, tmpReq := range tx.GetContractRequests() {
-		limits := contract.FromPbLimits(tmpReq.GetResourceLimits())
+		limits := contractBase.FromPbLimits(tmpReq.GetResourceLimits())
 		if i >= len(reservedRequests) {
 			gasLimit -= limits.TotalGas(gasPrice)
 		}

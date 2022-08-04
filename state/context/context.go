@@ -6,7 +6,7 @@ import (
 	xconf "github.com/wooyang2018/corechain/common/config"
 	xctx "github.com/wooyang2018/corechain/common/context"
 	"github.com/wooyang2018/corechain/common/timer"
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/contract/proposal/govern"
 	"github.com/wooyang2018/corechain/contract/proposal/propose"
 	ptimer "github.com/wooyang2018/corechain/contract/proposal/timer"
@@ -37,7 +37,7 @@ type StateCtx struct {
 	AclMgr aclBase.AclManager
 	// contract Manager
 	// 注意：依赖注入后才可以使用
-	ContractMgr contract.Manager
+	ContractMgr base.Manager
 	// 注意：注入后才可以使用
 	GovernTokenMgr govern.GovManager
 	// 注意：注入后才可以使用
@@ -79,7 +79,7 @@ func (t *StateCtx) SetAclMG(aclMgr aclBase.AclManager) {
 	t.AclMgr = aclMgr
 }
 
-func (t *StateCtx) SetContractMG(contractMgr contract.Manager) {
+func (t *StateCtx) SetContractMG(contractMgr base.Manager) {
 	t.ContractMgr = contractMgr
 }
 

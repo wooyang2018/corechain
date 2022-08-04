@@ -32,7 +32,7 @@ func TestMethodEditValidates(t *testing.T) {
 	if !ok {
 		t.Fatal("transfer err.")
 	}
-	fakeCtx := cmock.NewFakeKContext(NewEditArgs(), cmock.NewUpdateM())
+	fakeCtx := cmock.NewFakeKContext(NewEditArgs(), make(map[string]map[string][]byte))
 	//第一次Get应当返回空Body
 	r, err := xpoa.methodGetValidates(fakeCtx)
 	if err != nil || r.Body != nil {

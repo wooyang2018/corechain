@@ -5,7 +5,7 @@ import (
 	"errors"
 	"math/big"
 
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/protos"
 )
 
@@ -14,7 +14,7 @@ type UTXOReader struct {
 	inputIdx   int
 }
 
-func NewUTXOReaderFromInput(input []*protos.TxInput) contract.UtxoReader {
+func NewUTXOReaderFromInput(input []*protos.TxInput) base.UtxoReader {
 	return &UTXOReader{
 		inputCache: input,
 		inputIdx:   0,

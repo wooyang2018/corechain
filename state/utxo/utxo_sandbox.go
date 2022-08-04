@@ -4,17 +4,17 @@ import (
 	"errors"
 	"math/big"
 
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/protos"
 )
 
 type UTXOSandbox struct {
 	inputCache  []*protos.TxInput
 	outputCache []*protos.TxOutput
-	utxoReader  contract.UtxoReader
+	utxoReader  base.UtxoReader
 }
 
-func NewUTXOSandbox(cfg *contract.SandboxConfig) *UTXOSandbox {
+func NewUTXOSandbox(cfg *base.SandboxConfig) *UTXOSandbox {
 	return &UTXOSandbox{
 		outputCache: []*protos.TxOutput{},
 		utxoReader:  cfg.UTXOReader,
@@ -44,8 +44,8 @@ func (u *UTXOSandbox) Transfer(from, to string, amount *big.Int) error {
 	return nil
 }
 
-func (uc *UTXOSandbox) GetUTXORWSets() *contract.UTXORWSet {
-	return &contract.UTXORWSet{
+func (uc *UTXOSandbox) GetUTXORWSets() *base.UTXORWSet {
+	return &base.UTXORWSet{
 		Rset: uc.inputCache,
 		WSet: uc.outputCache,
 	}

@@ -7,7 +7,7 @@ import (
 	"github.com/btcsuite/btcutil/base58"
 	"github.com/hyperledger/burrow/binary"
 	"github.com/hyperledger/burrow/crypto"
-	"github.com/wooyang2018/corechain/contract"
+	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/crypto/core/hash"
 	"github.com/wooyang2018/corechain/permission/base"
 )
@@ -101,7 +101,7 @@ func DetermineContractAccount(account string) bool {
 
 // determine whether it is a contract name
 func DetermineContractName(contractName string) error {
-	return contract.ValidContractName(contractName)
+	return contractBase.ValidContractName(contractName)
 }
 
 // determine whether it is a contract name

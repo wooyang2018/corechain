@@ -10,7 +10,7 @@ import (
 
 	"github.com/docker/go-units"
 	docker "github.com/fsouza/go-dockerclient"
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/logger"
 )
 
@@ -39,7 +39,7 @@ type DockerProcess struct {
 	envs     []string
 	mounts   []string
 	// ports    []string
-	cfg *contract.NativeDockerConfig
+	cfg *base.NativeDockerConfig
 
 	id string
 	logger.Logger
@@ -166,7 +166,6 @@ type HostProcess struct {
 func (h *HostProcess) Start() error {
 	cmd := h.startcmd
 	cmd.Dir = h.basedir
-	cmd.SysProcAttr = &syscall.SysProcAttr{}
 	cmd.Env = []string{"XCHAIN_PING_TIMEOUT=" + strconv.Itoa(pingTimeoutSecond)}
 	cmd.Env = append(cmd.Env, h.envs...)
 	cmd.Env = append(cmd.Env, os.Environ()...)
@@ -181,16 +180,13 @@ func (h *HostProcess) Start() error {
 	return nil
 }
 
-func processExists(pid int) bool {
-	return true
-}
-
 // Stop implements process interface
 func (h *HostProcess) Stop(timeout time.Duration) error {
 	h.cmd.Process.Signal(syscall.SIGTERM)
 	deadline := time.Now().Add(timeout)
 	for time.Now().Before(deadline) {
-		if !processExists(h.cmd.Process.Pid) {
+		err := h.cmd.Process.Kill()
+		if err != nil {
 			break
 		}
 		time.Sleep(time.Second)

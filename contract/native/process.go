@@ -10,14 +10,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/protos"
 	"google.golang.org/grpc"
 )
 
 type contractProcess struct {
-	cfg *contract.NativeConfig
+	cfg *base.NativeConfig
 
 	name      string
 	basedir   string
@@ -36,7 +36,7 @@ type contractProcess struct {
 	rpcClient protos.NativeCodeClient
 }
 
-func newContractProcess(cfg *contract.NativeConfig, name, basedir, chainAddr string, desc *protos.WasmCodeDesc) (*contractProcess, error) {
+func newContractProcess(cfg *base.NativeConfig, name, basedir, chainAddr string, desc *protos.WasmCodeDesc) (*contractProcess, error) {
 	log, _ := logger.NewLogger("", "contract")
 	process := &contractProcess{
 		cfg:           cfg,

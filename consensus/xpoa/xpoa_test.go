@@ -2,14 +2,17 @@ package xpoa
 
 import (
 	"encoding/json"
+	"testing"
+	"time"
+
 	"github.com/wooyang2018/corechain/consensus/base"
 	"github.com/wooyang2018/corechain/consensus/mock"
 	"github.com/wooyang2018/corechain/logger"
 	mockNet "github.com/wooyang2018/corechain/mock/testnet"
+	_ "github.com/wooyang2018/corechain/network/p2pv1"
+	_ "github.com/wooyang2018/corechain/network/p2pv2"
 	"github.com/wooyang2018/corechain/protos"
 	"google.golang.org/protobuf/proto"
-	"testing"
-	"time"
 )
 
 func TestUnmarshalConfig(t *testing.T) {
@@ -58,8 +61,7 @@ func prepare(config string) (*base.ConsensusCtx, error) {
 	l := mock.NewFakeLedger([]byte(config))
 	cctx, err := mock.NewConsensusCtxWithCrypto(l)
 	cctx.Ledger = l
-	p, ctxN, err := mockNet.NewFakeP2P("node1")
-	p.Init(ctxN)
+	p, _, err := mockNet.NewFakeP2P("node1")
 	cctx.Network = p
 	cctx.XLog, _ = logger.NewLogger("", "consensus_test")
 	return cctx, err

@@ -1,16 +1,15 @@
-package manager
+package kernel
 
 import (
 	"testing"
 
-	"github.com/wooyang2018/corechain/contract"
-	_ "github.com/wooyang2018/corechain/contract/kernel"
+	"github.com/wooyang2018/corechain/contract/base"
 	mock2 "github.com/wooyang2018/corechain/contract/mock"
 	"github.com/wooyang2018/corechain/contract/sandbox"
 )
 
-var contractConfig = &contract.ContractConfig{
-	Xkernel: contract.XkernelConfig{
+var contractConfig = &base.ContractConfig{
+	Xkernel: base.XkernelConfig{
 		Enable: true,
 		Driver: "default",
 	},
@@ -28,7 +27,7 @@ func TestCreateSandbox(t *testing.T) {
 	m := th.Manager()
 
 	r := sandbox.NewMemXModel()
-	state, err := m.NewStateSandbox(&contract.SandboxConfig{
+	state, err := m.NewStateSandbox(&base.SandboxConfig{
 		XMReader: r,
 	})
 	if err != nil {
@@ -60,10 +59,10 @@ func TestInvoke(t *testing.T) {
 type helloContract struct {
 }
 
-func (h *helloContract) Hi(ctx contract.KContext) (*contract.Response, error) {
+func (h *helloContract) Hi(ctx base.KContext) (*base.Response, error) {
 	name := ctx.Args()["name"]
 	ctx.Put("test", []byte("k1"), []byte("v1"))
-	return &contract.Response{
+	return &base.Response{
 		Body: []byte("hello " + string(name)),
 	}, nil
 }

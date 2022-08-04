@@ -8,7 +8,7 @@ import (
 	xctx "github.com/wooyang2018/corechain/common/context"
 	"github.com/wooyang2018/corechain/common/utils"
 	cbase "github.com/wooyang2018/corechain/consensus/base"
-	"github.com/wooyang2018/corechain/contract"
+	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/crypto/client"
 	"github.com/wooyang2018/corechain/crypto/client/base"
 	"github.com/wooyang2018/corechain/logger"
@@ -70,7 +70,7 @@ func (c *FakeKContext) VerifyContractOwnerPermission(contractName string, authRe
 	return nil
 }
 
-func (c *FakeKContext) RWSet() *contract.RWSet {
+func (c *FakeKContext) RWSet() *contractBase.RWSet {
 	return nil
 }
 
@@ -87,7 +87,7 @@ func (c *FakeKContext) Get(bucket string, key []byte) ([]byte, error) {
 	return c.m[bucket][utils.F(key)], nil
 }
 
-func (c *FakeKContext) Select(bucket string, startKey []byte, endKey []byte) (contract.Iterator, error) {
+func (c *FakeKContext) Select(bucket string, startKey []byte, endKey []byte) (contractBase.Iterator, error) {
 	return nil, nil
 }
 
@@ -105,10 +105,10 @@ func (c *FakeKContext) Del(bucket string, key []byte) error {
 	return nil
 }
 
-func (c *FakeKContext) AddResourceUsed(delta contract.Limits) {}
+func (c *FakeKContext) AddResourceUsed(delta contractBase.Limits) {}
 
-func (c *FakeKContext) ResourceLimit() contract.Limits {
-	return contract.Limits{
+func (c *FakeKContext) ResourceLimit() contractBase.Limits {
+	return contractBase.Limits{
 		Cpu:    0,
 		Memory: 0,
 		Disk:   0,
@@ -116,12 +116,12 @@ func (c *FakeKContext) ResourceLimit() contract.Limits {
 	}
 }
 
-func (c *FakeKContext) Call(module, contract, method string, args map[string][]byte) (*contract.Response, error) {
+func (c *FakeKContext) Call(module, contract, method string, args map[string][]byte) (*contractBase.Response, error) {
 	return nil, nil
 }
 
-func (c *FakeKContext) UTXORWSet() *contract.UTXORWSet {
-	return &contract.UTXORWSet{
+func (c *FakeKContext) UTXORWSet() *contractBase.UTXORWSet {
+	return &contractBase.UTXORWSet{
 		Rset: []*protos.TxInput{},
 		WSet: []*protos.TxOutput{},
 	}
@@ -141,23 +141,23 @@ type FakeManager struct {
 	R *FakeRegistry
 }
 
-func (m *FakeManager) NewContext(cfg *contract.ContextConfig) (contract.Context, error) {
+func (m *FakeManager) NewContext(cfg *contractBase.ContextConfig) (contractBase.VMContext, error) {
 	return nil, nil
 }
 
-func (m *FakeManager) NewStateSandbox(cfg *contract.SandboxConfig) (contract.StateSandbox, error) {
+func (m *FakeManager) NewStateSandbox(cfg *contractBase.SandboxConfig) (contractBase.StateSandbox, error) {
 	return nil, nil
 }
 
-func (m *FakeManager) GetKernRegistry() contract.KernRegistry {
+func (m *FakeManager) GetKernRegistry() contractBase.KernRegistry {
 	return m.R
 }
 
 type FakeRegistry struct {
-	M map[string]contract.KernMethod
+	M map[string]contractBase.KernMethod
 }
 
-func (r *FakeRegistry) RegisterKernMethod(contract, method string, handler contract.KernMethod) {
+func (r *FakeRegistry) RegisterKernMethod(contract, method string, handler contractBase.KernMethod) {
 	r.M[method] = handler
 }
 
@@ -165,7 +165,7 @@ func (r *FakeRegistry) UnregisterKernMethod(ctract, method string) {
 	return
 }
 
-func (r *FakeRegistry) GetKernMethod(contract, method string) (contract.KernMethod, error) {
+func (r *FakeRegistry) GetKernMethod(contract, method string) (contractBase.KernMethod, error) {
 	return nil, nil
 }
 
@@ -218,7 +218,7 @@ func NewConsensusCtx(ledger *FakeLedger) cbase.ConsensusCtx {
 		},
 		Contract: &FakeManager{
 			R: &FakeRegistry{
-				M: make(map[string]contract.KernMethod),
+				M: make(map[string]contractBase.KernMethod),
 			},
 		},
 	}

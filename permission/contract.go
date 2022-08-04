@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/wooyang2018/corechain/contract"
+	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/contract/sandbox"
 	"github.com/wooyang2018/corechain/permission/base"
 	"github.com/wooyang2018/corechain/protos"
@@ -23,7 +23,7 @@ func NewKernContractMethod(bcName string, NewAccountResourceAmount int64) *KernM
 	return t
 }
 
-func (t *KernMethod) NewAccount(ctx contract.KContext) (*contract.Response, error) {
+func (t *KernMethod) NewAccount(ctx contractBase.KContext) (*contractBase.Response, error) {
 	if ctx.ResourceLimit().XFee < t.NewAccountResourceAmount {
 		return nil, fmt.Errorf("gas not enough, expect no less than %d", t.NewAccountResourceAmount)
 	}
@@ -73,19 +73,19 @@ func (t *KernMethod) NewAccount(ctx contract.KContext) (*contract.Response, erro
 		return nil, err
 	}
 
-	delta := contract.Limits{
+	delta := contractBase.Limits{
 		XFee: t.NewAccountResourceAmount,
 	}
 	ctx.AddResourceUsed(delta)
 
-	return &contract.Response{
+	return &contractBase.Response{
 		Status:  base.StatusOK,
 		Message: "success",
 		Body:    aclJSON,
 	}, nil
 }
 
-func (t *KernMethod) SetAccountACL(ctx contract.KContext) (*contract.Response, error) {
+func (t *KernMethod) SetAccountACL(ctx contractBase.KContext) (*contractBase.Response, error) {
 	if ctx.ResourceLimit().XFee < t.NewAccountResourceAmount/1000 {
 		return nil, fmt.Errorf("gas not enough, expect no less than %d", t.NewAccountResourceAmount/1000)
 	}
@@ -120,19 +120,19 @@ func (t *KernMethod) SetAccountACL(ctx contract.KContext) (*contract.Response, e
 		return nil, err
 	}
 
-	delta := contract.Limits{
+	delta := contractBase.Limits{
 		XFee: t.NewAccountResourceAmount / 1000,
 	}
 	ctx.AddResourceUsed(delta)
 
-	return &contract.Response{
+	return &contractBase.Response{
 		Status:  base.StatusOK,
 		Message: "success",
 		Body:    aclJSON,
 	}, nil
 }
 
-func (t *KernMethod) SetMethodACL(ctx contract.KContext) (*contract.Response, error) {
+func (t *KernMethod) SetMethodACL(ctx contractBase.KContext) (*contractBase.Response, error) {
 	if ctx.ResourceLimit().XFee < t.NewAccountResourceAmount/1000 {
 		return nil, fmt.Errorf("gas not enough, expect no less than %d", t.NewAccountResourceAmount/1000)
 	}
@@ -162,12 +162,12 @@ func (t *KernMethod) SetMethodACL(ctx contract.KContext) (*contract.Response, er
 		return nil, err
 	}
 
-	delta := contract.Limits{
+	delta := contractBase.Limits{
 		XFee: t.NewAccountResourceAmount / 1000,
 	}
 	ctx.AddResourceUsed(delta)
 
-	return &contract.Response{
+	return &contractBase.Response{
 		Status:  base.StatusOK,
 		Message: "success",
 		Body:    aclJSON,

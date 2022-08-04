@@ -12,7 +12,7 @@ import (
 	"github.com/wooyang2018/corechain/consensus/base"
 	"github.com/wooyang2018/corechain/consensus/chainbft"
 	quorum2 "github.com/wooyang2018/corechain/consensus/chainbft/quorum"
-	"github.com/wooyang2018/corechain/contract"
+	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/ledger"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/protos"
@@ -25,13 +25,13 @@ func init() {
 type tdposConsensus struct {
 	ctx       base.ConsensusCtx
 	bcName    string
-	config    *tdposConfig
+	config    *xposConfig
 	isProduce map[int64]bool
 	election  *XPOSSchedule
 	status    *TdposStatus
 	smr       *chainbft.SMR
-	contract  contract.Manager
-	kMethod   map[string]contract.KernMethod
+	contract  contractBase.Manager
+	kMethod   map[string]contractBase.KernMethod
 	log       logger.Logger
 }
 
@@ -87,12 +87,12 @@ func NewTdposConsensus(cctx base.ConsensusCtx, cCfg base.ConsensusConfig) base.C
 		ctx:       cctx,
 	}
 
-	tdposKMethods := map[string]contract.KernMethod{
+	tdposKMethods := map[string]contractBase.KernMethod{
 		contractNominateCandidate: tdpos.runNominateCandidate,
 		contractRevokeCandidate:   tdpos.runRevokeCandidate,
-		contractVote:              tdpos.runVote,
+		contractVoteCandidate:     tdpos.runVote,
 		contractRevokeVote:        tdpos.runRevokeVote,
-		contractGetTdposInfos:     tdpos.runGetTdposInfos,
+		contractGetInfo:           tdpos.runGetTdposInfos,
 	}
 
 	tdpos.kMethod = tdposKMethods

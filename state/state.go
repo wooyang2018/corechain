@@ -5,7 +5,6 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"github.com/wooyang2018/corechain/storage/leveldb"
 	"math/big"
 	"path/filepath"
 	"strconv"
@@ -15,7 +14,7 @@ import (
 	"github.com/wooyang2018/corechain/common/metrics"
 	"github.com/wooyang2018/corechain/common/timer"
 	"github.com/wooyang2018/corechain/common/utils"
-	"github.com/wooyang2018/corechain/contract"
+	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/contract/proposal/govern"
 	"github.com/wooyang2018/corechain/contract/proposal/propose"
 	ptimer "github.com/wooyang2018/corechain/contract/proposal/timer"
@@ -30,6 +29,7 @@ import (
 	"github.com/wooyang2018/corechain/state/model"
 	"github.com/wooyang2018/corechain/state/utxo"
 	"github.com/wooyang2018/corechain/storage"
+	"github.com/wooyang2018/corechain/storage/leveldb"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -150,7 +150,7 @@ func (t *State) SetAclMG(aclMgr base.AclManager) {
 	t.sctx.SetAclMG(aclMgr)
 }
 
-func (t *State) SetContractMG(contractMgr contract.Manager) {
+func (t *State) SetContractMG(contractMgr contractBase.Manager) {
 	t.sctx.SetContractMG(contractMgr)
 }
 
@@ -205,7 +205,7 @@ func (t *State) GetContractStatus(contractName string) (*protos.ContractStatus, 
 	res := &protos.ContractStatus{}
 	res.ContractName = contractName
 	//根据合约名获取合约版本数据
-	verdata, err := t.xmodel.Get("contract", contract.ContractCodeDescKey(contractName))
+	verdata, err := t.xmodel.Get("contract", contractBase.ContractCodeDescKey(contractName))
 	if err != nil {
 		t.log.Warn("GetContractStatus get version data error", "error", err.Error())
 		return nil, err
@@ -350,7 +350,7 @@ func (t *State) DoTx(tx *protos.Transaction) error {
 func (t *State) CreateXMReader() ledger.XReader {
 	return t.xmodel
 }
-func (t *State) CreateUtxoReader() contract.UtxoReader {
+func (t *State) CreateUtxoReader() contractBase.UtxoReader {
 	return t.utxo
 }
 
@@ -539,7 +539,7 @@ func (t *State) PlayAndRepost(blockid []byte, needRepost bool, isRootTx bool) er
 }
 
 func (t *State) GetTimerTx(blockHeight int64) (*protos.Transaction, error) {
-	stateConfig := &contract.SandboxConfig{
+	stateConfig := &contractBase.SandboxConfig{
 		XMReader:   t.CreateXMReader(),
 		UTXOReader: t.CreateUtxoReader(),
 	}
@@ -553,7 +553,7 @@ func (t *State) GetTimerTx(blockHeight int64) (*protos.Transaction, error) {
 		return nil, err
 	}
 
-	contextConfig := &contract.ContextConfig{
+	contextConfig := &contractBase.ContextConfig{
 		State:       sandBox,
 		Initiator:   "",
 		AuthRequire: nil,
@@ -568,7 +568,7 @@ func (t *State) GetTimerTx(blockHeight int64) (*protos.Transaction, error) {
 		Args:         args,
 	}
 
-	contextConfig.ResourceLimits = contract.MaxLimits
+	contextConfig.ResourceLimits = contractBase.MaxLimits
 	contextConfig.Module = req.ModuleName
 	contextConfig.ContractName = req.GetContractName()
 
@@ -1423,7 +1423,7 @@ func (t *State) queryContractBannedStatus(contractName string) (bool, error) {
 	}
 
 	xmReader := t.CreateXMReader()
-	sandBoxCfg := &contract.SandboxConfig{
+	sandBoxCfg := &contractBase.SandboxConfig{
 		XMReader: xmReader,
 	}
 	sandBox, err := t.sctx.ContractMgr.NewStateSandbox(sandBoxCfg)
@@ -1431,9 +1431,9 @@ func (t *State) queryContractBannedStatus(contractName string) (bool, error) {
 		return false, err
 	}
 
-	contextConfig := &contract.ContextConfig{
+	contextConfig := &contractBase.ContextConfig{
 		State:          sandBox,
-		ResourceLimits: contract.MaxLimits,
+		ResourceLimits: contractBase.MaxLimits,
 		ContractName:   request.GetContractName(),
 	}
 	ctx, err := t.sctx.ContractMgr.NewContext(contextConfig)

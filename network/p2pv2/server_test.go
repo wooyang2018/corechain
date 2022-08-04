@@ -41,7 +41,7 @@ func startNode1(t *testing.T) {
 		return
 	}
 
-	node := NewP2PServer()
+	node := NewP2PServerV2()
 	if err := node.Init(ctx); err != nil {
 		t.Errorf("server init error: %v", err)
 		return
@@ -69,7 +69,7 @@ func startNode2(t *testing.T) {
 	ecfg, _ := mockNet.GetMockEnvConf("node2/conf/env.yaml")
 	ecfg.NetConf = NetConf
 	ctx, _ := nctx.NewNetCtx(ecfg)
-	node := NewP2PServer()
+	node := NewP2PServerV2()
 	if err := node.Init(ctx); err != nil {
 		t.Errorf("server init error: %v", err)
 		return
@@ -89,7 +89,7 @@ func startNode3(t *testing.T) {
 	ecfg, _ := mockNet.GetMockEnvConf("node3/conf/env.yaml")
 	ecfg.NetConf = NetConf
 	ctx, _ := nctx.NewNetCtx(ecfg)
-	node := NewP2PServer()
+	node := NewP2PServerV2()
 	if err := node.Init(ctx); err != nil {
 		t.Errorf("server init error: %v", err)
 		return

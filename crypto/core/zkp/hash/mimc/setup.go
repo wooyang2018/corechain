@@ -2,11 +2,18 @@ package mimc
 
 import (
 	"github.com/consensys/gnark/backend/groth16"
-	"github.com/wooyang2018/corechain/crypto/common/zkp"
+	"github.com/consensys/gnark/frontend"
 )
 
+// ZkpInfo includes CompiledConstraintSystem、ProvingKey、VerifyingKey
+type ZkpInfo struct {
+	R1CS         frontend.CompiledConstraintSystem
+	ProvingKey   groth16.ProvingKey
+	VerifyingKey groth16.VerifyingKey
+}
+
 // Setup generate CompiledConstraintSystem, ProvingKey and VerifyingKey
-func Setup() (*zkp.ZkpInfo, error) {
+func Setup() (*ZkpInfo, error) {
 	mimcCircuit, err := NewCircuit()
 	if err != nil {
 		return nil, err
@@ -17,7 +24,7 @@ func Setup() (*zkp.ZkpInfo, error) {
 		return nil, err
 	}
 
-	zkpInfo := &zkp.ZkpInfo{
+	zkpInfo := &ZkpInfo{
 		R1CS:         mimcCircuit,
 		ProvingKey:   pk,
 		VerifyingKey: vk,

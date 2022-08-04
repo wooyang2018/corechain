@@ -5,7 +5,7 @@ import (
 	"net"
 	"os"
 
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/contract/bridge"
 	"github.com/wooyang2018/corechain/protos"
 	"google.golang.org/grpc"
@@ -31,7 +31,7 @@ func newNativeCreator(cfg *bridge.InstanceCreatorConfig) (bridge.InstanceCreator
 		return nil, err
 	}
 
-	pm, err := newProcessManager(cfg.VMConfig.(*contract.NativeConfig), cfg.Basedir, listenAddr)
+	pm, err := newProcessManager(cfg.VMConfig.(*base.NativeConfig), cfg.Basedir, listenAddr)
 	if err != nil {
 		return nil, err
 	}
@@ -86,8 +86,8 @@ func (i *nativeVmInstance) Exec() error {
 	return err
 }
 
-func (i *nativeVmInstance) ResourceUsed() contract.Limits {
-	return contract.Limits{
+func (i *nativeVmInstance) ResourceUsed() base.Limits {
+	return base.Limits{
 		XFee: 1,
 	}
 }

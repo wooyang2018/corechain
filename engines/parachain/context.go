@@ -5,7 +5,7 @@ import (
 
 	xctx "github.com/wooyang2018/corechain/common/context"
 	"github.com/wooyang2018/corechain/common/timer"
-	"github.com/wooyang2018/corechain/contract"
+	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/engines/base"
 	"github.com/wooyang2018/corechain/logger"
 )
@@ -19,7 +19,7 @@ type ParaChainCtx struct {
 	// 基础上下文
 	xctx.BaseCtx
 	BcName   string
-	Contract contract.Manager
+	Contract contractBase.Manager
 	ChainCtx *base.ChainCtx
 }
 

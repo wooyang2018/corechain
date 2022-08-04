@@ -6,7 +6,7 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/ledger"
 )
 
@@ -24,7 +24,7 @@ func TestXMCachePutGet(t *testing.T) {
 	}
 	store := NewMemXModel()
 
-	mc := NewXModelCache(&contract.SandboxConfig{
+	mc := NewXModelCache(&base.SandboxConfig{
 		XMReader:   store,
 		UTXOReader: nil,
 	})
@@ -70,7 +70,7 @@ func TestXMCacheIterator(t *testing.T) {
 			},
 		})
 	}
-	mc := NewXModelCache(&contract.SandboxConfig{
+	mc := NewXModelCache(&base.SandboxConfig{
 		XMReader:   state,
 		UTXOReader: nil,
 	})

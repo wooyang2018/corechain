@@ -1,4 +1,4 @@
-package contract
+package base
 
 import "github.com/wooyang2018/corechain/protos"
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/wooyang2018/corechain/contract"
+	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/ledger"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/protos"
@@ -18,8 +18,8 @@ type XBridge struct {
 	vmconfigs      map[ContractType]VMConfig
 	creators       map[ContractType]InstanceCreator
 	xmodel         ledger.XReader
-	config         contract.ContractConfig
-	core           contract.ChainCore
+	config         base.ContractConfig
+	core           base.ChainCore
 
 	debugLogger logger.Logger
 
@@ -30,9 +30,9 @@ type XBridgeConfig struct {
 	Basedir   string
 	VMConfigs map[ContractType]VMConfig
 	XModel    ledger.XReader
-	Config    contract.ContractConfig
+	Config    base.ContractConfig
 	LogDriver logger.Logger
-	Core      contract.ChainCore
+	Core      base.ChainCore
 }
 
 // New instances a new XBridge
@@ -92,7 +92,7 @@ func (v *XBridge) getCreator(tp ContractType) InstanceCreator {
 	return v.creators[tp]
 }
 
-func (v *XBridge) NewContext(ctxCfg *contract.ContextConfig) (contract.Context, error) {
+func (v *XBridge) NewContext(ctxCfg *base.ContextConfig) (base.VMContext, error) {
 	var desc *protos.WasmCodeDesc
 	var err error
 
@@ -166,7 +166,7 @@ func (v *XBridge) NewContext(ctxCfg *contract.ContextConfig) (contract.Context, 
 		return nil, err
 	}
 	ctx.Instance = instance
-	return &vmContextImpl{
+	return &VMContextImpl{
 		ctx:      ctx,
 		instance: instance,
 		release:  release,

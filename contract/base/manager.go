@@ -1,4 +1,4 @@
-package contract
+package base
 
 import (
 	"fmt"
@@ -17,7 +17,7 @@ var (
 type NewManagerFunc func(cfg *ManagerConfig) (Manager, error)
 
 type Manager interface {
-	NewContext(cfg *ContextConfig) (Context, error)
+	NewContext(cfg *ContextConfig) (VMContext, error)
 	NewStateSandbox(cfg *SandboxConfig) (StateSandbox, error)
 	GetKernRegistry() KernRegistry
 }

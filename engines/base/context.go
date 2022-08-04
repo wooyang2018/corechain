@@ -6,7 +6,7 @@ import (
 	xconf "github.com/wooyang2018/corechain/common/config"
 	xctx "github.com/wooyang2018/corechain/common/context"
 	"github.com/wooyang2018/corechain/consensus/base"
-	"github.com/wooyang2018/corechain/contract"
+	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/contract/proposal/govern"
 	"github.com/wooyang2018/corechain/contract/proposal/propose"
 	ptimer "github.com/wooyang2018/corechain/contract/proposal/timer"
@@ -45,7 +45,7 @@ type ChainCtx struct {
 	// 状态机
 	State *state.State
 	// 合约
-	Contract contract.Manager
+	Contract contractBase.Manager
 	// 共识
 	Consensus base.PluggableConsensus
 	// 加密
