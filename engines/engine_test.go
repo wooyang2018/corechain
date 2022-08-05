@@ -10,7 +10,6 @@ import (
 	_ "github.com/wooyang2018/corechain/consensus/single"
 	_ "github.com/wooyang2018/corechain/contract/evm"
 	_ "github.com/wooyang2018/corechain/contract/kernel"
-	_ "github.com/wooyang2018/corechain/contract/manager"
 	_ "github.com/wooyang2018/corechain/crypto/client"
 	mock "github.com/wooyang2018/corechain/mock/config"
 	_ "github.com/wooyang2018/corechain/network/p2pv1"

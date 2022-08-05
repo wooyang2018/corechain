@@ -14,7 +14,12 @@ const (
 	ParaChainKernelContract = "$parachain"
 )
 
-//ParaChainCtx 这个可能和ChainCtx重复了
+const (
+	ParaChainStatusStart = 0
+	ParaChainStatusStop  = 1
+)
+
+// ParaChainCtx 这个可能和ChainCtx重复了
 type ParaChainCtx struct {
 	// 基础上下文
 	xctx.BaseCtx

@@ -21,7 +21,6 @@ import (
 	_ "github.com/wooyang2018/corechain/consensus/xpos"
 	_ "github.com/wooyang2018/corechain/contract/evm"
 	_ "github.com/wooyang2018/corechain/contract/kernel"
-	_ "github.com/wooyang2018/corechain/contract/manager"
 	_ "github.com/wooyang2018/corechain/contract/native"
 	_ "github.com/wooyang2018/corechain/crypto/client"
 	"github.com/wooyang2018/corechain/engines"

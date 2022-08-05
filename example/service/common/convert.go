@@ -3,14 +3,13 @@ package common
 import (
 	"fmt"
 
-	protos2 "github.com/wooyang2018/corechain/example/protos"
-	"github.com/wooyang2018/corechain/example/service/protos"
+	epb "github.com/wooyang2018/corechain/example/protos"
 	"github.com/wooyang2018/corechain/protos"
 	"google.golang.org/protobuf/proto"
 )
 
 // 为了完全兼容老版本pb结构，转换交易结构
-func TxToXledger(tx *protos2.Transaction) *protos2.Transaction {
+func TxToXledger(tx *epb.Transaction) *protos.Transaction {
 	if tx == nil {
 		return nil
 	}
@@ -20,7 +19,7 @@ func TxToXledger(tx *protos2.Transaction) *protos2.Transaction {
 		return nil
 	}
 
-	var newTx protos2.Transaction
+	var newTx protos.Transaction
 	err = proto.Unmarshal(prtBuf, &newTx)
 	if err != nil {
 		return nil
@@ -30,7 +29,7 @@ func TxToXledger(tx *protos2.Transaction) *protos2.Transaction {
 }
 
 // 为了完全兼容老版本pb结构，转换交易结构
-func TxToXchain(tx *protos2.Transaction) *protos2.Transaction {
+func TxToXchain(tx *protos.Transaction) *epb.Transaction {
 	if tx == nil {
 		return nil
 	}
@@ -40,7 +39,7 @@ func TxToXchain(tx *protos2.Transaction) *protos2.Transaction {
 		return nil
 	}
 
-	var newTx protos2.Transaction
+	var newTx epb.Transaction
 	err = proto.Unmarshal(prtBuf, &newTx)
 	if err != nil {
 		return nil
@@ -50,7 +49,7 @@ func TxToXchain(tx *protos2.Transaction) *protos2.Transaction {
 }
 
 // 为了完全兼容老版本pb结构，转换区块结构
-func BlockToXledger(block *protos2.InternalBlock) *protos2.InternalBlock {
+func BlockToXledger(block *epb.InternalBlock) *protos.InternalBlock {
 	if block == nil {
 		return nil
 	}
@@ -60,7 +59,7 @@ func BlockToXledger(block *protos2.InternalBlock) *protos2.InternalBlock {
 		return nil
 	}
 
-	var newBlock protos2.InternalBlock
+	var newBlock protos.InternalBlock
 	err = proto.Unmarshal(blkBuf, &newBlock)
 	if err != nil {
 		return nil
@@ -70,7 +69,7 @@ func BlockToXledger(block *protos2.InternalBlock) *protos2.InternalBlock {
 }
 
 // 为了完全兼容老版本pb结构，转换区块结构
-func BlockToXchain(block *protos2.InternalBlock) *protos2.InternalBlock {
+func BlockToXchain(block *protos.InternalBlock) *epb.InternalBlock {
 	if block == nil {
 		return nil
 	}
@@ -80,7 +79,7 @@ func BlockToXchain(block *protos2.InternalBlock) *protos2.InternalBlock {
 		return nil
 	}
 
-	var newBlock protos2.InternalBlock
+	var newBlock epb.InternalBlock
 	err = proto.Unmarshal(blkBuf, &newBlock)
 	if err != nil {
 		return nil
@@ -89,19 +88,19 @@ func BlockToXchain(block *protos2.InternalBlock) *protos2.InternalBlock {
 	return &newBlock
 }
 
-func ConvertInvokeReq(reqs []*protos2.InvokeRequest) ([]*protos2.InvokeRequest, error) {
+func ConvertInvokeReq(reqs []*epb.InvokeRequest) ([]*protos.InvokeRequest, error) {
 	if reqs == nil {
 		return nil, nil
 	}
 
-	newReqs := make([]*protos2.InvokeRequest, 0, len(reqs))
+	newReqs := make([]*protos.InvokeRequest, 0, len(reqs))
 	for _, req := range reqs {
 		buf, err := proto.Marshal(req)
 		if err != nil {
 			return nil, err
 		}
 
-		var tmp protos2.InvokeRequest
+		var tmp protos.InvokeRequest
 		err = proto.Unmarshal(buf, &tmp)
 		if err != nil {
 			return nil, err
@@ -113,7 +112,7 @@ func ConvertInvokeReq(reqs []*protos2.InvokeRequest) ([]*protos2.InvokeRequest, 
 	return newReqs, nil
 }
 
-func ConvertInvokeResp(resp *protos2.InvokeResponse) *protos2.InvokeResponse {
+func ConvertInvokeResp(resp *protos.InvokeResponse) *epb.InvokeResponse {
 	if resp == nil {
 		return nil
 	}
@@ -123,7 +122,7 @@ func ConvertInvokeResp(resp *protos2.InvokeResponse) *protos2.InvokeResponse {
 		return nil
 	}
 
-	var tmp protos2.InvokeResponse
+	var tmp epb.InvokeResponse
 	err = proto.Unmarshal(buf, &tmp)
 	if err != nil {
 		return nil
@@ -132,7 +131,7 @@ func ConvertInvokeResp(resp *protos2.InvokeResponse) *protos2.InvokeResponse {
 	return &tmp
 }
 
-func UtxoToXchain(utxo *protos2.Utxo) *protos2.Utxo {
+func UtxoToXchain(utxo *protos.Utxo) *epb.Utxo {
 	if utxo == nil {
 		return nil
 	}
@@ -142,7 +141,7 @@ func UtxoToXchain(utxo *protos2.Utxo) *protos2.Utxo {
 		return nil
 	}
 
-	var tmp protos2.Utxo
+	var tmp epb.Utxo
 	err = proto.Unmarshal(buf, &tmp)
 	if err != nil {
 		return nil
@@ -151,7 +150,7 @@ func UtxoToXchain(utxo *protos2.Utxo) *protos2.Utxo {
 	return &tmp
 }
 
-func UtxoToXledger(utxo *protos2.Utxo) *protos2.Utxo {
+func UtxoToXledger(utxo *epb.Utxo) *protos.Utxo {
 	if utxo == nil {
 		return nil
 	}
@@ -161,7 +160,7 @@ func UtxoToXledger(utxo *protos2.Utxo) *protos2.Utxo {
 		return nil
 	}
 
-	var tmp protos2.Utxo
+	var tmp protos.Utxo
 	err = proto.Unmarshal(buf, &tmp)
 	if err != nil {
 		return nil
@@ -170,12 +169,12 @@ func UtxoToXledger(utxo *protos2.Utxo) *protos2.Utxo {
 	return &tmp
 }
 
-func UtxoListToXchain(utxoList []*protos2.Utxo) ([]*protos2.Utxo, error) {
+func UtxoListToXchain(utxoList []*protos.Utxo) ([]*epb.Utxo, error) {
 	if utxoList == nil {
 		return nil, nil
 	}
 
-	tmpList := make([]*protos2.Utxo, 0, len(utxoList))
+	tmpList := make([]*epb.Utxo, 0, len(utxoList))
 	for _, utxo := range utxoList {
 		tmp := UtxoToXchain(utxo)
 		if tmp == nil {
@@ -187,12 +186,12 @@ func UtxoListToXchain(utxoList []*protos2.Utxo) ([]*protos2.Utxo, error) {
 	return tmpList, nil
 }
 
-func UtxoRecordToXchain(record *protos2.UtxoRecord) *protos2.UtxoRecord {
+func UtxoRecordToXchain(record *protos.UtxoRecord) *epb.UtxoRecord {
 	if record == nil {
 		return nil
 	}
 
-	newRecord := &protos2.UtxoRecord{
+	newRecord := &epb.UtxoRecord{
 		UtxoCount:  record.GetUtxoCount(),
 		UtxoAmount: record.GetUtxoAmount(),
 	}
@@ -200,9 +199,9 @@ func UtxoRecordToXchain(record *protos2.UtxoRecord) *protos2.UtxoRecord {
 		return newRecord
 	}
 
-	newRecord.Item = make([]*protos2.UtxoKey, 0, len(record.GetItem()))
+	newRecord.Item = make([]*epb.UtxoKey, 0, len(record.GetItem()))
 	for _, item := range record.GetItem() {
-		tmp := &protos2.UtxoKey{
+		tmp := &epb.UtxoKey{
 			RefTxid: item.GetRefTxid(),
 			Offset:  item.GetOffset(),
 			Amount:  item.GetAmount(),
@@ -213,7 +212,7 @@ func UtxoRecordToXchain(record *protos2.UtxoRecord) *protos2.UtxoRecord {
 	return newRecord
 }
 
-func AclToXchain(acl *protos2.Acl) *protos2.Acl {
+func AclToXchain(acl *protos.Acl) *epb.Acl {
 	if acl == nil {
 		return nil
 	}
@@ -223,7 +222,7 @@ func AclToXchain(acl *protos2.Acl) *protos2.Acl {
 		return nil
 	}
 
-	var tmp protos2.Acl
+	var tmp epb.Acl
 	err = proto.Unmarshal(buf, &tmp)
 	if err != nil {
 		return nil
@@ -232,7 +231,7 @@ func AclToXchain(acl *protos2.Acl) *protos2.Acl {
 	return &tmp
 }
 
-func ContractStatusToXchain(contractStatus *protos2.ContractStatus) *protos2.ContractStatus {
+func ContractStatusToXchain(contractStatus *protos.ContractStatus) *epb.ContractStatus {
 	if contractStatus == nil {
 		return nil
 	}
@@ -242,7 +241,7 @@ func ContractStatusToXchain(contractStatus *protos2.ContractStatus) *protos2.Con
 		return nil
 	}
 
-	var tmp protos2.ContractStatus
+	var tmp epb.ContractStatus
 	err = proto.Unmarshal(buf, &tmp)
 	if err != nil {
 		return nil
@@ -251,12 +250,12 @@ func ContractStatusToXchain(contractStatus *protos2.ContractStatus) *protos2.Con
 	return &tmp
 }
 
-func ContractStatusListToXchain(contractStatusList []*protos2.ContractStatus) ([]*protos2.ContractStatus, error) {
+func ContractStatusListToXchain(contractStatusList []*protos.ContractStatus) ([]*epb.ContractStatus, error) {
 	if contractStatusList == nil {
 		return nil, nil
 	}
 
-	tmpList := make([]*protos2.ContractStatus, 0, len(contractStatusList))
+	tmpList := make([]*epb.ContractStatus, 0, len(contractStatusList))
 	for _, cs := range contractStatusList {
 		tmp := ContractStatusToXchain(cs)
 		if tmp == nil {
@@ -276,7 +275,7 @@ func PeerInfoToStrings(info protos.PeerInfo) []string {
 	return peerUrls
 }
 
-func BalanceDetailToXchain(detail *protos.BalanceDetailInfo) *protos2.TokenFrozenDetail {
+func BalanceDetailToXchain(detail *protos.BalanceDetailInfo) *epb.TokenFrozenDetail {
 	if detail == nil {
 		return nil
 	}
@@ -286,7 +285,7 @@ func BalanceDetailToXchain(detail *protos.BalanceDetailInfo) *protos2.TokenFroze
 		return nil
 	}
 
-	var tmp protos2.TokenFrozenDetail
+	var tmp epb.TokenFrozenDetail
 	err = proto.Unmarshal(buf, &tmp)
 	if err != nil {
 		return nil
@@ -295,12 +294,12 @@ func BalanceDetailToXchain(detail *protos.BalanceDetailInfo) *protos2.TokenFroze
 	return &tmp
 }
 
-func BalanceDetailsToXchain(details []*protos.BalanceDetailInfo) ([]*protos2.TokenFrozenDetail, error) {
+func BalanceDetailsToXchain(details []*protos.BalanceDetailInfo) ([]*epb.TokenFrozenDetail, error) {
 	if details == nil {
 		return nil, nil
 	}
 
-	tmpList := make([]*protos2.TokenFrozenDetail, 0, len(details))
+	tmpList := make([]*epb.TokenFrozenDetail, 0, len(details))
 	for _, detail := range details {
 		tmp := BalanceDetailToXchain(detail)
 		if tmp == nil {
@@ -312,7 +311,7 @@ func BalanceDetailsToXchain(details []*protos.BalanceDetailInfo) ([]*protos2.Tok
 	return tmpList, nil
 }
 
-func LedgerMetaToXchain(meta *protos2.LedgerMeta) *protos2.LedgerMeta {
+func LedgerMetaToXchain(meta *protos.LedgerMeta) *epb.LedgerMeta {
 	if meta == nil {
 		return nil
 	}
@@ -322,7 +321,7 @@ func LedgerMetaToXchain(meta *protos2.LedgerMeta) *protos2.LedgerMeta {
 		return nil
 	}
 
-	var tmp protos2.LedgerMeta
+	var tmp epb.LedgerMeta
 	err = proto.Unmarshal(buf, &tmp)
 	if err != nil {
 		return nil
@@ -331,7 +330,7 @@ func LedgerMetaToXchain(meta *protos2.LedgerMeta) *protos2.LedgerMeta {
 	return &tmp
 }
 
-func UtxoMetaToXchain(meta *protos2.UtxoMeta) *protos2.UtxoMeta {
+func UtxoMetaToXchain(meta *protos.UtxoMeta) *epb.UtxoMeta {
 	if meta == nil {
 		return nil
 	}
@@ -341,7 +340,7 @@ func UtxoMetaToXchain(meta *protos2.UtxoMeta) *protos2.UtxoMeta {
 		return nil
 	}
 
-	var tmp protos2.UtxoMeta
+	var tmp epb.UtxoMeta
 	err = proto.Unmarshal(buf, &tmp)
 	if err != nil {
 		return nil
@@ -350,11 +349,11 @@ func UtxoMetaToXchain(meta *protos2.UtxoMeta) *protos2.UtxoMeta {
 	return &tmp
 }
 
-func ConvertEventSubType(typ protos2.SubscribeType) protos2.SubscribeType {
+func ConvertEventSubType(typ epb.SubscribeType) protos.SubscribeType {
 	switch typ {
-	case protos2.SubscribeType_BLOCK:
-		return protos2.SubscribeType_BLOCK
+	case epb.SubscribeType_BLOCK:
+		return protos.SubscribeType_BLOCK
 	}
 
-	return protos2.SubscribeType_BLOCK
+	return protos.SubscribeType_BLOCK
 }

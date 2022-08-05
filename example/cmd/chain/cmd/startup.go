@@ -19,13 +19,12 @@ import (
 	_ "github.com/wooyang2018/corechain/consensus/xpos"
 	_ "github.com/wooyang2018/corechain/contract/evm"
 	_ "github.com/wooyang2018/corechain/contract/kernel"
-	_ "github.com/wooyang2018/corechain/contract/manager"
+	_ "github.com/wooyang2018/corechain/contract/native"
 	// import内核核心组件驱动
 	_ "github.com/wooyang2018/corechain/crypto/client"
-	_ "github.com/wooyang2018/corechain/storage/leveldb"
-	//_ "github.com/wooyang2018/corechain/contract/native"
 	_ "github.com/wooyang2018/corechain/network/p2pv1"
 	_ "github.com/wooyang2018/corechain/network/p2pv2"
+	_ "github.com/wooyang2018/corechain/storage/leveldb"
 )
 
 type StartupCmd struct {

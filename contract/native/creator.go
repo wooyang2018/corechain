@@ -2,6 +2,7 @@ package native
 
 import (
 	"context"
+	"fmt"
 	"net"
 	"os"
 
@@ -48,9 +49,14 @@ func (n *nativeCreator) startRpcServer(service *bridge.SyscallService) (string, 
 	n.listener = listener
 	rpcServer := grpc.NewServer()
 	protos.RegisterSyscallServer(rpcServer, service)
+	port := listener.Addr().(*net.TCPAddr).Port
 	go rpcServer.Serve(listener)
+	chainAddr := chainAddrHost
+	if n.config.VMConfig.(*base.NativeConfig).Docker.Enable {
+		chainAddr = chainAddrDocker
+	}
+	addr := fmt.Sprintf("tcp://%s:%d", chainAddr, port)
 
-	addr := "tcp://" + listener.Addr().String()
 	return addr, nil
 }
 
