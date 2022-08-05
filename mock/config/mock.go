@@ -45,7 +45,8 @@ func GetTempDirPath() string {
 }
 
 func GetAbsTempDirPath() string {
-	return filepath.Join(dir, GetTempDirPath())
+	dataDir := filepath.Join(dir, "data")
+	return filepath.Join(dataDir, GetTempDirPath())
 }
 
 func InitFakeLogger() {

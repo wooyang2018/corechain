@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/wooyang2018/corechain/contract/base"
+	mock "github.com/wooyang2018/corechain/mock/config"
 	"github.com/wooyang2018/corechain/protos"
 )
 
@@ -19,13 +20,13 @@ func TestCommandNotFound(t *testing.T) {
 			StopTimeout: 5,
 			Enable:      true,
 			Docker: base.NativeDockerConfig{
-				Enable:    true,
+				Enable:    false,
 				ImageName: "ubuntu:18.04:",
 				Cpus:      1,
 				Memory:    "1G",
 			},
-		}, "xchain-test", "/tmp", "", &protos.WasmCodeDesc{
-			Runtime: "java",
+		}, "xchain-test", mock.GetAbsTempDirPath(), "", &protos.WasmCodeDesc{
+			Runtime: "go",
 			Digest:  []byte("nativetest"),
 		})
 

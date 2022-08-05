@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"runtime"
 	"sync"
 
 	"github.com/wooyang2018/corechain/contract/base"
@@ -111,5 +112,9 @@ func nativeCodeFileName(desc *protos.WasmCodeDesc) string {
 		suffix = ".jar"
 	}
 	hash := hex.EncodeToString(desc.GetDigest()[0:3])
-	return "nativecode-" + hash + suffix
+	name := "nativecode-" + hash + suffix
+	if runtime.GOOS == "windows" {
+		name = name + ".exe"
+	}
+	return name
 }

@@ -35,6 +35,6 @@ coverage.txt
 
 mock/config/data/chains
 mock/config/data/logger
-mock/config/temp
+mock/config/data/temp
 example/data/chains
 example/data/logger

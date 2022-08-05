@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"testing"
 
 	"github.com/wooyang2018/corechain/contract/base"
@@ -61,8 +62,11 @@ func TestNative(t *testing.T) {
 
 	runtimes := []string{RUNTIME_HOST, RUNTIME_DOCKER}
 
-	for _, runtime := range runtimes {
-		if runtime == RUNTIME_DOCKER {
+	for _, r := range runtimes {
+		if r == RUNTIME_DOCKER {
+			if runtime.GOOS == "windows" {
+				continue
+			}
 			_, err := exec.Command("docker", "info").CombinedOutput()
 			if err != nil {
 				t.Skip("docker not available")
@@ -79,11 +83,11 @@ func TestNative(t *testing.T) {
 		} else {
 			contractConfig.Native.Docker.Enable = false
 		}
-		t.Run("TestNativeDeploy_"+runtime, func(t *testing.T) {
+		t.Run("TestNativeDeploy_"+r, func(t *testing.T) {
 			th := mock.NewTestHelper(contractConfig)
 			defer th.Close()
 
-			bin, err := compile(th, runtime)
+			bin, err := compile(th, r)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -96,11 +100,11 @@ func TestNative(t *testing.T) {
 			}
 			t.Logf("%#v", resp)
 		})
-		t.Run("TestNativeInvoke_"+runtime, func(t *testing.T) {
+		t.Run("TestNativeInvoke_"+r, func(t *testing.T) {
 			th := mock.NewTestHelper(contractConfig)
 			defer th.Close()
 
-			bin, err := compile(th, runtime)
+			bin, err := compile(th, r)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -121,11 +125,11 @@ func TestNative(t *testing.T) {
 			t.Logf("body:%s", resp.Body)
 		})
 
-		t.Run("TestNativeUpgrade_"+runtime, func(t *testing.T) {
+		t.Run("TestNativeUpgrade_"+r, func(t *testing.T) {
 			th := mock.NewTestHelper(contractConfig)
 			defer th.Close()
 
-			bin, err := compile(th, runtime)
+			bin, err := compile(th, r)
 			if err != nil {
 				t.Fatal(err)
 			}
