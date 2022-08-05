@@ -25,10 +25,7 @@ const (
 
 // Process is the container of running contract
 type Process interface {
-	// Start 启动Native code进程
 	Start() error
-
-	// Stop 停止进程，如果在超时时间内进程没有退出则强制杀死进程
 	Stop(timeout time.Duration) error
 }
 
@@ -89,18 +86,6 @@ func (d *DockerProcess) Start() error {
 	for i := range d.mounts {
 		binds[i] = d.mounts[i] + ":" + d.mounts[i]
 	}
-
-	// portBinds := make(map[docker.Port][]docker.PortBinding)
-	// for _, port := range d.ports {
-	// 	key := docker.Port(port + "/tcp")
-	// 	value := []docker.PortBinding{
-	// 		{
-	// 			HostIP:   "127.0.0.1",
-	// 			HostPort: port,
-	// 		},
-	// 	}
-	// 	portBinds[key] = value
-	// }
 
 	opts := docker.CreateContainerOptions{
 		Config: &docker.Config{

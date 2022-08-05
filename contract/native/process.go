@@ -12,6 +12,7 @@ import (
 
 	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/logger"
+	mock "github.com/wooyang2018/corechain/mock/config"
 	"github.com/wooyang2018/corechain/protos"
 	"google.golang.org/grpc"
 )
@@ -37,7 +38,8 @@ type contractProcess struct {
 }
 
 func newContractProcess(cfg *base.NativeConfig, name, basedir, chainAddr string, desc *protos.WasmCodeDesc) (*contractProcess, error) {
-	log, _ := logger.NewLogger("", "contract")
+	mock.InitFakeLogger()
+	log, _ := logger.NewLogger("", "contract_test")
 	process := &contractProcess{
 		cfg:           cfg,
 		name:          name,

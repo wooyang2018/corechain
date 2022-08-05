@@ -58,7 +58,6 @@ func (c *contractManager) DeployContract(kctx base.KContext) (*base.Response, ba
 	}
 	if err := state.Put("contract", base.ContractCodeKey(contractName), code); err != nil {
 		return nil, base.Limits{}, err
-
 	}
 
 	if desc.ContractType == string(TypeEvm) {

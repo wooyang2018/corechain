@@ -43,6 +43,7 @@ func TestCommandNotFound(t *testing.T) {
 		t.Log(err)
 	})
 
+	// docker pull openjdk:8u292-slim-buster
 	t.Run("testDockerOpenJDK", func(t *testing.T) {
 		if resp, err := exec.Command("docker", "info").CombinedOutput(); err != nil {
 			t.Skip(string(resp))

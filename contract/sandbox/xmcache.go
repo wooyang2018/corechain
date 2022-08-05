@@ -159,10 +159,16 @@ func (xc *XMCache) Select(bucket string, startKey []byte, endKey []byte) (base.I
 
 // newXModelCacheIterator new an instance of XModel Cache iterator
 func (mc *XMCache) newXModelCacheIterator(bucket string, startKey []byte, endKey []byte) (base.Iterator, error) {
-	iter, _ := mc.outputsCache.Select(bucket, startKey, endKey)
+	iter, err := mc.outputsCache.Select(bucket, startKey, endKey)
+	if err != nil {
+		return nil, err
+	}
 	outputIter := iter
 
-	iter, _ = mc.inputsCache.Select(bucket, startKey, endKey)
+	iter, err = mc.inputsCache.Select(bucket, startKey, endKey)
+	if err != nil {
+		return nil, err
+	}
 	inputIter := newStripDelIterator(iter)
 
 	backendIter, err := mc.model.Select(bucket, startKey, endKey)
@@ -219,7 +225,7 @@ func (xc *XMCache) Transfer(from, to string, amount *big.Int) error {
 	return xc.utxoSandbox.Transfer(from, to, amount)
 }
 
-//UTXORWSet returns the inputs and outputs of utxo
+// UTXORWSet returns the inputs and outputs of utxo
 func (xc *XMCache) UTXORWSet() *base.UTXORWSet {
 	return xc.utxoSandbox.GetUTXORWSets()
 }
