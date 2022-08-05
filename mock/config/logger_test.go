@@ -1,4 +1,4 @@
-package logger
+package config
 
 import (
 	"fmt"
@@ -9,22 +9,22 @@ import (
 	"testing"
 
 	"github.com/wooyang2018/corechain/common/utils"
-	mock "github.com/wooyang2018/corechain/mock/config"
+	"github.com/wooyang2018/corechain/logger"
 )
 
 func TestInfo(t *testing.T) {
 	// 初始化日志
-	confFile := mock.GetLogConfFilePath()
+	confFile := GetLogConfFilePath()
 	logDir := filepath.Join(utils.GetCurFileDir(), "logger")
 	fmt.Printf("conf:%s dir:%s\n", confFile, logDir)
-	InitMLog(confFile, logDir)
+	logger.InitMLog(confFile, logDir)
 
 	wg := &sync.WaitGroup{}
 	for i := 0; i < 3; i++ {
 		wg.Add(1)
 		go func(num int) {
 			defer wg.Done()
-			log, err := NewLogger("", "test"+strconv.Itoa(num))
+			log, err := logger.NewLogger("", "test"+strconv.Itoa(num))
 			if err != nil {
 				t.Errorf("new logger fail.err:%v", err)
 			}

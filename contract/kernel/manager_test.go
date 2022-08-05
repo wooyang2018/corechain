@@ -6,15 +6,21 @@ import (
 	"github.com/wooyang2018/corechain/contract/base"
 	mock2 "github.com/wooyang2018/corechain/contract/mock"
 	"github.com/wooyang2018/corechain/contract/sandbox"
+	"github.com/wooyang2018/corechain/logger"
 )
 
-var contractConfig = &base.ContractConfig{
-	Xkernel: base.XkernelConfig{
-		Enable: true,
-		Driver: "default",
-	},
-	LogDriver: mock2.NewMockLogger(),
+func GetMockContractConfig() *base.ContractConfig {
+	l, _ := logger.NewLogger("", "kernel_test")
+	return &base.ContractConfig{
+		Xkernel: base.XkernelConfig{
+			Enable: true,
+			Driver: "default",
+		},
+		LogDriver: l,
+	}
 }
+
+var contractConfig = GetMockContractConfig()
 
 func TestCreate(t *testing.T) {
 	th := mock2.NewTestHelper(contractConfig)

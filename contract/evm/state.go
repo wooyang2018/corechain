@@ -9,7 +9,6 @@ import (
 	"github.com/hyperledger/burrow/crypto"
 	"github.com/hyperledger/burrow/permission"
 	"github.com/wooyang2018/corechain/contract/bridge"
-	"github.com/wooyang2018/corechain/state"
 )
 
 type stateManager struct {
@@ -38,11 +37,7 @@ func (s *stateManager) GetAccount(address crypto.Address) (*acm.Account, error) 
 		evmCode = v
 	}
 
-	balance, err := s.ctx.Core.(*state.State).GetBalance(addr)
-	if err != nil {
-		return nil, nil
-	}
-
+	var balance *big.Int
 	return &acm.Account{
 		Address:     address,
 		Balance:     balance.Uint64(),
@@ -125,23 +120,12 @@ func newBlockStateManager(ctx *bridge.Context) *blockStateManager {
 
 // LastBlockHeight
 func (s *blockStateManager) LastBlockHeight() uint64 {
-	blockId := s.ctx.Core.(*state.State).GetLatestBlockid()
-	block, err := s.ctx.Core.QueryBlock(blockId)
-	if err != nil {
-		return 0
-	}
-	return uint64(block.GetHeight())
+	return 0
 }
 
 // LastBlockTime
 func (s *blockStateManager) LastBlockTime() time.Time {
-	blockId := s.ctx.Core.(*state.State).GetLatestBlockid()
-	block, err := s.ctx.Core.QueryBlock(blockId)
-	if err != nil {
-		return time.Time{}
-	}
-	timestamp := block.GetTimestamp()
-	return time.Unix(timestamp/1e9, timestamp%1e9)
+	return time.Time{}
 }
 
 // LastBlockHeight
