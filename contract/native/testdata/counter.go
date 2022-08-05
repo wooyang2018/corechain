@@ -3,8 +3,8 @@ package main
 import (
 	"strconv"
 
-	"github.com/wooyang2018/corechain-sdk/code"
-	"github.com/wooyang2018/corechain-sdk/driver"
+	"github.com/xuperchain/contract-sdk-go/code"
+	"github.com/xuperchain/contract-sdk-go/driver"
 )
 
 type counter struct{}
