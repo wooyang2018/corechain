@@ -21,7 +21,7 @@ import (
 	"github.com/wooyang2018/corechain/permission/base"
 	pctx "github.com/wooyang2018/corechain/permission/context"
 	"github.com/wooyang2018/corechain/state"
-	sctx "github.com/wooyang2018/corechain/state/context"
+	sctx "github.com/wooyang2018/corechain/state/base"
 )
 
 // 区块链依赖代理

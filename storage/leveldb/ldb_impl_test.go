@@ -4,6 +4,7 @@ import (
 	"math/rand"
 	"testing"
 
+	mock "github.com/wooyang2018/corechain/mock/config"
 	"github.com/wooyang2018/corechain/storage"
 )
 
@@ -33,9 +34,9 @@ func RandBytes(n int) []byte {
 
 func makeDB() (storage.Database, error) {
 	kvParam := &KVParameter{
-		DBPath:                "./data",
-		KVEngineType:          "leveldb",
-		StorageType:           "single",
+		DBPath:                mock.GetAbsTempDirPath(),
+		KVEngineType:          KVEngineType,
+		StorageType:           StorageTypeSingle,
 		MemCacheSize:          128,
 		FileHandlersCacheSize: 1024,
 	}

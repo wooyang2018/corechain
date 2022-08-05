@@ -11,7 +11,7 @@ import (
 	"github.com/wooyang2018/corechain/common/utils"
 	"github.com/wooyang2018/corechain/ledger"
 	"github.com/wooyang2018/corechain/ledger/def"
-	"github.com/wooyang2018/corechain/state/context"
+	"github.com/wooyang2018/corechain/state/base"
 	"github.com/wooyang2018/corechain/state/txhash"
 	"github.com/wooyang2018/corechain/storage"
 	"google.golang.org/protobuf/proto"
@@ -57,7 +57,7 @@ type RootJSON struct {
 	} `json:"predistribution"`
 }
 
-func NewTxHandler(sctx *context.StateCtx, stateDB storage.Database) (*TxHandler, error) {
+func NewTxHandler(sctx *base.StateCtx, stateDB storage.Database) (*TxHandler, error) {
 	tx := &TxHandler{
 		log:              sctx.XLog,
 		ldb:              stateDB,

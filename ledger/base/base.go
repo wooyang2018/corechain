@@ -15,7 +15,7 @@ import (
 	"github.com/wooyang2018/corechain/ledger/tx"
 	"github.com/wooyang2018/corechain/protos"
 	"github.com/wooyang2018/corechain/state"
-	sctx "github.com/wooyang2018/corechain/state/context"
+	sctx "github.com/wooyang2018/corechain/state/base"
 )
 
 var (

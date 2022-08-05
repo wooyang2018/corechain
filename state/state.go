@@ -24,8 +24,7 @@ import (
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/permission/base"
 	"github.com/wooyang2018/corechain/protos"
-	sctx "github.com/wooyang2018/corechain/state/context"
-	"github.com/wooyang2018/corechain/state/meta"
+	stateBase "github.com/wooyang2018/corechain/state/base"
 	"github.com/wooyang2018/corechain/state/model"
 	"github.com/wooyang2018/corechain/state/utxo"
 	"github.com/wooyang2018/corechain/storage"
@@ -67,21 +66,21 @@ const (
 )
 
 type State struct {
-	sctx           *sctx.StateCtx // 状态机运行环境上下文
+	sctx           *stateBase.StateCtx // 状态机运行环境上下文
 	log            logger.Logger
-	utxo           *utxo.UtxoVM   //utxo表
-	xmodel         *model.XModel  //xmodel数据表和历史表
-	meta           *meta.Meta     //meta表
-	tx             *ltx.TxHandler //未确认交易表
+	utxo           *utxo.UtxoVM    //utxo表
+	xmodel         *model.XModel   //xmodel数据表和历史表
+	meta           *stateBase.Meta //meta表
+	tx             *ltx.TxHandler  //未确认交易表
 	ldb            storage.Database
 	latestBlockid  []byte
 	heightNotifier *BlockHeightNotifier // 最新区块高度通知器
 }
 
 //NewState 新建状态机
-func NewState(sctx *sctx.StateCtx) (*State, error) {
+func NewState(sctx *stateBase.StateCtx) (*State, error) {
 	if sctx == nil {
-		return nil, fmt.Errorf("create state failed because sctx set error")
+		return nil, fmt.Errorf("create state failed because stateBase set error")
 	}
 
 	obj := &State{
@@ -111,7 +110,7 @@ func NewState(sctx *sctx.StateCtx) (*State, error) {
 		return nil, fmt.Errorf("create state failed because create xmodel error:%s", err)
 	}
 
-	obj.meta, err = meta.NewMeta(sctx, obj.ldb) //获取DataBase之上的Meta实例
+	obj.meta, err = stateBase.NewMeta(sctx, obj.ldb) //获取DataBase之上的Meta实例
 	if err != nil {
 		return nil, fmt.Errorf("create state failed because create meta error:%s", err)
 	}
@@ -1438,7 +1437,7 @@ func (t *State) queryContractBannedStatus(contractName string) (bool, error) {
 	}
 	ctx, err := t.sctx.ContractMgr.NewContext(contextConfig)
 	if err != nil {
-		t.log.Warn("queryContractBannedStatus new sctx error", "error", err)
+		t.log.Warn("queryContractBannedStatus new stateBase error", "error", err)
 		return false, err
 	}
 	_, err = ctx.Invoke(request.GetMethodName(), request.GetArgs())

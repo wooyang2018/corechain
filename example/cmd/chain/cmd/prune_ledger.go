@@ -19,7 +19,7 @@ import (
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/protos"
 	"github.com/wooyang2018/corechain/state"
-	sctx "github.com/wooyang2018/corechain/state/context"
+	sctx "github.com/wooyang2018/corechain/state/base"
 	_ "github.com/wooyang2018/corechain/storage/leveldb"
 	"google.golang.org/protobuf/proto"
 )

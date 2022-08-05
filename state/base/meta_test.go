@@ -1,10 +1,11 @@
-package meta
+package base
 
 import (
-	"github.com/wooyang2018/corechain/storage/leveldb"
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/wooyang2018/corechain/storage/leveldb"
 
 	cryptoClient "github.com/wooyang2018/corechain/crypto/client"
 	"github.com/wooyang2018/corechain/ledger"
@@ -14,7 +15,6 @@ import (
 	"github.com/wooyang2018/corechain/logger"
 	mock "github.com/wooyang2018/corechain/mock/config"
 	"github.com/wooyang2018/corechain/protos"
-	"github.com/wooyang2018/corechain/state/context"
 	_ "github.com/wooyang2018/corechain/storage/leveldb"
 )
 
@@ -116,7 +116,7 @@ func TestMetaGetFunc(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	sctx, err := context.NewStateCtx(econf, "xuper", mledger, crypt)
+	sctx, err := NewStateCtx(econf, "xuper", mledger, crypt)
 	if err != nil {
 		t.Fatal(err)
 	}

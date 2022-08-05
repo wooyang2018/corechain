@@ -11,7 +11,7 @@ import (
 	"github.com/wooyang2018/corechain/ledger/def"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/protos"
-	"github.com/wooyang2018/corechain/state/context"
+	"github.com/wooyang2018/corechain/state/base"
 	"github.com/wooyang2018/corechain/storage"
 )
 
@@ -43,7 +43,7 @@ type XModel struct {
 }
 
 // NewXuperModel new an instance of XModel
-func NewXModel(sctx *context.StateCtx, stateDB storage.Database) (*XModel, error) {
+func NewXModel(sctx *base.StateCtx, stateDB storage.Database) (*XModel, error) {
 	return &XModel{
 		ledger:          sctx.Ledger,
 		stateDB:         stateDB,

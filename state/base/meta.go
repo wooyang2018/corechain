@@ -1,4 +1,4 @@
-package meta
+package base
 
 import (
 	"errors"
@@ -9,7 +9,6 @@ import (
 	"github.com/wooyang2018/corechain/ledger/def"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/protos"
-	"github.com/wooyang2018/corechain/state/context"
 	"github.com/wooyang2018/corechain/storage"
 	"google.golang.org/protobuf/proto"
 )
@@ -20,7 +19,7 @@ type Meta struct {
 	Meta      *protos.UtxoMeta // utxo meta
 	MetaTmp   *protos.UtxoMeta // tmp utxo meta
 	MutexMeta *sync.Mutex      // access control for meta
-	MetaTable storage.Database // 元数据表，会持久化保存latestBlockid
+	MetaTable storage.Database // 元数据表，持久化保存latestBlockid
 }
 
 var (
@@ -36,7 +35,7 @@ type reservedArgs struct {
 	ContractNames string
 }
 
-func NewMeta(sctx *context.StateCtx, stateDB storage.Database) (*Meta, error) {
+func NewMeta(sctx *StateCtx, stateDB storage.Database) (*Meta, error) {
 	obj := &Meta{
 		log:       sctx.XLog,
 		Ledger:    sctx.Ledger,
