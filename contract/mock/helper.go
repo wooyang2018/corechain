@@ -10,6 +10,7 @@ import (
 	"github.com/wooyang2018/corechain/contract/bridge"
 	"github.com/wooyang2018/corechain/contract/sandbox"
 	"github.com/wooyang2018/corechain/ledger"
+	mockConf "github.com/wooyang2018/corechain/mock/config"
 	"github.com/wooyang2018/corechain/permission/base"
 	"github.com/wooyang2018/corechain/protos"
 	"google.golang.org/protobuf/proto"
@@ -30,11 +31,7 @@ type TestHelper struct {
 }
 
 func NewTestHelper(cfg *contractBase.ContractConfig) *TestHelper {
-	basedir, err := os.MkdirTemp("", "contract-test")
-	if err != nil {
-		panic(err)
-	}
-
+	basedir := mockConf.GetAbsTempDirPath()
 	state := sandbox.NewMemXModel()
 	core := new(fakeChainCore)
 	m, err := contractBase.CreateManager("default", &contractBase.ManagerConfig{

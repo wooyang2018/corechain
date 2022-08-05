@@ -17,7 +17,7 @@ var contractConfig = mock.GetMockContractConfig()
 func compile(th *mock.TestHelper) ([]byte, error) {
 	target := filepath.Join(th.Basedir(), "counter.bin")
 	cmd := exec.Command("go", "build", "-o", target)
-	cmd.Dir = "testdata"
+	cmd.Dir = "counter"
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return nil, fmt.Errorf("%s:%s", err, out)
