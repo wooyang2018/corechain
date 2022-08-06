@@ -25,7 +25,7 @@ import (
 	"github.com/wooyang2018/corechain/permission/base"
 	"github.com/wooyang2018/corechain/protos"
 	stateBase "github.com/wooyang2018/corechain/state/base"
-	meta2 "github.com/wooyang2018/corechain/state/meta"
+	"github.com/wooyang2018/corechain/state/meta"
 	"github.com/wooyang2018/corechain/state/model"
 	"github.com/wooyang2018/corechain/state/utxo"
 	"github.com/wooyang2018/corechain/storage"
@@ -67,15 +67,15 @@ const (
 )
 
 type State struct {
-	sctx           *stateBase.StateCtx // 状态机运行环境上下文
-	log            logger.Logger
-	utxo           *utxo.UtxoVM   //utxo表
-	xmodel         *model.XModel  //xmodel数据表和历史表
-	meta           *meta2.Meta    //meta表
-	tx             *ltx.TxHandler //未确认交易表
-	ldb            storage.Database
-	latestBlockid  []byte
-	heightNotifier *BlockHeightNotifier // 最新区块高度通知器
+	sctx          *stateBase.StateCtx // 状态机运行环境上下文
+	log           logger.Logger
+	utxo          *utxo.UtxoVM   //utxo表
+	xmodel        *model.XModel  //xmodel数据表和历史表
+	meta          *meta.Meta     //meta表
+	tx            *ltx.TxHandler //未确认交易表
+	ldb           storage.Database
+	latestBlockid []byte
+	notifier      *BlockHeightNotifier // 最新区块高度通知器
 }
 
 //NewState 新建状态机
@@ -111,7 +111,7 @@ func NewState(sctx *stateBase.StateCtx) (*State, error) {
 		return nil, fmt.Errorf("create state failed because create xmodel error:%s", err)
 	}
 
-	obj.meta, err = meta2.NewMeta(sctx, obj.ldb) //获取DataBase之上的Meta实例
+	obj.meta, err = meta.NewMeta(sctx, obj.ldb) //获取DataBase之上的Meta实例
 	if err != nil {
 		return nil, fmt.Errorf("create state failed because create meta error:%s", err)
 	}
@@ -127,7 +127,7 @@ func NewState(sctx *stateBase.StateCtx) (*State, error) {
 		return nil, fmt.Errorf("create state failed because create tx error:%s", err)
 	}
 
-	latestBlockid, findErr := obj.meta.MetaTable.Get([]byte(LatestBlockKey)) //获取最新的区块ID
+	latestBlockid, findErr := obj.meta.Table.Get([]byte(LatestBlockKey)) //获取最新的区块ID
 	if findErr == nil {
 		obj.latestBlockid = latestBlockid
 	} else {
@@ -141,7 +141,7 @@ func NewState(sctx *stateBase.StateCtx) (*State, error) {
 		return nil, loadErr
 	}
 
-	obj.heightNotifier = NewBlockHeightNotifier()
+	obj.notifier = NewBlockHeightNotifier()
 
 	return obj, nil
 }
@@ -1116,7 +1116,7 @@ func (t *State) updateLatestBlockid(newBlockid []byte, batch storage.Batch, reas
 		return writeErr
 	}
 	t.latestBlockid = newBlockid
-	t.heightNotifier.UpdateHeight(blk.GetHeight())
+	t.notifier.UpdateHeight(blk.GetHeight())
 	return nil
 }
 
@@ -1453,5 +1453,5 @@ func (t *State) queryContractBannedStatus(contractName string) (bool, error) {
 
 // WaitBlockHeight wait util the height of current block >= target
 func (t *State) WaitBlockHeight(target int64) int64 {
-	return t.heightNotifier.WaitHeight(target)
+	return t.notifier.WaitHeight(target)
 }

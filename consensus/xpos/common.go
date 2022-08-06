@@ -12,9 +12,9 @@ import (
 )
 
 const (
-	MAXSLEEPTIME        = 1000
-	MAXMAPSIZE          = 1000
-	MAXHISPROPOSERSSIZE = 100
+	MAX_SLEEP_TIME    = 1000
+	MAX_MAP_SIZE      = 1000
+	MAX_PROPOSER_SIZE = 100
 
 	contractNominateCandidate = "nominateCandidate"
 	contractRevokeCandidate   = "revokeNominate"
@@ -28,10 +28,10 @@ const (
 	voteKeyPrefix = "vote_"
 	revokeKey     = "revoke"
 
-	NOMINATETYPE = "nominate"
-	VOTETYPE     = "vote"
+	NOMINATE_TYPE = "nominate"
+	VOTE_TYPE     = "vote"
 
-	fee = 1000
+	LIMIT_FEE = 1000
 )
 
 var (
@@ -49,7 +49,7 @@ var (
 	ErrNotFound         = errors.New("Key not found")
 )
 
-// xposConfig 共识机制的配置
+// xposConfig XPOS共识机制的配置
 type xposConfig struct {
 	Version int64 `json:"version,omitempty"`
 	// 每轮选出的候选人个数
@@ -71,19 +71,20 @@ type xposConfig struct {
 	EnableBFT    map[string]bool     `json:"bft_config,omitempty"`
 }
 
-func (tp *tdposConsensus) needSync() bool {
+//needSync 返回是否需要同步
+func (tp *XPoSConsensus) needSync() bool {
 	tipBlock := tp.election.ledger.GetTipBlock()
 	if tipBlock.GetHeight() == 0 {
 		return true
 	}
-	if string(tipBlock.GetProposer()) == string(tp.election.address) {
+	if string(tipBlock.GetProposer()) == tp.election.address {
 		return false
 	}
 	return true
 }
 
-// unmarshalTdposConfig 解析tdposConfig
-func unmarshalTdposConfig(input []byte) (*xposConfig, error) {
+// unmarshalXPOSConfig 解析tdposConfig
+func unmarshalXPOSConfig(input []byte) (*xposConfig, error) {
 	xconfig, err := buildConfigs(input)
 	if err != nil {
 		return nil, err

@@ -11,7 +11,7 @@ import (
 	xctx "github.com/wooyang2018/corechain/common/context"
 	"github.com/wooyang2018/corechain/common/timer"
 	"github.com/wooyang2018/corechain/common/utils"
-	quorum2 "github.com/wooyang2018/corechain/consensus/chainbft/quorum"
+	"github.com/wooyang2018/corechain/consensus/chainbft/quorum"
 	"github.com/wooyang2018/corechain/ledger"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/network"
@@ -62,7 +62,7 @@ type SMR struct {
 	pacemaker   Pacemaker
 	safetyRules SafetyRules
 	election    ProposerElection
-	qcTree      *quorum2.QCPendingTree
+	qcTree      *quorum.QCPendingTree
 	// smr本地存储和外界账本存储的唯一关联，该字段标识了账本状态，
 	ledgerState int64
 	// map[proposalId]int64
@@ -73,7 +73,7 @@ type SMR struct {
 }
 
 func NewSMR(bcName, address string, log logger.Logger, p2p network.Network, cryptoClient *CBFTCrypto, pacemaker Pacemaker,
-	saftyrules SafetyRules, election ProposerElection, qcTree *quorum2.QCPendingTree) *SMR {
+	saftyrules SafetyRules, election ProposerElection, qcTree *quorum.QCPendingTree) *SMR {
 	s := &SMR{
 		bcName:        bcName,
 		log:           log,
@@ -167,7 +167,7 @@ func (s *SMR) Stop() {
 }
 
 // GetRootQC 查询状态树的Root节点，Root节点已经被账本commit
-func (s *SMR) GetRootQC() quorum2.QuorumCert {
+func (s *SMR) GetRootQC() quorum.QuorumCert {
 	return s.qcTree.GetRootQC().QC
 }
 
@@ -179,7 +179,7 @@ func (s *SMR) GetAddress() string {
 	return s.address
 }
 
-func (s *SMR) CheckProposal(block ledger.BlockHandle, justify quorum2.QuorumCert, validators []string) error {
+func (s *SMR) CheckProposal(block ledger.BlockHandle, justify quorum.QuorumCert, validators []string) error {
 	s.mtx.Lock()
 	defer s.mtx.Unlock()
 
@@ -187,7 +187,7 @@ func (s *SMR) CheckProposal(block ledger.BlockHandle, justify quorum2.QuorumCert
 	return s.safetyRules.CheckProposal(pNode.QC, justify, validators)
 }
 
-func (s *SMR) KeepUpWithBlock(block ledger.BlockHandle, justify quorum2.QuorumCert, validators []string) error {
+func (s *SMR) KeepUpWithBlock(block ledger.BlockHandle, justify quorum.QuorumCert, validators []string) error {
 	s.mtx.Lock()
 	defer s.mtx.Unlock()
 
@@ -213,7 +213,7 @@ func (s *SMR) KeepUpWithBlock(block ledger.BlockHandle, justify quorum2.QuorumCe
 
 func (s *SMR) ResetProposerStatus(tipBlock ledger.BlockHandle,
 	queryBlockFunc func(blkId []byte) (ledger.BlockHandle, error),
-	validators []string) (bool, quorum2.QuorumCert, error) {
+	validators []string) (bool, quorum.QuorumCert, error) {
 	s.mtx.Lock()
 	defer s.mtx.Unlock()
 
@@ -225,7 +225,7 @@ func (s *SMR) ResetProposerStatus(tipBlock ledger.BlockHandle,
 
 	// 从当前TipBlock开始往前追溯，交给smr根据状态进行回滚。
 	// 在本地状态树上找到指代TipBlock的QC，若找不到，则在状态树上找和TipBlock同一分支上的最近值
-	var qc quorum2.QuorumCert
+	var qc quorum.QuorumCert
 	targetId := tipBlock.GetBlockid()
 	for {
 		block, err := queryBlockFunc(targetId)
@@ -296,7 +296,7 @@ func (s *SMR) handleReceivedMsg(msg *protos.CoreMessage) error {
 // UpdateJustifyQcStatus 用于支持可回滚的账本，生成相同高度的块
 // 为了支持生成相同round的块，需要拿到justify的full votes，因此需要在上层账本收到新块时调用，在CheckMinerMatch后
 // 注意：为了支持回滚操作，必须调用该函数
-func (s *SMR) updateJustifyQCStatus(justify quorum2.QuorumCert) {
+func (s *SMR) updateJustifyQCStatus(justify quorum.QuorumCert) {
 	if justify == nil {
 		return
 	}
@@ -316,7 +316,7 @@ func (s *SMR) updateJustifyQCStatus(justify quorum2.QuorumCert) {
 }
 
 // UpdateQCStatus 除了更新本地smr的QC之外，还更新了smr的和账本相关的状态，以此区别于smr receive proposal时的updateQcStatus
-func (s *SMR) updateQcStatus(node *quorum2.ProposalNode) error {
+func (s *SMR) updateQcStatus(node *quorum.ProposalNode) error {
 	if node == nil {
 		return ErrEmptyTarget
 	}
@@ -392,23 +392,23 @@ func (s *SMR) ProcessProposal(viewNumber int64, proposalID []byte, parentID []by
 	return nil
 }
 
-func (s *SMR) voteToSelf(viewNumber int64, proposalID []byte, parent quorum2.QuorumCert) {
-	selfVote := &quorum2.VoteInfo{
+func (s *SMR) voteToSelf(viewNumber int64, proposalID []byte, parent quorum.QuorumCert) {
+	selfVote := &quorum.VoteInfo{
 		ProposalId:   proposalID,
 		ProposalView: viewNumber,
 		ParentId:     parent.GetProposalId(),
 	}
-	selfLedgerInfo := &quorum2.LedgerCommitInfo{
+	selfLedgerInfo := &quorum.LedgerCommitInfo{
 		VoteInfoHash: proposalID,
 	}
-	selfQC := quorum2.NewQuorumCert(selfVote, selfLedgerInfo, nil)
+	selfQC := quorum.NewQuorumCert(selfVote, selfLedgerInfo, nil)
 	selfSign, err := s.cryptoClient.SignVoteMsg(proposalID)
 	if err != nil {
 		s.log.Error("smr::voteProposal::voteToSelf error", "err", err)
 		return
 	}
 	s.qcVoteMsgs.LoadOrStore(utils.F(proposalID), []*protos.QuorumCertSign{selfSign})
-	selfNode := &quorum2.ProposalNode{
+	selfNode := &quorum.ProposalNode{
 		QC: selfQC,
 	}
 	if err := s.qcTree.UpdateQCStatus(selfNode); err != nil {
@@ -422,7 +422,7 @@ func (s *SMR) voteToSelf(viewNumber int64, proposalID []byte, parent quorum2.Quo
 }
 
 // reloadJustifyQC 与LibraBFT不同，返回一个指定的parentQC
-func (s *SMR) reloadJustifyQC(parentID []byte) (quorum2.QuorumCert, error) {
+func (s *SMR) reloadJustifyQC(parentID []byte) (quorum.QuorumCert, error) {
 	// 第一次proposal，highQC==rootQC==genesisQC
 	if bytes.Equal(s.qcTree.GetGenesisQC().QC.GetProposalId(), parentID) {
 		highQC := s.getHighQC()
@@ -433,7 +433,7 @@ func (s *SMR) reloadJustifyQC(parentID []byte) (quorum2.QuorumCert, error) {
 	if qc == nil {
 		return nil, ErrEmptyTarget
 	}
-	v := &quorum2.VoteInfo{
+	v := &quorum.VoteInfo{
 		ProposalView: qc.QC.GetProposalView(),
 		ProposalId:   qc.QC.GetProposalId(),
 	}
@@ -450,7 +450,7 @@ func (s *SMR) reloadJustifyQC(parentID []byte) (quorum2.QuorumCert, error) {
 		return nil, ErrJustifyVotesEmpty
 	}
 	signs, _ := value.([]*protos.QuorumCertSign)
-	parentQuorumCert := quorum2.NewQuorumCert(v, &quorum2.LedgerCommitInfo{
+	parentQuorumCert := quorum.NewQuorumCert(v, &quorum.LedgerCommitInfo{
 		CommitStateId: commitId,
 	}, signs)
 	return parentQuorumCert, nil
@@ -483,13 +483,13 @@ func (s *SMR) handleReceivedProposal(msg *protos.CoreMessage) error {
 	s.log.Debug("smr::handleReceivedProposal::received a proposal", "logid", msg.GetHeader().GetLogid(),
 		"newView", newProposalMsg.GetProposalView(), "newProposalId", utils.F(newProposalMsg.GetProposalId()))
 	parentQCBytes := newProposalMsg.GetJustifyQC()
-	parentQC := &quorum2.QuorumCertImpl{}
+	parentQC := &quorum.QuorumCertImpl{}
 	if err := json.Unmarshal(parentQCBytes, parentQC); err != nil {
 		s.log.Error("smr::handleReceivedProposal Unmarshal parentQC error", "error", err)
 		return err
 	}
 
-	newVote := &quorum2.VoteInfo{
+	newVote := &quorum.VoteInfo{
 		ProposalId:   newProposalMsg.GetProposalId(),
 		ProposalView: newProposalMsg.GetProposalView(),
 		ParentId:     parentQC.GetProposalId(),
@@ -498,7 +498,7 @@ func (s *SMR) handleReceivedProposal(msg *protos.CoreMessage) error {
 	isFirstJustify := bytes.Equal(s.qcTree.GetGenesisQC().QC.GetProposalId(), parentQC.GetProposalId())
 	// 0.若为初始状态，则无需检查justify，否则需要检查qc有效性
 	if !isFirstJustify {
-		proposalQC := quorum2.NewQuorumCert(newVote, nil, []*protos.QuorumCertSign{newProposalMsg.GetSign()})
+		proposalQC := quorum.NewQuorumCert(newVote, nil, []*protos.QuorumCertSign{newProposalMsg.GetSign()})
 		if err := s.safetyRules.CheckProposal(proposalQC, parentQC, s.election.GetValidators(parentQC.GetProposalView())); err != nil {
 			s.log.Debug("smr::handleReceivedProposal::CheckProposal error", "error", err,
 				"parentView", parentQC.GetProposalView(), "parentId", utils.F(parentQC.GetProposalId()))
@@ -544,11 +544,11 @@ func (s *SMR) handleReceivedProposal(msg *protos.CoreMessage) error {
 		return ErrVoteProposal
 	}
 
-	newLedgerInfo := &quorum2.LedgerCommitInfo{
+	newLedgerInfo := &quorum.LedgerCommitInfo{
 		VoteInfoHash: newProposalMsg.GetProposalId(),
 	}
-	newNode := &quorum2.ProposalNode{
-		QC: quorum2.NewQuorumCert(newVote, newLedgerInfo, nil),
+	newNode := &quorum.ProposalNode{
+		QC: quorum.NewQuorumCert(newVote, newLedgerInfo, nil),
 	}
 	// 5.与proposal.ParentId相比，更新本地qcTree，insert新节点, 更新CommitQC
 	if err := s.qcTree.UpdateQCStatus(newNode); err != nil {
@@ -568,7 +568,7 @@ func (s *SMR) handleReceivedProposal(msg *protos.CoreMessage) error {
 
 // voteProposal 当Replica收到一个Proposal并对该Proposal检查之后，利用voteProposal针对该QC投票
 // 投票信息包括：vote的对象的基本信息，ledger账本的基本信息，对msg的签名
-func (s *SMR) voteProposal(msg []byte, vote *quorum2.VoteInfo, ledger *quorum2.LedgerCommitInfo, voteTo string) {
+func (s *SMR) voteProposal(msg []byte, vote *quorum.VoteInfo, ledger *quorum.LedgerCommitInfo, voteTo string) {
 	// 若为自己直接返回
 	if voteTo == s.address {
 		return
@@ -667,40 +667,40 @@ func (s *SMR) handleReceivedVoteMsg(msg *protos.CoreMessage) error {
 }
 
 // voteMsgToQC 提供一个从VoteMsg转化为quorumCert的方法
-func (s *SMR) voteMsgToQC(msg *protos.VoteMsg) (quorum2.QuorumCert, error) {
-	voteInfo := &quorum2.VoteInfo{}
+func (s *SMR) voteMsgToQC(msg *protos.VoteMsg) (quorum.QuorumCert, error) {
+	voteInfo := &quorum.VoteInfo{}
 	if err := json.Unmarshal(msg.VoteInfo, voteInfo); err != nil {
 		return nil, err
 	}
-	ledgerCommitInfo := &quorum2.LedgerCommitInfo{}
+	ledgerCommitInfo := &quorum.LedgerCommitInfo{}
 	if err := json.Unmarshal(msg.LedgerCommitInfo, ledgerCommitInfo); err != nil {
 		return nil, err
 	}
-	return quorum2.NewQuorumCert(voteInfo, ledgerCommitInfo, msg.GetSignature()), nil
+	return quorum.NewQuorumCert(voteInfo, ledgerCommitInfo, msg.GetSignature()), nil
 }
 
-func (s *SMR) blockToProposalNode(block ledger.BlockHandle) *quorum2.ProposalNode {
+func (s *SMR) blockToProposalNode(block ledger.BlockHandle) *quorum.ProposalNode {
 	targetId := block.GetBlockid()
 	if node := s.qcTree.DFSQueryNode(targetId); node != nil {
 		return node
 	}
-	v := &quorum2.VoteInfo{
+	v := &quorum.VoteInfo{
 		ProposalId:   block.GetBlockid(),
 		ProposalView: block.GetHeight(),
 		ParentId:     block.GetPreHash(),
 		ParentView:   block.GetHeight() - 1,
 	}
-	return &quorum2.ProposalNode{QC: quorum2.NewQuorumCert(v, nil, nil)}
+	return &quorum.ProposalNode{QC: quorum.NewQuorumCert(v, nil, nil)}
 }
 
-func (s *SMR) getHighQC() quorum2.QuorumCert {
+func (s *SMR) getHighQC() quorum.QuorumCert {
 	return s.qcTree.GetHighQC().QC
 }
 
 // getCompleteHighQC 本地qcTree不带签名，因此smr需要重新组装完整的QC
-func (s *SMR) getCompleteHighQC() quorum2.QuorumCert {
+func (s *SMR) getCompleteHighQC() quorum.QuorumCert {
 	raw := s.getHighQC()
-	vote := &quorum2.VoteInfo{
+	vote := &quorum.VoteInfo{
 		ProposalId:   raw.GetProposalId(),
 		ProposalView: raw.GetProposalView(),
 		ParentId:     raw.GetParentProposalId(),
@@ -708,10 +708,10 @@ func (s *SMR) getCompleteHighQC() quorum2.QuorumCert {
 	}
 	signInfo, ok := s.qcVoteMsgs.Load(utils.F(raw.GetProposalId()))
 	if !ok {
-		return quorum2.NewQuorumCert(vote, nil, nil)
+		return quorum.NewQuorumCert(vote, nil, nil)
 	}
 	signs, _ := signInfo.([]*protos.QuorumCertSign)
-	return quorum2.NewQuorumCert(vote, nil, signs)
+	return quorum.NewQuorumCert(vote, nil, signs)
 }
 
 func (s *SMR) validNewHighQC(inProposalId []byte, validators []string) bool {

@@ -7,19 +7,19 @@ import (
 	"strconv"
 )
 
-// PoWConfig pow创始块配置，根据Bitcoin推荐：
+// powConfig pow创始块配置，根据Bitcoin推荐：
 //    AdjustHeightGap: 2016,
 //	  MaxTarget: 0x1d00FFFF,
 //    DefaultTarget: 0x207FFFFF
-type PoWConfig struct {
+type powConfig struct {
 	DefaultTarget        uint32 `json:"defaultTarget"`
 	AdjustHeightGap      int32  `json:"adjustHeightGap"`
 	ExpectedPeriodMilSec int32  `json:"expectedPeriod"`
 	MaxTarget            uint32 `json:"maxTarget"`
 }
 
-// PoWStorage pow占用block中consensusStorage
-type PoWStorage struct {
+// powStorage pow占用block中consensusStorage
+type powStorage struct {
 	TargetBits uint32 `json:"targetBits,omitempty"`
 }
 
@@ -77,14 +77,14 @@ func SetCompact(nCompact uint32) (*big.Int, bool, bool) {
 	return u, pfNegative, pfOverflow
 }
 
-//unmarshalPowConfig 转换配置结构到内部结构
-func unmarshalPowConfig(input []byte) (*PoWConfig, error) {
+//unmarshalPoWConfig 转换配置结构到内部结构
+func unmarshalPoWConfig(input []byte) (*powConfig, error) {
 	consCfg := make(map[string]interface{})
 	err := json.Unmarshal(input, &consCfg)
 	if err != nil {
 		return nil, err
 	}
-	powCfg := &PoWConfig{}
+	powCfg := &powConfig{}
 	int32Map := map[string]int32{
 		"adjustHeightGap": 0,
 		"expectedPeriod":  0,

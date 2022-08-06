@@ -25,28 +25,23 @@ const (
 	TxSizePercent = 0.8
 )
 
-// reservedArgs used to get contractnames from InvokeRPCRequest
-type reservedArgs struct {
-	ContractNames string
-}
-
 type Meta struct {
-	log       logger.Logger
-	Ledger    *ledger.Ledger
-	UtxoMeta  *protos.UtxoMeta
-	TempMeta  *protos.UtxoMeta
-	Mutex     *sync.Mutex      // access control for meta
-	MetaTable storage.Database // 元数据表，持久化保存latestBlockid
+	log      logger.Logger
+	Ledger   *ledger.Ledger
+	UtxoMeta *protos.UtxoMeta
+	TempMeta *protos.UtxoMeta
+	Mutex    *sync.Mutex      // access control for meta
+	Table    storage.Database // 元数据表，持久化保存latestBlockid
 }
 
 func NewMeta(sctx *base.StateCtx, stateDB storage.Database) (*Meta, error) {
 	obj := &Meta{
-		log:       sctx.XLog,
-		Ledger:    sctx.Ledger,
-		UtxoMeta:  &protos.UtxoMeta{},
-		TempMeta:  &protos.UtxoMeta{},
-		Mutex:     &sync.Mutex{},
-		MetaTable: storage.NewTable(stateDB, def.MetaTablePrefix),
+		log:      sctx.XLog,
+		Ledger:   sctx.Ledger,
+		UtxoMeta: &protos.UtxoMeta{},
+		TempMeta: &protos.UtxoMeta{},
+		Mutex:    &sync.Mutex{},
+		Table:    storage.NewTable(stateDB, def.MetaTablePrefix),
 	}
 
 	var loadErr error
@@ -109,7 +104,7 @@ func (t *Meta) GetNewAccountResourceAmount() int64 {
 
 // LoadNewAccountResourceAmount load newAccountResourceAmount into memory
 func (t *Meta) LoadNewAccountResourceAmount() (int64, error) {
-	newAccountResourceAmountBuf, findErr := t.MetaTable.Get([]byte(ledger.NewAccountResourceAmountKey))
+	newAccountResourceAmountBuf, findErr := t.Table.Get([]byte(ledger.NewAccountResourceAmountKey))
 	if findErr == nil {
 		utxoMeta := &protos.UtxoMeta{}
 		err := proto.Unmarshal(newAccountResourceAmountBuf, utxoMeta)
@@ -125,7 +120,6 @@ func (t *Meta) LoadNewAccountResourceAmount() (int64, error) {
 	return int64(0), findErr
 }
 
-// UpdateNewAccountResourceAmount ...
 func (t *Meta) UpdateNewAccountResourceAmount(newAccountResourceAmount int64, batch storage.Batch) error {
 	if newAccountResourceAmount < 0 {
 		return ErrProposalParamsIsNegativeNumber
@@ -148,7 +142,7 @@ func (t *Meta) UpdateNewAccountResourceAmount(newAccountResourceAmount int64, ba
 	return err
 }
 
-// GetMaxBlockSize get max block size effective in Utxo
+// GetMaxBlockSize get max block size effective in utxo
 func (t *Meta) GetMaxBlockSize() int64 {
 	t.Mutex.Lock()
 	defer t.Mutex.Unlock()
@@ -157,7 +151,7 @@ func (t *Meta) GetMaxBlockSize() int64 {
 
 // LoadMaxBlockSize load maxBlockSize into memory
 func (t *Meta) LoadMaxBlockSize() (int64, error) {
-	maxBlockSizeBuf, findErr := t.MetaTable.Get([]byte(ledger.MaxBlockSizeKey))
+	maxBlockSizeBuf, findErr := t.Table.Get([]byte(ledger.MaxBlockSizeKey))
 	if findErr == nil {
 		utxoMeta := &protos.UtxoMeta{}
 		err := proto.Unmarshal(maxBlockSizeBuf, utxoMeta)
@@ -207,7 +201,7 @@ func (t *Meta) GetReservedContracts() []*protos.InvokeRequest {
 }
 
 func (t *Meta) LoadReservedContracts() ([]*protos.InvokeRequest, error) {
-	reservedContractsBuf, findErr := t.MetaTable.Get([]byte(ledger.ReservedContractsKey))
+	reservedContractsBuf, findErr := t.Table.Get([]byte(ledger.ReservedContractsKey))
 	if findErr == nil {
 		utxoMeta := &protos.UtxoMeta{}
 		err := proto.Unmarshal(reservedContractsBuf, utxoMeta)
@@ -218,7 +212,7 @@ func (t *Meta) LoadReservedContracts() ([]*protos.InvokeRequest, error) {
 	return nil, findErr
 }
 
-//when to register to kernel method
+//UpdateReservedContracts when to register to kernel method
 func (t *Meta) UpdateReservedContracts(params []*protos.InvokeRequest, batch storage.Batch) error {
 	if params == nil {
 		return fmt.Errorf("invalid reservered contract requests")
@@ -254,7 +248,7 @@ func (t *Meta) GetGroupChainContract() *protos.InvokeRequest {
 }
 
 func (t *Meta) LoadGroupChainContract() (*protos.InvokeRequest, error) {
-	groupChainContractBuf, findErr := t.MetaTable.Get([]byte(ledger.GroupChainContractKey))
+	groupChainContractBuf, findErr := t.Table.Get([]byte(ledger.GroupChainContractKey))
 	if findErr == nil {
 		utxoMeta := &protos.UtxoMeta{}
 		err := proto.Unmarshal(groupChainContractBuf, utxoMeta)
@@ -270,7 +264,7 @@ func (t *Meta) LoadGroupChainContract() (*protos.InvokeRequest, error) {
 }
 
 func (t *Meta) LoadForbiddenContract() (*protos.InvokeRequest, error) {
-	forbiddenContractBuf, findErr := t.MetaTable.Get([]byte(ledger.ForbiddenContractKey))
+	forbiddenContractBuf, findErr := t.Table.Get([]byte(ledger.ForbiddenContractKey))
 	if findErr == nil {
 		utxoMeta := &protos.UtxoMeta{}
 		err := proto.Unmarshal(forbiddenContractBuf, utxoMeta)
@@ -308,7 +302,7 @@ func (t *Meta) UpdateForbiddenContract(param *protos.InvokeRequest, batch storag
 }
 
 func (t *Meta) LoadIrreversibleBlockHeight() (int64, error) {
-	irreversibleBlockHeightBuf, findErr := t.MetaTable.Get([]byte(ledger.IrreversibleBlockHeightKey))
+	irreversibleBlockHeightBuf, findErr := t.Table.Get([]byte(ledger.IrreversibleBlockHeightKey))
 	if findErr == nil {
 		utxoMeta := &protos.UtxoMeta{}
 		err := proto.Unmarshal(irreversibleBlockHeightBuf, utxoMeta)
@@ -320,7 +314,7 @@ func (t *Meta) LoadIrreversibleBlockHeight() (int64, error) {
 }
 
 func (t *Meta) LoadIrreversibleSlideWindow() (int64, error) {
-	irreversibleSlideWindowBuf, findErr := t.MetaTable.Get([]byte(ledger.IrreversibleSlideWindowKey))
+	irreversibleSlideWindowBuf, findErr := t.Table.Get([]byte(ledger.IrreversibleSlideWindowKey))
 	if findErr == nil {
 		utxoMeta := &protos.UtxoMeta{}
 		err := proto.Unmarshal(irreversibleSlideWindowBuf, utxoMeta)
@@ -373,11 +367,11 @@ func (t *Meta) UpdateNextIrreversibleBlockHeight(blockHeight int64, curIrreversi
 	if curIrreversibleSlideWindow < 0 {
 		return ErrProposalParamsIsNegativeNumber
 	}
-	// slideWindow为开启,不需要更新IrreversibleBlockHeight
+	// slideWindow为0,不需要更新IrreversibleBlockHeight
 	if curIrreversibleSlideWindow == 0 {
 		return nil
 	}
-	// curIrreversibleBlockHeight小于0, 不符合预期，报警
+	// curIrreversibleBlockHeight小于0, 不符合预期
 	if curIrreversibleBlockHeight < 0 {
 		t.log.Warn("update irreversible block height error, should be here")
 		return errors.New("curIrreversibleBlockHeight is less than 0")
@@ -452,7 +446,7 @@ func (t *Meta) GetGasPrice() *protos.GasPrice {
 
 // LoadGasPrice load gas rate
 func (t *Meta) LoadGasPrice() (*protos.GasPrice, error) {
-	gasPriceBuf, findErr := t.MetaTable.Get([]byte(ledger.GasPriceKey))
+	gasPriceBuf, findErr := t.Table.Get([]byte(ledger.GasPriceKey))
 	if findErr == nil {
 		utxoMeta := &protos.UtxoMeta{}
 		err := proto.Unmarshal(gasPriceBuf, utxoMeta)

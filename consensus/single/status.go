@@ -10,10 +10,10 @@ type ValidatorsInfo struct {
 }
 
 type SingleStatus struct {
-	startHeight int64
+	startHeight int64 //共识开始的高度
 	mutex       sync.RWMutex
-	newHeight   int64
-	index       int
+	newHeight   int64 //当前的Term
+	index       int   //step共识的索引
 	config      *SingleConfig
 }
 

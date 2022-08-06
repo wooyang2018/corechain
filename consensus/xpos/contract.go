@@ -26,7 +26,7 @@ import (
 )
 
 // runNominateCandidate 执行提名候选人
-func (tp *tdposConsensus) runNominateCandidate(contractCtx contractBase.KContext) (*contractBase.Response, error) {
+func (tp *XPoSConsensus) runNominateCandidate(contractCtx contractBase.KContext) (*contractBase.Response, error) {
 	// 1.1 核查nominate合约参数有效性
 	candidateName, err := tp.checkArgs(contractCtx.Args())
 	if err != nil {
@@ -82,7 +82,7 @@ func (tp *tdposConsensus) runNominateCandidate(contractCtx contractBase.KContext
 		return base.NewContractErrResponse(err.Error()), err
 	}
 	delta := contractBase.Limits{
-		XFee: fee,
+		XFee: LIMIT_FEE,
 	}
 	contractCtx.AddResourceUsed(delta)
 	return base.NewContractOKResponse([]byte("ok")), nil
@@ -91,7 +91,7 @@ func (tp *tdposConsensus) runNominateCandidate(contractCtx contractBase.KContext
 // runRevokeCandidate 执行候选人撤销,仅支持自我撤销
 // 重构后的候选人撤销
 // Args: candidate::候选人钱包地址
-func (tp *tdposConsensus) runRevokeCandidate(contractCtx contractBase.KContext) (*contractBase.Response, error) {
+func (tp *XPoSConsensus) runRevokeCandidate(contractCtx contractBase.KContext) (*contractBase.Response, error) {
 	// 核查撤销nominate合约参数有效性
 	candidateName, err := tp.checkArgs(contractCtx.Args())
 	if err != nil {
@@ -149,7 +149,7 @@ func (tp *tdposConsensus) runRevokeCandidate(contractCtx contractBase.KContext) 
 		revokeValue[contractCtx.Initiator()] = make([]revokeItem, 0)
 	}
 	revokeValue[contractCtx.Initiator()] = append(revokeValue[contractCtx.Initiator()], revokeItem{
-		RevokeType:    NOMINATETYPE,
+		RevokeType:    NOMINATE_TYPE,
 		Ballot:        ballot,
 		TargetAddress: candidateName,
 	})
@@ -171,7 +171,7 @@ func (tp *tdposConsensus) runRevokeCandidate(contractCtx contractBase.KContext) 
 		return base.NewContractErrResponse(err.Error()), err
 	}
 	delta := contractBase.Limits{
-		XFee: fee,
+		XFee: LIMIT_FEE,
 	}
 	contractCtx.AddResourceUsed(delta)
 	return base.NewContractOKResponse([]byte("ok")), nil
@@ -180,7 +180,7 @@ func (tp *tdposConsensus) runRevokeCandidate(contractCtx contractBase.KContext) 
 // runVote 执行投票
 // Args: candidate::候选人钱包地址
 //       amount::投票者票数
-func (tp *tdposConsensus) runVote(contractCtx contractBase.KContext) (*contractBase.Response, error) {
+func (tp *XPoSConsensus) runVote(contractCtx contractBase.KContext) (*contractBase.Response, error) {
 	// 1.1 验证合约参数是否正确
 	candidateName, err := tp.checkArgs(contractCtx.Args())
 	if err != nil {
@@ -243,7 +243,7 @@ func (tp *tdposConsensus) runVote(contractCtx contractBase.KContext) (*contractB
 		return base.NewContractErrResponse(err.Error()), err
 	}
 	delta := contractBase.Limits{
-		XFee: fee,
+		XFee: LIMIT_FEE,
 	}
 	contractCtx.AddResourceUsed(delta)
 	return base.NewContractOKResponse([]byte("ok")), nil
@@ -253,7 +253,7 @@ func (tp *tdposConsensus) runVote(contractCtx contractBase.KContext) (*contractB
 // 重构后的候选人撤销
 // Args: candidate::候选人钱包地址
 //       amount: 投票数
-func (tp *tdposConsensus) runRevokeVote(contractCtx contractBase.KContext) (*contractBase.Response, error) {
+func (tp *XPoSConsensus) runRevokeVote(contractCtx contractBase.KContext) (*contractBase.Response, error) {
 	// 1.1 验证合约参数
 	candidateName, err := tp.checkArgs(contractCtx.Args())
 	if err != nil {
@@ -314,7 +314,7 @@ func (tp *tdposConsensus) runRevokeVote(contractCtx contractBase.KContext) (*con
 		revokeValue[contractCtx.Initiator()] = make([]revokeItem, 0)
 	}
 	revokeValue[contractCtx.Initiator()] = append(revokeValue[contractCtx.Initiator()], revokeItem{
-		RevokeType:    VOTETYPE,
+		RevokeType:    VOTE_TYPE,
 		Ballot:        amount,
 		TargetAddress: candidateName,
 	})
@@ -339,13 +339,13 @@ func (tp *tdposConsensus) runRevokeVote(contractCtx contractBase.KContext) (*con
 		return base.NewContractErrResponse(err.Error()), err
 	}
 	delta := contractBase.Limits{
-		XFee: fee,
+		XFee: LIMIT_FEE,
 	}
 	contractCtx.AddResourceUsed(delta)
 	return base.NewContractOKResponse([]byte("ok")), nil
 }
 
-func (tp *tdposConsensus) runGetTdposInfos(contractCtx contractBase.KContext) (*contractBase.Response, error) {
+func (tp *XPoSConsensus) runGetTdposInfos(contractCtx contractBase.KContext) (*contractBase.Response, error) {
 	// nominate信息
 	nKey := fmt.Sprintf("%s_%d_%s", tp.status.Name, tp.status.Version, nominateKey)
 	res, err := contractCtx.Get(tp.election.bindContractBucket, []byte(nKey))
@@ -406,7 +406,7 @@ func (tp *tdposConsensus) runGetTdposInfos(contractCtx contractBase.KContext) (*
 	return base.NewContractOKResponse(return_bytes), nil
 }
 
-func (tp *tdposConsensus) checkArgs(txArgs map[string][]byte) (string, error) {
+func (tp *XPoSConsensus) checkArgs(txArgs map[string][]byte) (string, error) {
 	candidateBytes := txArgs["candidate"]
 	candidateName := string(candidateBytes)
 	if candidateName == "" {
@@ -439,7 +439,7 @@ func NewRevokeValue() revokeValue {
 	return make(map[string][]revokeItem)
 }
 
-func (tp *tdposConsensus) isAuthAddress(candidate string, initiator string, authRequire []string) bool {
+func (tp *XPoSConsensus) isAuthAddress(candidate string, initiator string, authRequire []string) bool {
 	if strings.HasSuffix(initiator, candidate) {
 		return true
 	}

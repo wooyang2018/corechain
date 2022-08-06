@@ -36,15 +36,6 @@ func getConsensusConf() base.ConsensusConfig {
 	}
 }
 
-func getWrongConsensusConf() base.ConsensusConfig {
-	return base.ConsensusConfig{
-		ConsensusName: "single",
-		Config:        string(getSingleConsensusConf()),
-		StartHeight:   1,
-		Index:         0,
-	}
-}
-
 func TestNewSingleConsensus(t *testing.T) {
 	cctx, err := prepare()
 	if err != nil {
@@ -55,12 +46,18 @@ func TestNewSingleConsensus(t *testing.T) {
 	if i == nil {
 		t.Fatal("NewSingleConsensus error")
 	}
-	if i := NewSingleConsensus(*cctx, getWrongConsensusConf()); i == nil {
-		t.Error("NewSingleConsensus check name error")
+	err = i.Stop()
+	if err != nil {
+		t.Fatal(err)
 	}
-	i.Stop()
-	i.Start()
-	i.ProcessBeforeMiner(0, time.Now().UnixNano())
+	err = i.Start()
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, _, err = i.ProcessBeforeMiner(0, time.Now().UnixNano())
+	if err != nil {
+		t.Fatal(err)
+	}
 	cctx.XLog = nil
 	i = NewSingleConsensus(*cctx, conf)
 	if i != nil {
@@ -95,7 +92,7 @@ func TestGetConsensusStatus(t *testing.T) {
 		t.Fatal("GetCurrentValidatorsInfo unmarshal error", "error", err)
 	}
 	if m.Validators[0] != mock.Miner {
-		t.Error("GetCurrentValidatorsInfo error", "m", m, "vb", vb)
+		t.Fatal("GetCurrentValidatorsInfo error", "m", m, "vb", vb)
 	}
 }
 
@@ -108,7 +105,7 @@ func TestCompeteMaster(t *testing.T) {
 	i := NewSingleConsensus(*cctx, conf)
 	isMiner, shouldSync, _ := i.CompeteMaster(2)
 	if isMiner && shouldSync {
-		t.Error("TestCompeteMaster error")
+		t.Fatal("TestCompeteMaster error")
 	}
 }
 
@@ -119,16 +116,16 @@ func TestCheckMinerMatch(t *testing.T) {
 	}
 	conf := getConsensusConf()
 	i := NewSingleConsensus(*cctx, conf)
-	f, err := mock.NewBlockWithStorage(2, cctx.Crypto, cctx.Address, []byte{})
+	block, err := mock.NewBlockWithStorage(2, cctx.Crypto, cctx.Address, []byte{})
 	if err != nil {
 		t.Fatal("NewBlock error", "error", err)
 	}
-	ok, err := i.CheckMinerMatch(&cctx.BaseCtx, f)
+	ok, err := i.CheckMinerMatch(&cctx.BaseCtx, block)
 	if !ok || err != nil {
-		t.Error("TestCheckMinerMatch error", "error", err, cctx.Address.PrivateKey)
+		t.Fatal("TestCheckMinerMatch error", "error", err, cctx.Address.PrivateKey)
 	}
 	_, _, err = i.ProcessBeforeMiner(0, time.Now().UnixNano())
 	if err != nil {
-		t.Error("ProcessBeforeMiner error", "error", err)
+		t.Fatal("ProcessBeforeMiner error", "error", err)
 	}
 }

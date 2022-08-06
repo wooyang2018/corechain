@@ -107,7 +107,7 @@ type IntConfig struct {
 	Version int64 `json:"version,omitempty"`
 }
 
-// ParseVersion 支持string格式和int格式的version
+// ParseVersion 支持string格式和int格式的version【这是写的什么鬼逻辑】
 func ParseVersion(cfg string) (int64, error) {
 	intVersion := IntConfig{}
 	if err := json.Unmarshal([]byte(cfg), &intVersion); err == nil {

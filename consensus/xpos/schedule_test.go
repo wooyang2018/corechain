@@ -30,12 +30,12 @@ func Test(t *testing.T) {
 }
 
 func TestNewSchedule(t *testing.T) {
-	cStr := getTdposConsensusConf()
+	cStr := getXPOSConsensusConf()
 	tdposCfg, err := buildConfigs([]byte(cStr))
 	if err != nil {
 		t.Error("Config unmarshal err", "err", err)
 	}
-	cctx, err := prepare(getTdposConsensusConf())
+	cctx, err := prepare(getXPOSConsensusConf())
 	if err != nil {
 		t.Error("prepare error", "error", err)
 		return
@@ -46,12 +46,12 @@ func TestNewSchedule(t *testing.T) {
 }
 
 func TestGetLeader(t *testing.T) {
-	cStr := getTdposConsensusConf()
+	cStr := getXPOSConsensusConf()
 	tdposCfg, err := buildConfigs([]byte(cStr))
 	if err != nil {
 		t.Error("Config unmarshal err", "err", err)
 	}
-	cctx, err := prepare(getTdposConsensusConf())
+	cctx, err := prepare(getXPOSConsensusConf())
 	if err != nil {
 		t.Error("prepare error", "error", err)
 		return
@@ -112,12 +112,12 @@ func VoteKey3() []byte {
 }
 
 func TestCalHisValidators(t *testing.T) {
-	cStr := getTdposConsensusConf()
+	cStr := getXPOSConsensusConf()
 	tdposCfg, err := buildConfigs([]byte(cStr))
 	if err != nil {
 		t.Error("Config unmarshal err", "err", err)
 	}
-	cctx, err := prepare(getTdposConsensusConf())
+	cctx, err := prepare(getXPOSConsensusConf())
 	if err != nil {
 		t.Error("prepare error", "error", err)
 		return
@@ -205,7 +205,7 @@ func TestCalHisValidators(t *testing.T) {
 }
 
 func TestMinerScheduling(t *testing.T) {
-	cctx, err := prepare(getTdposConsensusConf())
+	cctx, err := prepare(getXPOSConsensusConf())
 	if err != nil {
 		t.Error("prepare error", "error", err)
 		return

@@ -15,7 +15,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func getTdposConsensusConf() string {
+func getXPOSConsensusConf() string {
 	return `{
 		"version": "2",
         "timestamp": "1559021720000000000",
@@ -31,7 +31,7 @@ func getTdposConsensusConf() string {
 	}`
 }
 
-func getBFTTdposConsensusConf() string {
+func getBFTXPOSConsensusConf() string {
 	return `{
 		"version": "2",
         "timestamp": "1559021720000000000",
@@ -58,7 +58,7 @@ func prepare(config string) (*base.ConsensusCtx, error) {
 }
 
 func TestUnmarshalConfig(t *testing.T) {
-	cStr := getTdposConsensusConf()
+	cStr := getXPOSConsensusConf()
 	_, err := buildConfigs([]byte(cStr))
 	if err != nil {
 		t.Error("Config unmarshal err", "err", err)
@@ -74,28 +74,26 @@ func getConfig(config string) base.ConsensusConfig {
 	}
 }
 
-func TestNewTdposConsensus(t *testing.T) {
-	cctx, err := prepare(getTdposConsensusConf())
+func TestNewXPOSConsensus(t *testing.T) {
+	cctx, err := prepare(getXPOSConsensusConf())
 	if err != nil {
-		t.Error("prepare error", "error", err)
-		return
+		t.Fatal("prepare error", "error", err)
 	}
-	i := NewTdposConsensus(*cctx, getConfig(getTdposConsensusConf()))
+	i := NewXPOSConsensus(*cctx, getConfig(getXPOSConsensusConf()))
 	if i == nil {
-		t.Error("NewTdposConsensus error", "conf", getConfig(getTdposConsensusConf()))
-		return
+		t.Fatal("NewXPOSConsensus error", "conf", getConfig(getXPOSConsensusConf()))
 	}
 }
 
 func TestCompeteMaster(t *testing.T) {
-	cctx, err := prepare(getTdposConsensusConf())
+	cctx, err := prepare(getXPOSConsensusConf())
 	if err != nil {
 		t.Error("prepare error", "error", err)
 		return
 	}
-	i := NewTdposConsensus(*cctx, getConfig(getTdposConsensusConf()))
+	i := NewXPOSConsensus(*cctx, getConfig(getXPOSConsensusConf()))
 	if i == nil {
-		t.Error("NewTdposConsensus error", "conf", getConfig(getTdposConsensusConf()))
+		t.Error("NewXPOSConsensus error", "conf", getConfig(getXPOSConsensusConf()))
 		return
 	}
 	_, _, err = i.CompeteMaster(3)
@@ -105,14 +103,14 @@ func TestCompeteMaster(t *testing.T) {
 }
 
 func TestCheckMinerMatch(t *testing.T) {
-	cctx, err := prepare(getTdposConsensusConf())
+	cctx, err := prepare(getXPOSConsensusConf())
 	if err != nil {
 		t.Error("prepare error", "error", err)
 		return
 	}
-	i := NewTdposConsensus(*cctx, getConfig(getTdposConsensusConf()))
+	i := NewXPOSConsensus(*cctx, getConfig(getXPOSConsensusConf()))
 	if i == nil {
-		t.Error("NewTdposConsensus error", "conf", getConfig(getTdposConsensusConf()))
+		t.Error("NewXPOSConsensus error", "conf", getConfig(getXPOSConsensusConf()))
 		return
 	}
 	b3 := cmock.NewFakeBlock(3)
@@ -121,18 +119,23 @@ func TestCheckMinerMatch(t *testing.T) {
 	l.SetConsensusStorage(2, SetTdposStorage(1, nil))
 	l.SetConsensusStorage(3, SetTdposStorage(1, nil))
 	c := cctx.BaseCtx
-	i.CheckMinerMatch(&c, b3)
+	match, err := i.CheckMinerMatch(&c, b3)
+	if err != nil {
+		t.Fatal(err)
+		return
+	}
+	t.Log(match)
 }
 
 func TestProcessBeforeMiner(t *testing.T) {
-	cctx, err := prepare(getTdposConsensusConf())
+	cctx, err := prepare(getXPOSConsensusConf())
 	if err != nil {
 		t.Error("prepare error", "error", err)
 		return
 	}
-	i := NewTdposConsensus(*cctx, getConfig(getTdposConsensusConf()))
+	i := NewXPOSConsensus(*cctx, getConfig(getXPOSConsensusConf()))
 	if i == nil {
-		t.Error("NewTdposConsensus error", "conf", getConfig(getTdposConsensusConf()))
+		t.Error("NewXPOSConsensus error", "conf", getConfig(getXPOSConsensusConf()))
 		return
 	}
 	_, _, err = i.ProcessBeforeMiner(0, time.Now().UnixNano())
@@ -142,14 +145,14 @@ func TestProcessBeforeMiner(t *testing.T) {
 }
 
 func TestProcessConfirmBlock(t *testing.T) {
-	cctx, err := prepare(getTdposConsensusConf())
+	cctx, err := prepare(getXPOSConsensusConf())
 	if err != nil {
 		t.Error("prepare error", "error", err)
 		return
 	}
-	i := NewTdposConsensus(*cctx, getConfig(getTdposConsensusConf()))
+	i := NewXPOSConsensus(*cctx, getConfig(getXPOSConsensusConf()))
 	if i == nil {
-		t.Error("NewTdposConsensus error", "conf", getConfig(getTdposConsensusConf()))
+		t.Error("NewXPOSConsensus error", "conf", getConfig(getXPOSConsensusConf()))
 		return
 	}
 	b3 := cmock.NewFakeBlock(3)
@@ -196,17 +199,17 @@ func justify(height int64) *protos.QuorumCert {
 }
 
 func TestBFT(t *testing.T) {
-	cctx, err := prepare(getBFTTdposConsensusConf())
+	cctx, err := prepare(getBFTXPOSConsensusConf())
 	if err != nil {
 		t.Error("prepare error", "error", err)
 		return
 	}
-	i := NewTdposConsensus(*cctx, getConfig(getBFTTdposConsensusConf()))
+	i := NewXPOSConsensus(*cctx, getConfig(getBFTXPOSConsensusConf()))
 	if i == nil {
-		t.Error("NewXpoaConsensus error", "conf", getConfig(getBFTTdposConsensusConf()))
+		t.Error("NewXpoaConsensus error", "conf", getConfig(getBFTXPOSConsensusConf()))
 		return
 	}
-	tdpos, _ := i.(*tdposConsensus)
+	tdpos, _ := i.(*XPoSConsensus)
 	tdpos.initBFT()
 	l, _ := tdpos.election.ledger.(*cmock.FakeLedger)
 	tdpos.election.address = "dpzuVdosQrF2kmzumhVeFQZa1aYcdgFpN"

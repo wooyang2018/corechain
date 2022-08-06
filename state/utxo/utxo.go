@@ -312,7 +312,7 @@ func MakeUtxo(sctx *stateBase.StateCtx, metaHandle *meta.Meta, cachesize, tmploc
 		bcname:            sctx.BCName,
 	}
 
-	utxoTotalBytes, findTotalErr := utxoVM.metaHandle.MetaTable.Get([]byte(UTXOTotalKey))
+	utxoTotalBytes, findTotalErr := utxoVM.metaHandle.Table.Get([]byte(UTXOTotalKey))
 	if findTotalErr == nil {
 		total := big.NewInt(0)
 		total.SetBytes(utxoTotalBytes)

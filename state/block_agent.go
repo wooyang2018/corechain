@@ -9,11 +9,13 @@ import (
 	"github.com/wooyang2018/corechain/protos"
 )
 
+var _ ledger.BlockHandle = (*BlockAgent)(nil)
+
 type BlockAgent struct {
 	blk *protos.InternalBlock
 }
 
-// 兼容xledger账本历史原因共识部分字段分开存储在区块中
+//ConsensusStorage 共识部分字段分开存储在区块中
 type ConsensusStorage struct {
 	TargetBits  int32              `json:"targetBits,omitempty"`
 	Justify     *protos.QuorumCert `json:"justify,omitempty"`
@@ -39,7 +41,7 @@ func (t *BlockAgent) GetBlockid() []byte {
 	return t.blk.GetBlockid()
 }
 
-// 共识记录信息，xledger账本由于历史原因需要做下转换
+//GetConsensusStorage 获取共识记录信息
 func (t *BlockAgent) GetConsensusStorage() ([]byte, error) {
 	strg := &ConsensusStorage{
 		TargetBits: t.blk.GetTargetBits(),
@@ -55,11 +57,12 @@ func (t *BlockAgent) GetConsensusStorage() ([]byte, error) {
 	return js, nil
 }
 
+//GetTimestamp 获取区块的时间戳
 func (t *BlockAgent) GetTimestamp() int64 {
 	return t.blk.GetTimestamp()
 }
 
-// 用于pow挖矿时需更新nonce
+//SetItem 用于pow挖矿时更新nonce，或者设置blockid和sign
 func (t *BlockAgent) SetItem(item string, value interface{}) error {
 	switch item {
 	case "nonce":
@@ -87,7 +90,7 @@ func (t *BlockAgent) SetItem(item string, value interface{}) error {
 	return nil
 }
 
-// 计算BlockId
+//MakeBlockId 设置并返回BlockId
 func (t *BlockAgent) MakeBlockId() ([]byte, error) {
 	blkId, err := ledger.MakeBlockID(t.blk)
 	if err != nil {
@@ -117,6 +120,7 @@ func (t *BlockAgent) GetNextHash() []byte {
 	return t.blk.NextHash
 }
 
+//GetTxIDs 获取区块中所有交易的id列表
 func (t *BlockAgent) GetTxIDs() []string {
 	txIDs := []string{}
 	for _, tx := range t.blk.Transactions {

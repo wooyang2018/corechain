@@ -11,7 +11,7 @@ import (
 	"github.com/wooyang2018/corechain/consensus"
 	"github.com/wooyang2018/corechain/consensus/base"
 	"github.com/wooyang2018/corechain/consensus/chainbft"
-	quorum2 "github.com/wooyang2018/corechain/consensus/chainbft/quorum"
+	"github.com/wooyang2018/corechain/consensus/chainbft/quorum"
 	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/ledger"
 	"github.com/wooyang2018/corechain/logger"
@@ -19,10 +19,10 @@ import (
 )
 
 func init() {
-	consensus.Register("xpos", NewTdposConsensus)
+	consensus.Register("xpos", NewXPOSConsensus)
 }
 
-type tdposConsensus struct {
+type XPoSConsensus struct {
 	ctx       base.ConsensusCtx
 	bcName    string
 	config    *xposConfig
@@ -35,32 +35,32 @@ type tdposConsensus struct {
 	log       logger.Logger
 }
 
-func NewTdposConsensus(cctx base.ConsensusCtx, cCfg base.ConsensusConfig) base.CommonConsensus {
+func NewXPOSConsensus(cctx base.ConsensusCtx, cCfg base.ConsensusConfig) base.CommonConsensus {
 	// 解析config中需要的字段
 	if cctx.XLog == nil {
 		return nil
 	}
 	if cctx.Crypto == nil || cctx.Address == nil {
-		cctx.XLog.Error("consensus:xpos:NewTdposConsensus: CryptoClient in context is nil")
+		cctx.XLog.Error("consensus:xpos:NewXPOSConsensus: CryptoClient in context is nil")
 		return nil
 	}
 	if cctx.Ledger == nil {
-		cctx.XLog.Error("consensus:xpos:NewTdposConsensus: ledger in context is nil")
+		cctx.XLog.Error("consensus:xpos:NewXPOSConsensus: ledger in context is nil")
 		return nil
 	}
 	if cCfg.ConsensusName != "xpos" {
-		cctx.XLog.Error("consensus:xpos:NewTdposConsensus: consensus name in config is wrong", "name", cCfg.ConsensusName)
+		cctx.XLog.Error("consensus:xpos:NewXPOSConsensus: consensus name in config is wrong", "name", cCfg.ConsensusName)
 		return nil
 	}
-	xconfig, err := unmarshalTdposConfig([]byte(cCfg.Config))
+	xconfig, err := unmarshalXPOSConfig([]byte(cCfg.Config))
 	if err != nil {
-		cctx.XLog.Error("consensus:xpos:NewTdposConsensus: xpos struct unmarshal error", "error", err)
+		cctx.XLog.Error("consensus:xpos:NewXPOSConsensus: xpos struct unmarshal error", "error", err)
 		return nil
 	}
 	// 新建schedule实例，该实例包含smr中election的接口实现
 	schedule := NewSchedule(xconfig, cctx.XLog, cctx.Ledger, cCfg.StartHeight)
 	if schedule == nil {
-		cctx.XLog.Error("consensus:xpos:NewTdposConsensus: new schedule err.")
+		cctx.XLog.Error("consensus:xpos:NewXPOSConsensus: new schedule err.")
 		return nil
 	}
 	schedule.address = cctx.Network.PeerInfo().Account
@@ -76,7 +76,7 @@ func NewTdposConsensus(cctx base.ConsensusCtx, cCfg base.ConsensusConfig) base.C
 		status.Name = "xpos"
 	}
 
-	tdpos := &tdposConsensus{
+	tdpos := &XPoSConsensus{
 		bcName:    cctx.BcName,
 		config:    xconfig,
 		isProduce: make(map[int64]bool),
@@ -104,13 +104,13 @@ func NewTdposConsensus(cctx base.ConsensusCtx, cCfg base.ConsensusConfig) base.C
 }
 
 // CompeteMaster is the specific implementation of BasicConsensus
-func (tp *tdposConsensus) CompeteMaster(height int64) (bool, bool, error) {
+func (tp *XPoSConsensus) CompeteMaster(height int64) (bool, bool, error) {
 Again:
 	t := time.Now().UnixNano() / int64(time.Millisecond)
 	key := t / tp.config.Period
 	sleep := tp.config.Period - t%tp.config.Period
-	if sleep > MAXSLEEPTIME {
-		sleep = MAXSLEEPTIME
+	if sleep > MAX_SLEEP_TIME {
+		sleep = MAX_SLEEP_TIME
 	}
 	_, ok := tp.isProduce[key]
 	if !ok {
@@ -146,12 +146,12 @@ Again:
 }
 
 // CalculateBlock 矿工挖矿时共识需要做的工作, 如PoW时共识需要计算结果
-func (tp *tdposConsensus) CalculateBlock(block ledger.BlockHandle) error {
+func (tp *XPoSConsensus) CalculateBlock(block ledger.BlockHandle) error {
 	return nil
 }
 
 // CheckMinerMatch 查看block是否合法
-func (tp *tdposConsensus) CheckMinerMatch(ctx xctx.Context, block ledger.BlockHandle) (bool, error) {
+func (tp *XPoSConsensus) CheckMinerMatch(ctx xctx.Context, block ledger.BlockHandle) (bool, error) {
 	// 获取当前共识存储
 	bv, err := block.GetConsensusStorage()
 	if err != nil {
@@ -188,7 +188,7 @@ func (tp *tdposConsensus) CheckMinerMatch(ctx xctx.Context, block ledger.BlockHa
 		return true, nil
 	}
 	// 兼容老的结构
-	justify, err := quorum2.OldQCToNew(bv)
+	justify, err := quorum.OldQCToNew(bv)
 	if err != nil {
 		tp.log.Warn("consensus:xpos:CheckMinerMatch: OldQCToNew error.", "logid", ctx.GetLog().GetLogId(), "err", err, "blockId", utils.F(block.GetBlockid()))
 		return false, err
@@ -213,7 +213,7 @@ func (tp *tdposConsensus) CheckMinerMatch(ctx xctx.Context, block ledger.BlockHa
 }
 
 // ProcessBeforeMiner 开始挖矿前进行相应的处理, 返回是否需要truncate, 返回写consensusStorage, 返回err
-func (tp *tdposConsensus) ProcessBeforeMiner(height, timestamp int64) ([]byte, []byte, error) {
+func (tp *XPoSConsensus) ProcessBeforeMiner(height, timestamp int64) ([]byte, []byte, error) {
 	term, pos, blockPos := tp.election.minerScheduling(timestamp)
 	if blockPos < 0 || term != tp.election.curTerm || blockPos >= tp.election.blockNum || pos >= tp.election.proposerNum {
 		tp.log.Warn("consensus:xpos:ProcessBeforeMiner: timeoutBlockErr", "term", term, "tp.election.curTerm", tp.election.curTerm,
@@ -223,7 +223,7 @@ func (tp *tdposConsensus) ProcessBeforeMiner(height, timestamp int64) ([]byte, [
 	if tp.election.validators[pos] != tp.election.address {
 		return nil, nil, ErrTimeoutBlock
 	}
-	storage := quorum2.ConsensusStorage{
+	storage := quorum.ConsensusStorage{
 		CurTerm:     tp.election.curTerm,
 		CurBlockNum: blockPos,
 	}
@@ -248,8 +248,8 @@ func (tp *tdposConsensus) ProcessBeforeMiner(height, timestamp int64) ([]byte, [
 		return nil, nil, nil
 	}
 
-	qcQuorumCert, _ := qc.(*quorum2.QuorumCertImpl)
-	oldQC, _ := quorum2.NewToOldQC(qcQuorumCert)
+	qcQuorumCert, _ := qc.(*quorum.QuorumCertImpl)
+	oldQC, _ := quorum.NewToOldQC(qcQuorumCert)
 	storage.Justify = oldQC
 	// 重做时还需要装载标定节点TipHeight，复用TargetBits作为回滚记录，便于追块时获取准确快照高度
 	if truncate {
@@ -264,7 +264,7 @@ func (tp *tdposConsensus) ProcessBeforeMiner(height, timestamp int64) ([]byte, [
 }
 
 // ProcessConfirmBlock 用于确认块后进行相应的处理
-func (tp *tdposConsensus) ProcessConfirmBlock(block ledger.BlockHandle) error {
+func (tp *XPoSConsensus) ProcessConfirmBlock(block ledger.BlockHandle) error {
 	if !tp.election.enableChainedBFT {
 		return nil
 	}
@@ -275,9 +275,9 @@ func (tp *tdposConsensus) ProcessConfirmBlock(block ledger.BlockHandle) error {
 		tp.log.Warn("consensus:xpos:ProcessConfirmBlock: parse storage error", "err", err)
 		return err
 	}
-	var justify quorum2.QuorumCert
+	var justify quorum.QuorumCert
 	if bv != nil && block.GetHeight() > tp.status.StartHeight {
-		justify, err = quorum2.OldQCToNew(bv)
+		justify, err = quorum.OldQCToNew(bv)
 		if err != nil {
 			tp.log.Error("consensus:xpos:ProcessConfirmBlock: OldQCToNew error", "err", err, "blockId", utils.F(block.GetBlockid()))
 			return err
@@ -305,7 +305,7 @@ func (tp *tdposConsensus) ProcessConfirmBlock(block ledger.BlockHandle) error {
 }
 
 // 共识实例的启动逻辑
-func (tp *tdposConsensus) Start() error {
+func (tp *XPoSConsensus) Start() error {
 	// 注册合约方法
 	for method, f := range tp.kMethod {
 		// 若有历史句柄，删除老句柄
@@ -315,19 +315,19 @@ func (tp *tdposConsensus) Start() error {
 	if tp.election.enableChainedBFT {
 		err := tp.initBFT()
 		if err != nil {
-			tp.log.Warn("tdposConsensus start init bft error", "err", err.Error())
+			tp.log.Warn("XPoSConsensus start init bft error", "err", err.Error())
 			return err
 		}
 	}
 	return nil
 }
 
-func (tp *tdposConsensus) initBFT() error {
+func (tp *XPoSConsensus) initBFT() error {
 	// create smr/ chained-bft实例, 需要新建CBFTCrypto、pacemaker和saftyrules实例
 	cryptoClient := chainbft.NewCBFTCrypto(tp.ctx.Address, tp.ctx.Crypto)
-	qcTree := quorum2.InitQCTree(tp.status.StartHeight, tp.ctx.Ledger, tp.ctx.XLog)
+	qcTree := quorum.InitQCTree(tp.status.StartHeight, tp.ctx.Ledger, tp.ctx.XLog)
 	if qcTree == nil {
-		tp.log.Error("consensus:xpos:NewTdposConsensus: init QCTree err", "startHeight", tp.status.StartHeight)
+		tp.log.Error("consensus:xpos:NewXPOSConsensus: init QCTree err", "startHeight", tp.status.StartHeight)
 		return errors.New("init bft init qcTree error")
 	}
 	pacemaker := &chainbft.DefaultPaceMaker{
@@ -360,7 +360,7 @@ func (tp *tdposConsensus) initBFT() error {
 }
 
 // 共识实例的挂起逻辑, 另: 若共识实例发现绑定block结构有误，会直接停掉当前共识实例并panic
-func (tp *tdposConsensus) Stop() error {
+func (tp *XPoSConsensus) Stop() error {
 	// 注销合约方法
 	for method, _ := range tp.kMethod {
 		// 若有历史句柄，删除老句柄
@@ -373,19 +373,19 @@ func (tp *tdposConsensus) Stop() error {
 }
 
 // 共识占用blockinterface的专有存储，特定共识需要提供parse接口，在此作为接口高亮
-func (tp *tdposConsensus) ParseConsensusStorage(block ledger.BlockHandle) (interface{}, error) {
+func (tp *XPoSConsensus) ParseConsensusStorage(block ledger.BlockHandle) (interface{}, error) {
 	return ParseConsensusStorage(block)
 }
 
-func (tp *tdposConsensus) GetConsensusStatus() (base.ConsensusStatus, error) {
+func (tp *XPoSConsensus) GetConsensusStatus() (base.ConsensusStatus, error) {
 	return tp.status, nil
 }
 
-func (tp *tdposConsensus) GetJustifySigns(block ledger.BlockHandle) []*protos.QuorumCertSign {
+func (tp *XPoSConsensus) GetJustifySigns(block ledger.BlockHandle) []*protos.QuorumCertSign {
 	b, err := block.GetConsensusStorage()
 	if err != nil {
 		return nil
 	}
-	signs := quorum2.OldSignToNew(b)
+	signs := quorum.OldSignToNew(b)
 	return signs
 }

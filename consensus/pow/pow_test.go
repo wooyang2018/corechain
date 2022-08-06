@@ -30,7 +30,7 @@ func getPoWConsensusConf() []byte {
 
 func prepare(config []byte) (*base.ConsensusCtx, error) {
 	l := mock.NewFakeLedger(config)
-	ps := PoWStorage{
+	ps := powStorage{
 		TargetBits: minTarget,
 	}
 	by, _ := json.Marshal(ps)
@@ -49,15 +49,6 @@ func getConsensusConf(config []byte) base.ConsensusConfig {
 	}
 }
 
-func getWrongConsensusConf(start int64) base.ConsensusConfig {
-	return base.ConsensusConfig{
-		ConsensusName: "pow2",
-		Config:        string(getPoWConsensusConf()),
-		StartHeight:   start,
-		Index:         0,
-	}
-}
-
 func TestNewPoWConsensus(t *testing.T) {
 	ctx, err := prepare(getPoWConsensusConf())
 	if err != nil {
@@ -65,19 +56,6 @@ func TestNewPoWConsensus(t *testing.T) {
 	}
 	conf := getConsensusConf(getPoWConsensusConf())
 	i := NewPoWConsensus(*ctx, conf)
-	if i == nil {
-		t.Fatal("NewPoWConsensus error", "conf", conf)
-	}
-	if i := NewPoWConsensus(*ctx, getWrongConsensusConf(1)); i != nil {
-		t.Fatal("NewPoWConsensus check name error")
-	}
-
-	ctx, err = prepare(getPoWConsensusConf())
-	if err != nil {
-		t.Fatal("prepare error")
-	}
-	conf = getConsensusConf(getPoWConsensusConf())
-	i = NewPoWConsensus(*ctx, conf)
 	if i == nil {
 		t.Fatal("NewPoWConsensus error", "conf", conf)
 	}
@@ -89,10 +67,12 @@ func TestProcessBeforeMiner(t *testing.T) {
 		t.Fatal("prepare error.")
 	}
 	i := NewPoWConsensus(*cctx, getConsensusConf(getPoWConsensusConf()))
-	_, _, err = i.ProcessBeforeMiner(0, time.Now().UnixNano())
+	//更新下一次pow挖矿时的targetBits
+	_, store, err := i.ProcessBeforeMiner(0, time.Now().UnixNano())
 	if err != nil {
 		t.Fatal("ProcessBeforeMiner error.")
 	}
+	t.Log(string(store))
 }
 
 func TestGetConsensusStatus(t *testing.T) {
@@ -128,29 +108,31 @@ func TestGetConsensusStatus(t *testing.T) {
 }
 
 func TestParseConsensusStorage(t *testing.T) {
-	ps := PoWStorage{
+	cctx, err := prepare(getPoWConsensusConf())
+	if err != nil {
+		t.Fatal("prepare error", err)
+	}
+
+	conf := getConsensusConf(getPoWConsensusConf())
+	pow := NewPoWConsensus(*cctx, conf)
+
+	ps := powStorage{
 		TargetBits: uint32(target),
 	}
 	b, err := json.Marshal(ps)
 	if err != nil {
 		t.Fatal("ParseConsensusStorage Unmarshal error", "error", err)
 	}
-	cctx, err := prepare(getPoWConsensusConf())
-	if err != nil {
-		t.Fatal("prepare error", err)
-	}
+
 	b1, err := mock.NewBlockWithStorage(1, cctx.Crypto, cctx.Address, b)
 	if err != nil {
 		t.Fatal("NewBlockWithStorage error", err)
 	}
-	conf := getConsensusConf(getPoWConsensusConf())
-	pow := NewPoWConsensus(*cctx, conf)
-
 	i, err := pow.ParseConsensusStorage(b1)
 	if err != nil {
 		t.Fatal("ParseConsensusStorage error", "error", err)
 	}
-	s, ok := i.(PoWStorage)
+	s, ok := i.(powStorage)
 	if !ok {
 		t.Fatal("ParseConsensusStorage transfer error")
 	}
@@ -208,16 +190,6 @@ func TestIsProofed(t *testing.T) {
 		t.Fatal("TestIsProofed error")
 	}
 
-	cctx, err = prepare(getPoWConsensusConf())
-	if err != nil {
-		t.Fatal("prepare error", err)
-	}
-	conf = getConsensusConf(getPoWConsensusConf())
-	i = NewPoWConsensus(*cctx, conf)
-	pow, ok = i.(*PoWConsensus)
-	if !ok {
-		t.Fatal("TestIsProofed transfer error")
-	}
 	b = big.NewInt(1)
 	b.Lsh(b, uint(4))
 	blockid = b.Bytes()
@@ -233,26 +205,26 @@ func TestMining(t *testing.T) {
 	}
 	conf := getConsensusConf(getPoWConsensusConf())
 	i := NewPoWConsensus(*cctx, conf)
-	powC, ok := i.(*PoWConsensus)
+	pow, ok := i.(*PoWConsensus)
 	if !ok {
 		t.Fatal("TestMining transfer error")
 	}
-	powC.targetBits = minTarget
-	powC.Start()
-	defer powC.Stop()
-	ps := PoWStorage{
+	pow.targetBits = minTarget
+	pow.Start()
+	defer pow.Stop()
+	ps := powStorage{
 		TargetBits: minTarget,
 	}
 	by, _ := json.Marshal(ps)
-	B, err := mock.NewBlockWithStorage(3, cctx.Crypto, cctx.Address, by)
+	block, err := mock.NewBlockWithStorage(3, cctx.Crypto, cctx.Address, by)
 	if err != nil {
 		t.Fatal("NewBlockWithStorage error", err)
 	}
-	err = powC.CalculateBlock(B)
+	err = pow.CalculateBlock(block)
 	if err != nil {
 		t.Fatal("CalculateBlock mining error", "err", err)
 	}
-	err = powC.ProcessConfirmBlock(B)
+	err = pow.ProcessConfirmBlock(block)
 	if err != nil {
 		t.Fatal("ProcessConfirmBlock mining error", "err", err)
 	}
@@ -265,81 +237,81 @@ func TestRefreshDifficulty(t *testing.T) {
 	}
 	conf := getConsensusConf(getPoWConsensusConf())
 	i := NewPoWConsensus(*cctx, conf)
-	powC, ok := i.(*PoWConsensus)
+	pow, ok := i.(*PoWConsensus)
 	if !ok {
 		t.Fatal("TestRefreshDifficulty transfer error")
 	}
-	genesisB, err := mock.NewBlockWithStorage(0, cctx.Crypto, cctx.Address, []byte{})
+	genesisBlock, err := mock.NewBlockWithStorage(0, cctx.Crypto, cctx.Address, []byte{})
 	if err != nil {
 		t.Fatal("NewBlock error", err)
 	}
-	l, ok := powC.Ledger.(*mock.FakeLedger)
-	err = l.Put(genesisB)
+	l, ok := pow.Ledger.(*mock.FakeLedger)
+	err = l.Put(genesisBlock)
 	if err != nil {
 		t.Fatal("TestRefreshDifficulty put genesis err", "err", err)
 	}
 
-	powC.targetBits = minTarget
-	ps := PoWStorage{
+	pow.targetBits = minTarget
+	ps := powStorage{
 		TargetBits: minTarget,
 	}
 	by, _ := json.Marshal(ps)
-	B1, err := mock.NewBlockWithStorage(3, cctx.Crypto, cctx.Address, by)
+	block, err := mock.NewBlockWithStorage(3, cctx.Crypto, cctx.Address, by)
 	if err != nil {
 		t.Fatal("NewBlockWithStorage error", err)
 	}
-	T1 := mineTask{
-		block: B1,
+	task := mineTask{
+		block: block,
 		done:  make(chan error, 1),
 		close: make(chan int, 1),
 	}
-	go powC.mining(&T1)
-	err = <-T1.done
+	go pow.mining(&task)
+	err = <-task.done
 	if err != nil {
-		t.Fatal("TestRefreshDifficulty mining error", "blockId", B1.GetBlockid(), "err", err)
+		t.Fatal("TestRefreshDifficulty mining error", "blockId", block.GetBlockid(), "err", err)
 	}
-	err = l.Put(B1)
+	err = l.Put(block)
 	if err != nil {
-		t.Fatal("TestRefreshDifficulty put B1 err", "err", err)
+		t.Fatal("TestRefreshDifficulty put block err", "err", err)
 	}
-	B2, err := mock.NewBlockWithStorage(4, cctx.Crypto, cctx.Address, by)
+	block2, err := mock.NewBlockWithStorage(4, cctx.Crypto, cctx.Address, by)
 	if err != nil {
 		t.Fatal("NewBlockWithStorage error", err)
 	}
-	T2 := mineTask{
-		block: B2,
+	task2 := mineTask{
+		block: block2,
 		done:  make(chan error, 1),
 		close: make(chan int, 1),
 	}
-	go powC.mining(&T2)
-	err = <-T2.done
+	go pow.mining(&task2)
+	err = <-task2.done
 	if err != nil {
-		t.Fatal("TestRefreshDifficulty mining error", "blockId", B2.GetBlockid(), "err", err)
+		t.Fatal("TestRefreshDifficulty mining error", "blockId", block2.GetBlockid(), "err", err)
 	}
-	err = l.Put(B2)
+	err = l.Put(block2)
 	if err != nil {
-		t.Fatal("TestRefreshDifficulty put B1 err", "err", err)
+		t.Fatal("TestRefreshDifficulty put block err", "err", err)
 	}
 
-	target, err := powC.refreshDifficulty(B2.GetBlockid(), 5)
+	target, err := pow.refreshDifficulty(block2.GetBlockid(), 5)
 	if err != nil {
 		t.Fatal("TestRefreshDifficulty refreshDifficulty err", "err", err, "target", target)
 	}
-	ps = PoWStorage{
+	ps = powStorage{
 		TargetBits: 218104063,
 	}
 	by, _ = json.Marshal(ps)
-	B3, err := mock.NewBlockWithStorage(5, cctx.Crypto, cctx.Address, by)
+	block3, err := mock.NewBlockWithStorage(5, cctx.Crypto, cctx.Address, by)
 	if err != nil {
-		t.Fatal("NewBlockWithStorage error B3", err)
+		t.Fatal("NewBlockWithStorage error block3", err)
 	}
-	T3 := mineTask{
-		block: B3,
+	task3 := mineTask{
+		block: block3,
 		done:  make(chan error, 1),
 		close: make(chan int, 1),
 	}
-	go powC.mining(&T3)
-	T3.close <- 1
+	go pow.mining(&task3)
+	task3.close <- 1
 }
 
 func TestCheckMinerMatch(t *testing.T) {
@@ -349,18 +321,19 @@ func TestCheckMinerMatch(t *testing.T) {
 	}
 	i := NewPoWConsensus(*cctx, getConsensusConf(getPoWConsensusConf()))
 	if i == nil {
-		t.Fatal("NewXpoaConsensus error")
+		t.Fatal("NewPoWConsensus error")
 	}
-	ps := PoWStorage{
+	ps := powStorage{
 		TargetBits: minTarget,
 	}
 	by, _ := json.Marshal(ps)
-	b3, err := mock.NewBlockWithStorage(3, cctx.Crypto, cctx.Address, by)
+	block, err := mock.NewBlockWithStorage(3, cctx.Crypto, cctx.Address, by)
 	c := cctx.BaseCtx
-	_, err = i.CheckMinerMatch(&c, b3)
+	check, err := i.CheckMinerMatch(&c, block)
 	if err != nil {
 		t.Fatal("CheckMinerMatch error", "err", err)
 	}
+	t.Log(check)
 }
 
 func TestCompeteMaster(t *testing.T) {
@@ -369,5 +342,9 @@ func TestCompeteMaster(t *testing.T) {
 		t.Fatal("prepare error", "error", err)
 	}
 	i := NewPoWConsensus(*cctx, getConsensusConf(getPoWConsensusConf()))
-	i.CompeteMaster(3)
+	master, sync, err := i.CompeteMaster(3)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(master, sync)
 }

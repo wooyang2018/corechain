@@ -24,25 +24,40 @@ var (
 
 const (
 	MAX_TRIES = 1 << 32 // mining时的最大尝试次数
-	BLOCK_BUF = 100
+	BLOCK_BUF = 100     //newblock通道中的最大区块数量
 )
 
 func init() {
 	consensus.Register("pow", NewPoWConsensus)
 }
 
+type mineTask struct {
+	block ledger.BlockHandle
+	done  chan error
+	close chan int
+}
+
+func (t *mineTask) doClose() {
+	close(t.close)
+}
+
+func (t *mineTask) doDone(err error) {
+	t.done <- err
+}
+
 // PoWConsensus pow具体结构
 type PoWConsensus struct {
-	bitcoinFlag   bool
-	sigc          chan bool
-	targetBits    uint32
-	maxDifficulty *big.Int
 	base.ConsensusCtx
-	status *PoWStatus
-	config *PoWConfig
 
-	minech   chan *mineTask
-	newblock chan int64
+	status *PoWStatus
+	config *powConfig
+
+	bitcoinFlag    bool
+	sigch          chan bool
+	targetBits     uint32
+	maxDifficulty  *big.Int
+	minech         chan *mineTask
+	newBlockHeight chan int64
 }
 
 // NewPoWConsensus 初始化PoW共识实例
@@ -62,7 +77,7 @@ func NewPoWConsensus(cctx base.ConsensusCtx, ccfg base.ConsensusConfig) base.Com
 		cctx.XLog.Error("PoW::NewPoWConsensus::consensus name in config is wrong", "name", ccfg.ConsensusName)
 		return nil
 	}
-	config, err := unmarshalPowConfig([]byte(ccfg.Config))
+	config, err := unmarshalPoWConfig([]byte(ccfg.Config))
 	if err != nil {
 		cctx.XLog.Error("PoW::NewPoWConsensus::pow struct unmarshal error", "error", err)
 		return nil
@@ -77,12 +92,12 @@ func NewPoWConsensus(cctx base.ConsensusCtx, ccfg base.ConsensusConfig) base.Com
 				Validators: []string{cctx.Address.Address},
 			},
 		},
-		sigc:     make(chan bool, 1),
-		minech:   make(chan *mineTask, 1),
-		newblock: make(chan int64, BLOCK_BUF),
+		sigch:          make(chan bool, 1),
+		minech:         make(chan *mineTask, 1),
+		newBlockHeight: make(chan int64, BLOCK_BUF),
 	}
 	target := config.DefaultTarget
-	// 目前通过数值大小判断版本类型
+	// 通过数值大小判断pow版本类型
 	if target > 256 {
 		pow.bitcoinFlag = true
 	}
@@ -119,7 +134,7 @@ func NewPoWConsensus(cctx base.ConsensusCtx, ccfg base.ConsensusConfig) base.Com
 
 // ParseConsensusStorage PoW专有存储的逻辑，即targetBits
 func (pow *PoWConsensus) ParseConsensusStorage(block ledger.BlockHandle) (interface{}, error) {
-	store := PoWStorage{}
+	store := powStorage{}
 	b, err := block.GetConsensusStorage()
 	if err != nil {
 		return nil, err
@@ -150,7 +165,6 @@ func (pow *PoWConsensus) CompeteMaster(height int64) (bool, bool, error) {
 }
 
 // CheckMinerMatch 验证区块，包括merkel根和hash
-// ATTENTION: TODO: 上层需要先检查VerifyMerkle(block)
 func (pow *PoWConsensus) CheckMinerMatch(ctx xctx.Context, block ledger.BlockHandle) (bool, error) {
 	// 检查区块是否有targetBits字段
 	in, err := pow.ParseConsensusStorage(block)
@@ -159,9 +173,9 @@ func (pow *PoWConsensus) CheckMinerMatch(ctx xctx.Context, block ledger.BlockHan
 			"blockId", block.GetBlockid(), "miner", string(block.GetProposer()))
 		return false, err
 	}
-	s, ok := in.(PoWStorage)
+	s, ok := in.(powStorage)
 	if !ok {
-		ctx.GetLog().Warn("PoW::CheckMinerMatch::transfer PoWStorage err", "blockId", block.GetBlockid(), "miner", string(block.GetProposer()))
+		ctx.GetLog().Warn("PoW::CheckMinerMatch::transfer powStorage err", "blockId", block.GetBlockid(), "miner", string(block.GetProposer()))
 		return false, err
 	}
 	// 检查区块的区块头是否和和区块中的targetBits字段匹配
@@ -226,7 +240,7 @@ func (pow *PoWConsensus) CheckMinerMatch(ctx xctx.Context, block ledger.BlockHan
 	}
 	if valid && pow.Ledger.QueryTipBlockHeader().GetHeight() < block.GetHeight() {
 		pow.status.newHeight = block.GetHeight()
-		pow.newblock <- block.GetHeight()
+		pow.newBlockHeight <- block.GetHeight()
 	}
 	return valid, err
 }
@@ -244,7 +258,7 @@ func (pow *PoWConsensus) ProcessBeforeMiner(height, timestamp int64) ([]byte, []
 		pow.Stop()
 	}
 	pow.targetBits = bits
-	store := &PoWStorage{
+	store := &powStorage{
 		TargetBits: bits,
 	}
 	by, err := json.Marshal(store)
@@ -270,7 +284,7 @@ func (pow *PoWConsensus) GetConsensusStatus() (base.ConsensusStatus, error) {
 // Stop 立即停止当前挖矿
 func (pow *PoWConsensus) Stop() error {
 	// 发送停止信号
-	pow.sigc <- true
+	pow.sigch <- true
 	pow.XLog.Debug("PoW::Stop")
 	return nil
 }
@@ -287,12 +301,12 @@ func (pow *PoWConsensus) Start() error {
 				}
 				currentMining = task
 				go pow.mining(task)
-			case height := <-pow.newblock:
+			case height := <-pow.newBlockHeight:
 				if currentMining != nil && height > currentMining.block.GetHeight() {
 					currentMining.doClose()
 					currentMining = nil
 				}
-			case <-pow.sigc:
+			case <-pow.sigch:
 				if currentMining != nil {
 					currentMining.doClose()
 					currentMining = nil
@@ -325,9 +339,9 @@ func (pow *PoWConsensus) refreshDifficulty(tipHash []byte, nextHeight int64) (ui
 		pow.XLog.Error("PoW::refreshDifficulty::ParseConsensusStorage err", "err", err, "blockId", tipHash)
 		return 0, err
 	}
-	s, ok := in.(PoWStorage)
+	s, ok := in.(powStorage)
 	if !ok {
-		pow.XLog.Error("PoW::refreshDifficulty::transfer PoWStorage err")
+		pow.XLog.Error("PoW::refreshDifficulty::transfer powStorage err")
 		return 0, PoWBlockItemErr
 	}
 	prevTargetBits := s.TargetBits
@@ -448,18 +462,4 @@ func (pow *PoWConsensus) mining(task *mineTask) {
 		gussNonce++
 		tries--
 	}
-}
-
-type mineTask struct {
-	block ledger.BlockHandle
-	done  chan error
-	close chan int
-}
-
-func (t *mineTask) doClose() {
-	close(t.close)
-}
-
-func (t *mineTask) doDone(err error) {
-	t.done <- err
 }

@@ -3,7 +3,7 @@ package chainbft
 import (
 	"errors"
 
-	quorum2 "github.com/wooyang2018/corechain/consensus/chainbft/quorum"
+	"github.com/wooyang2018/corechain/consensus/chainbft/quorum"
 	"github.com/wooyang2018/corechain/logger"
 )
 
@@ -27,10 +27,10 @@ var (
 
 type SafetyRules interface {
 	UpdatePreferredRound(round int64) bool
-	VoteProposal(proposalId []byte, proposalRound int64, parentQc quorum2.QuorumCert) bool
-	CheckVote(qc quorum2.QuorumCert, logid string, validators []string) error
+	VoteProposal(proposalId []byte, proposalRound int64, parentQc quorum.QuorumCert) bool
+	CheckVote(qc quorum.QuorumCert, logid string, validators []string) error
 	CalVotesThreshold(input, sum int) bool
-	CheckProposal(proposal, parent quorum2.QuorumCert, justifyValidators []string) error
+	CheckProposal(proposal, parent quorum.QuorumCert, justifyValidators []string) error
 	CheckPacemaker(pending, local int64) bool
 }
 
@@ -38,7 +38,7 @@ type DefaultSafetyRules struct {
 	latestRound    int64 //本地最近一次投票的轮数
 	preferredRound int64
 	Crypto         *CBFTCrypto
-	QCTree         *quorum2.QCPendingTree
+	QCTree         *quorum.QCPendingTree
 	Log            logger.Logger
 }
 
@@ -50,7 +50,7 @@ func (s *DefaultSafetyRules) UpdatePreferredRound(round int64) bool {
 }
 
 // VoteProposal 返回是否需要发送voteMsg给下一个Leader
-func (s *DefaultSafetyRules) VoteProposal(proposalId []byte, proposalRound int64, parentQC quorum2.QuorumCert) bool {
+func (s *DefaultSafetyRules) VoteProposal(proposalId []byte, proposalRound int64, parentQC quorum.QuorumCert) bool {
 	if proposalRound < s.latestRound-StrictInternal {
 		return false
 	}
@@ -62,7 +62,7 @@ func (s *DefaultSafetyRules) VoteProposal(proposalId []byte, proposalRound int64
 }
 
 // CheckVote 检查logid、voteInfoHash是否正确
-func (s *DefaultSafetyRules) CheckVote(qc quorum2.QuorumCert, logid string, validators []string) error {
+func (s *DefaultSafetyRules) CheckVote(qc quorum.QuorumCert, logid string, validators []string) error {
 	signs := qc.GetSignsInfo()
 	if len(signs) == 0 {
 		return EmptyVoteSignErr
@@ -105,7 +105,7 @@ func (s *DefaultSafetyRules) CalVotesThreshold(input, sum int) bool {
 }
 
 // CheckProposal 由于共识操纵了账本回滚。因此实际上safety_rules需要proposalRound和parentRound严格相邻的，在此proposal和parent的QC稍微宽松检查
-func (s *DefaultSafetyRules) CheckProposal(proposal, parent quorum2.QuorumCert, justifyValidators []string) error {
+func (s *DefaultSafetyRules) CheckProposal(proposal, parent quorum.QuorumCert, justifyValidators []string) error {
 	if proposal.GetProposalView() < s.latestRound-PermissiveInternal {
 		return TooLowProposalView
 	}

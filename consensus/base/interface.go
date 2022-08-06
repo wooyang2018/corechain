@@ -10,7 +10,7 @@ type BasicConsensus interface {
 	CompeteMaster(height int64) (bool, bool, error)
 	// CheckMinerMatch 检查当前block是否合法
 	CheckMinerMatch(ctx xctx.Context, block ledger.BlockHandle) (bool, error)
-	// ProcessBeforeMiner 开始挖矿前进行相应的处理, 返回truncate目标(如需裁剪), 返回写consensusStorage, 返回err
+	// ProcessBeforeMiner 开始挖矿前进行相应的处理
 	ProcessBeforeMiner(height, timestamp int64) ([]byte, []byte, error)
 	// CalculateBlock 矿工挖矿时共识需要做的工作, 如PoW时共识需要完成存在性证明
 	CalculateBlock(block ledger.BlockHandle) error

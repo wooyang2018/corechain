@@ -6,12 +6,12 @@ import (
 )
 
 func TestGetCurrentValidatorsInfo(t *testing.T) {
-	cstr := getTdposConsensusConf()
+	cstr := getXPOSConsensusConf()
 	tdposCfg, err := buildConfigs([]byte(cstr))
 	if err != nil {
 		t.Error("Config unmarshal err", "err", err)
 	}
-	cctx, err := prepare(getTdposConsensusConf())
+	cctx, err := prepare(getXPOSConsensusConf())
 	if err != nil {
 		t.Error("prepare error", "error", err)
 		return

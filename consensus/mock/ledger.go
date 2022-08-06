@@ -157,6 +157,7 @@ func (l *FakeLedger) GetTipSnapshot() (ledger.XReader, error) {
 	return nil, nil
 }
 
+//SetConsensusStorage 设置指定height的ConsensusStorage
 func (l *FakeLedger) SetConsensusStorage(height int, s []byte) {
 	if len(l.ledgerSlice)-1 < height {
 		return

@@ -11,9 +11,9 @@ import (
 	cmock "github.com/wooyang2018/corechain/consensus/mock"
 )
 
-var (
-	_ = Register("fake", cmock.NewFakeConsensus)
-)
+func init() {
+	Register("fake", cmock.NewFakeConsensus)
+}
 
 func GetGenesisConsensusConf() []byte {
 	return []byte("{\"name\":\"fake\",\"config\":\"{}\"}")
@@ -22,6 +22,7 @@ func GetGenesisConsensusConf() []byte {
 func GetWrongConsensusConf() []byte {
 	return []byte("{\"name\":\"\",\"config\":\"{}\"}")
 }
+
 func NewUpdateArgs() map[string][]byte {
 	a := make(map[string]interface{})
 	a["name"] = "fake"

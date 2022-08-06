@@ -12,10 +12,11 @@ type reservedArgs struct {
 	ContractNames string
 }
 
-func genArgs(req []*protos.InvokeRequest) *reservedArgs {
+func getReservedArgs(req []*protos.InvokeRequest) *reservedArgs {
 	ra := &reservedArgs{}
 	for i, v := range req {
 		ra.ContractNames += v.GetContractName()
+		//合约名字用逗号隔开
 		if i < len(req)-1 {
 			ra.ContractNames += ","
 		}
@@ -126,14 +127,14 @@ func (t *State) GetReservedContractRequests(req []*protos.InvokeRequest, isPreEx
 	// if all reservedContracts have not been updated, return nil, nil
 	ra := &reservedArgs{}
 	if isPreExec || len(reservedContractstpl) == 0 {
-		ra = genArgs(req)
+		ra = getReservedArgs(req)
 	} else {
 		// req should contrain reservedContracts, so the len of req should no less than reservedContracts
 		if len(req) < len(reservedContractstpl) {
 			t.log.Warn("req should contain reservedContracts")
 			return nil, ErrGetReservedContracts
 		} else if len(req) > len(reservedContractstpl) {
-			ra = genArgs(req[len(reservedContractstpl):])
+			ra = getReservedArgs(req[len(reservedContractstpl):])
 		}
 	}
 

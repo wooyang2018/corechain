@@ -11,13 +11,13 @@ var nominate_key = "tdpos_0_nominate"
 var vote_prefix = "tdpos_0_vote_"
 
 func TestIsAuthAddress(t *testing.T) {
-	cctx, err := prepare(getTdposConsensusConf())
+	cctx, err := prepare(getXPOSConsensusConf())
 	if err != nil {
 		t.Error("prepare error", "error", err)
 		return
 	}
-	i := NewTdposConsensus(*cctx, getConfig(getTdposConsensusConf()))
-	tdpos, _ := i.(*tdposConsensus)
+	i := NewXPOSConsensus(*cctx, getConfig(getXPOSConsensusConf()))
+	tdpos, _ := i.(*XPoSConsensus)
 	if !tdpos.isAuthAddress("A", "A", []string{"B", "C"}) {
 		t.Error("isAuthAddress error1.")
 		return
@@ -72,7 +72,7 @@ func NominateKey2() []byte {
 }
 
 func TestRunNominateCandidate(t *testing.T) {
-	cctx, err := prepare(getTdposConsensusConf())
+	cctx, err := prepare(getXPOSConsensusConf())
 	if err != nil {
 		t.Error("prepare error", "error", err)
 		return
@@ -97,8 +97,8 @@ func TestRunNominateCandidate(t *testing.T) {
 	l.SetSnapshot(posBucket, []byte(vote_prefix+"SmJG3rH2ZzYQ9ojxhbRCPwFiE9y6pD1Co"), VoteKey2())
 	l.SetSnapshot(posBucket, []byte(vote_prefix+"akf7qunmeaqb51Wu418d6TyPKp4jdLdpV"), VoteKey3())
 
-	i := NewTdposConsensus(*cctx, getConfig(getTdposConsensusConf()))
-	tdpos, _ := i.(*tdposConsensus)
+	i := NewXPOSConsensus(*cctx, getConfig(getXPOSConsensusConf()))
+	tdpos, _ := i.(*XPoSConsensus)
 	fakeCtx := cmock.NewFakeKContext(NewNominateArgs(), NewM())
 	_, err = tdpos.runNominateCandidate(fakeCtx)
 	if err != nil {
@@ -108,7 +108,7 @@ func TestRunNominateCandidate(t *testing.T) {
 }
 
 func TestRunRevokeCandidate(t *testing.T) {
-	cctx, err := prepare(getTdposConsensusConf())
+	cctx, err := prepare(getXPOSConsensusConf())
 	if err != nil {
 		t.Error("prepare error", "error", err)
 		return
@@ -133,14 +133,14 @@ func TestRunRevokeCandidate(t *testing.T) {
 	l.SetSnapshot(posBucket, []byte(vote_prefix+"SmJG3rH2ZzYQ9ojxhbRCPwFiE9y6pD1Co"), VoteKey2())
 	l.SetSnapshot(posBucket, []byte(vote_prefix+"akf7qunmeaqb51Wu418d6TyPKp4jdLdpV"), VoteKey3())
 
-	i := NewTdposConsensus(*cctx, getConfig(getTdposConsensusConf()))
-	tdpos, _ := i.(*tdposConsensus)
+	i := NewXPOSConsensus(*cctx, getConfig(getXPOSConsensusConf()))
+	tdpos, _ := i.(*XPoSConsensus)
 	fakeCtx := cmock.NewFakeKContext(NewRevokeNominateArgs(), NewM())
 	tdpos.runRevokeCandidate(fakeCtx)
 }
 
 func TestRunVote(t *testing.T) {
-	cctx, err := prepare(getTdposConsensusConf())
+	cctx, err := prepare(getXPOSConsensusConf())
 	if err != nil {
 		t.Error("prepare error", "error", err)
 		return
@@ -165,13 +165,13 @@ func TestRunVote(t *testing.T) {
 	l.SetSnapshot(posBucket, []byte(vote_prefix+"SmJG3rH2ZzYQ9ojxhbRCPwFiE9y6pD1Co"), VoteKey2())
 	l.SetSnapshot(posBucket, []byte(vote_prefix+"akf7qunmeaqb51Wu418d6TyPKp4jdLdpV"), VoteKey3())
 
-	i := NewTdposConsensus(*cctx, getConfig(getTdposConsensusConf()))
-	tdpos, _ := i.(*tdposConsensus)
+	i := NewXPOSConsensus(*cctx, getConfig(getXPOSConsensusConf()))
+	tdpos, _ := i.(*XPoSConsensus)
 	fakeCtx := cmock.NewFakeKContext(NewVoteArgs(), NewM())
 	tdpos.runVote(fakeCtx)
 }
 func TestRunRevokeVote(t *testing.T) {
-	cctx, err := prepare(getTdposConsensusConf())
+	cctx, err := prepare(getXPOSConsensusConf())
 	if err != nil {
 		t.Error("prepare error", "error", err)
 		return
@@ -196,8 +196,8 @@ func TestRunRevokeVote(t *testing.T) {
 	l.SetSnapshot(posBucket, []byte(vote_prefix+"SmJG3rH2ZzYQ9ojxhbRCPwFiE9y6pD1Co"), VoteKey2())
 	l.SetSnapshot(posBucket, []byte(vote_prefix+"akf7qunmeaqb51Wu418d6TyPKp4jdLdpV"), VoteKey3())
 
-	i := NewTdposConsensus(*cctx, getConfig(getTdposConsensusConf()))
-	tdpos, _ := i.(*tdposConsensus)
+	i := NewXPOSConsensus(*cctx, getConfig(getXPOSConsensusConf()))
+	tdpos, _ := i.(*XPoSConsensus)
 	fakeCtx := cmock.NewFakeKContext(NewNominateArgs(), NewM())
 	tdpos.runRevokeVote(fakeCtx)
 }

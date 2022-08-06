@@ -69,7 +69,6 @@ func NewSingleConsensus(cctx base.ConsensusCtx, ccfg base.ConsensusConfig) base.
 
 func (s *SingleConsensus) CompeteMaster(height int64) (bool, bool, error) {
 	time.Sleep(time.Duration(s.config.Period) * time.Millisecond)
-
 	if s.ctx.Address.Address == s.config.Miner {
 		// single共识确定miner后只能通过共识升级改变miner，因此在单个single实例中miner是不可更改的
 		// 此时一个miner从始至终都是自己在挖矿，故不需要向其他节点同步区块
@@ -123,7 +122,7 @@ func (s *SingleConsensus) CheckMinerMatch(ctx xctx.Context, block ledger.BlockHa
 	return valid, err
 }
 
-// ProcessBeforeMiner 开始挖矿前进行相应的处理, 返回是否需要truncate, 返回写consensusStorage, 返回err
+// ProcessBeforeMiner 开始挖矿前进行相应的处理, Single共识返回空
 func (s *SingleConsensus) ProcessBeforeMiner(height, timestamp int64) ([]byte, []byte, error) {
 	return nil, nil, nil
 }
