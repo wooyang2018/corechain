@@ -26,6 +26,7 @@ import (
 	"github.com/wooyang2018/corechain/permission/base"
 	"github.com/wooyang2018/corechain/protos"
 	stateBase "github.com/wooyang2018/corechain/state/base"
+	"github.com/wooyang2018/corechain/state/meta"
 	"github.com/wooyang2018/corechain/state/model"
 	"github.com/wooyang2018/corechain/storage"
 )
@@ -58,7 +59,7 @@ const (
 type TxLists []*protos.Transaction
 
 type UtxoVM struct {
-	metaHandle        *stateBase.Meta
+	metaHandle        *meta.Meta
 	ldb               storage.Database
 	Mutex             *sync.RWMutex // utxo leveldb表读写锁
 	MutexMem          *sync.Mutex   // 内存锁定状态互斥锁
@@ -279,12 +280,12 @@ func (uv *UtxoVM) clearExpiredLocks() {
 //   @param ledger 账本对象
 //   @param store path, utxo 数据的保存路径
 //   @param xlog , 日志handler
-func NewUtxo(sctx *stateBase.StateCtx, metaHandle *stateBase.Meta, stateDB storage.Database) (*UtxoVM, error) {
+func NewUtxo(sctx *stateBase.StateCtx, metaHandle *meta.Meta, stateDB storage.Database) (*UtxoVM, error) {
 	return MakeUtxo(sctx, metaHandle, UTXOCacheSize, UTXOLockExpiredSecond, stateDB)
 }
 
 // MakeUtxoVM 这个函数比NewUtxoVM更加可订制化
-func MakeUtxo(sctx *stateBase.StateCtx, metaHandle *stateBase.Meta, cachesize, tmplockSeconds int,
+func MakeUtxo(sctx *stateBase.StateCtx, metaHandle *meta.Meta, cachesize, tmplockSeconds int,
 	stateDB storage.Database) (*UtxoVM, error) {
 	utxoMutex := &sync.RWMutex{}
 	utxoVM := &UtxoVM{

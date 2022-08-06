@@ -39,7 +39,7 @@ func NewSingleConsensus(cctx base.ConsensusCtx, ccfg base.ConsensusConfig) base.
 		return nil
 	}
 	if cctx.Ledger == nil {
-		cctx.XLog.Error("Single::NewSingleConsensus::Ledger in context is nil")
+		cctx.XLog.Error("Single::NewSingleConsensus::ledger in context is nil")
 		return nil
 	}
 	if ccfg.ConsensusName != "single" {

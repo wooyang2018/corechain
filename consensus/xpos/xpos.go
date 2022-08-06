@@ -45,7 +45,7 @@ func NewTdposConsensus(cctx base.ConsensusCtx, cCfg base.ConsensusConfig) base.C
 		return nil
 	}
 	if cctx.Ledger == nil {
-		cctx.XLog.Error("consensus:xpos:NewTdposConsensus: Ledger in context is nil")
+		cctx.XLog.Error("consensus:xpos:NewTdposConsensus: ledger in context is nil")
 		return nil
 	}
 	if cCfg.ConsensusName != "xpos" {

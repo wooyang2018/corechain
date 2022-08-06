@@ -47,7 +47,7 @@ func NewXPOAConsensus(cctx base.ConsensusCtx, cCfg base.ConsensusConfig) base.Co
 		return nil
 	}
 	if cctx.Ledger == nil {
-		cctx.XLog.Error("consensus:xpoa:NewXPOAConsensus: Ledger in context is nil")
+		cctx.XLog.Error("consensus:xpoa:NewXPOAConsensus: ledger in context is nil")
 		return nil
 	}
 	if cCfg.ConsensusName != "xpoa" {

@@ -1,4 +1,4 @@
-package base
+package meta
 
 import (
 	"errors"
@@ -9,23 +9,18 @@ import (
 	"github.com/wooyang2018/corechain/ledger/def"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/protos"
+	"github.com/wooyang2018/corechain/state/base"
 	"github.com/wooyang2018/corechain/storage"
 	"google.golang.org/protobuf/proto"
 )
-
-type Meta struct {
-	log       logger.Logger
-	Ledger    *ledger.Ledger
-	Meta      *protos.UtxoMeta // utxo meta
-	MetaTmp   *protos.UtxoMeta // tmp utxo meta
-	MutexMeta *sync.Mutex      // access control for meta
-	MetaTable storage.Database // 元数据表，持久化保存latestBlockid
-}
 
 var (
 	ErrProposalParamsIsNegativeNumber    = errors.New("negative number for proposal parameter is not allowed")
 	ErrProposalParamsIsNotPositiveNumber = errors.New("negative number of zero for proposal parameter is not allowed")
 	ErrGetReservedContracts              = errors.New("Get reserved contracts error")
+)
+
+const (
 	// TxSizePercent max percent of txs' size in one block
 	TxSizePercent = 0.8
 )
@@ -35,72 +30,81 @@ type reservedArgs struct {
 	ContractNames string
 }
 
-func NewMeta(sctx *StateCtx, stateDB storage.Database) (*Meta, error) {
+type Meta struct {
+	log       logger.Logger
+	Ledger    *ledger.Ledger
+	UtxoMeta  *protos.UtxoMeta
+	TempMeta  *protos.UtxoMeta
+	Mutex     *sync.Mutex      // access control for meta
+	MetaTable storage.Database // 元数据表，持久化保存latestBlockid
+}
+
+func NewMeta(sctx *base.StateCtx, stateDB storage.Database) (*Meta, error) {
 	obj := &Meta{
 		log:       sctx.XLog,
 		Ledger:    sctx.Ledger,
-		Meta:      &protos.UtxoMeta{},
-		MetaTmp:   &protos.UtxoMeta{},
-		MutexMeta: &sync.Mutex{},
+		UtxoMeta:  &protos.UtxoMeta{},
+		TempMeta:  &protos.UtxoMeta{},
+		Mutex:     &sync.Mutex{},
 		MetaTable: storage.NewTable(stateDB, def.MetaTablePrefix),
 	}
 
 	var loadErr error
 	// load consensus parameters
-	obj.Meta.MaxBlockSize, loadErr = obj.LoadMaxBlockSize()
+	obj.UtxoMeta.MaxBlockSize, loadErr = obj.LoadMaxBlockSize()
 	if loadErr != nil {
 		sctx.XLog.Warn("failed to load maxBlockSize from disk", "loadErr", loadErr)
 		return nil, loadErr
 	}
-	obj.Meta.ForbiddenContract, loadErr = obj.LoadForbiddenContract()
+	obj.UtxoMeta.ForbiddenContract, loadErr = obj.LoadForbiddenContract()
 	if loadErr != nil {
 		sctx.XLog.Warn("failed to load forbiddenContract from disk", "loadErr", loadErr)
 		return nil, loadErr
 	}
-	obj.Meta.ReservedContracts, loadErr = obj.LoadReservedContracts()
+	obj.UtxoMeta.ReservedContracts, loadErr = obj.LoadReservedContracts()
 	if loadErr != nil {
 		sctx.XLog.Warn("failed to load reservedContracts from disk", "loadErr", loadErr)
 		return nil, loadErr
 	}
-	obj.Meta.NewAccountResourceAmount, loadErr = obj.LoadNewAccountResourceAmount()
+	obj.UtxoMeta.NewAccountResourceAmount, loadErr = obj.LoadNewAccountResourceAmount()
 	if loadErr != nil {
 		sctx.XLog.Warn("failed to load newAccountResourceAmount from disk", "loadErr", loadErr)
 		return nil, loadErr
 	}
 	// load irreversible block height & slide window parameters
-	obj.Meta.IrreversibleBlockHeight, loadErr = obj.LoadIrreversibleBlockHeight()
+	obj.UtxoMeta.IrreversibleBlockHeight, loadErr = obj.LoadIrreversibleBlockHeight()
 	if loadErr != nil {
 		sctx.XLog.Warn("failed to load irreversible block height from disk", "loadErr", loadErr)
 		return nil, loadErr
 	}
-	obj.Meta.IrreversibleSlideWindow, loadErr = obj.LoadIrreversibleSlideWindow()
+	obj.UtxoMeta.IrreversibleSlideWindow, loadErr = obj.LoadIrreversibleSlideWindow()
 	if loadErr != nil {
 		sctx.XLog.Warn("failed to load irreversibleSlide window from disk", "loadErr", loadErr)
 		return nil, loadErr
 	}
 	// load gas price
-	obj.Meta.GasPrice, loadErr = obj.LoadGasPrice()
+	obj.UtxoMeta.GasPrice, loadErr = obj.LoadGasPrice()
 	if loadErr != nil {
 		sctx.XLog.Warn("failed to load gas price from disk", "loadErr", loadErr)
 		return nil, loadErr
 	}
 	// load group chain
-	obj.Meta.GroupChainContract, loadErr = obj.LoadGroupChainContract()
+	obj.UtxoMeta.GroupChainContract, loadErr = obj.LoadGroupChainContract()
 	if loadErr != nil {
 		sctx.XLog.Warn("failed to load groupchain from disk", "loadErr", loadErr)
 		return nil, loadErr
 	}
-	newMeta := proto.Clone(obj.Meta).(*protos.UtxoMeta)
-	obj.MetaTmp = newMeta
+	newMeta := proto.Clone(obj.UtxoMeta).(*protos.UtxoMeta)
+	obj.TempMeta = newMeta
 
 	return obj, nil
 }
 
 // GetNewAccountResourceAmount get account for creating an account
 func (t *Meta) GetNewAccountResourceAmount() int64 {
-	t.MutexMeta.Lock()
-	defer t.MutexMeta.Unlock()
-	return t.Meta.GetNewAccountResourceAmount()
+	t.Mutex.Lock()
+	defer t.Mutex.Unlock()
+	return t.UtxoMeta.GetNewAccountResourceAmount()
 }
 
 // LoadNewAccountResourceAmount load newAccountResourceAmount into memory
@@ -138,17 +142,17 @@ func (t *Meta) UpdateNewAccountResourceAmount(newAccountResourceAmount int64, ba
 	if err == nil {
 		t.log.Info("Update newAccountResourceAmount succeed")
 	}
-	t.MutexMeta.Lock()
-	defer t.MutexMeta.Unlock()
-	t.MetaTmp.NewAccountResourceAmount = newAccountResourceAmount
+	t.Mutex.Lock()
+	defer t.Mutex.Unlock()
+	t.TempMeta.NewAccountResourceAmount = newAccountResourceAmount
 	return err
 }
 
 // GetMaxBlockSize get max block size effective in Utxo
 func (t *Meta) GetMaxBlockSize() int64 {
-	t.MutexMeta.Lock()
-	defer t.MutexMeta.Unlock()
-	return t.Meta.GetMaxBlockSize()
+	t.Mutex.Lock()
+	defer t.Mutex.Unlock()
+	return t.UtxoMeta.GetMaxBlockSize()
 }
 
 // LoadMaxBlockSize load maxBlockSize into memory
@@ -190,16 +194,16 @@ func (t *Meta) UpdateMaxBlockSize(maxBlockSize int64, batch storage.Batch) error
 	if err == nil {
 		t.log.Info("Update maxBlockSize succeed")
 	}
-	t.MutexMeta.Lock()
-	defer t.MutexMeta.Unlock()
-	t.MetaTmp.MaxBlockSize = maxBlockSize
+	t.Mutex.Lock()
+	defer t.Mutex.Unlock()
+	t.TempMeta.MaxBlockSize = maxBlockSize
 	return err
 }
 
 func (t *Meta) GetReservedContracts() []*protos.InvokeRequest {
-	t.MutexMeta.Lock()
-	defer t.MutexMeta.Unlock()
-	return t.Meta.ReservedContracts
+	t.Mutex.Lock()
+	defer t.Mutex.Unlock()
+	return t.UtxoMeta.ReservedContracts
 }
 
 func (t *Meta) LoadReservedContracts() ([]*protos.InvokeRequest, error) {
@@ -231,22 +235,22 @@ func (t *Meta) UpdateReservedContracts(params []*protos.InvokeRequest, batch sto
 	if err == nil {
 		t.log.Info("Update reservered contract succeed")
 	}
-	t.MutexMeta.Lock()
-	defer t.MutexMeta.Unlock()
-	t.MetaTmp.ReservedContracts = params
+	t.Mutex.Lock()
+	defer t.Mutex.Unlock()
+	t.TempMeta.ReservedContracts = params
 	return err
 }
 
 func (t *Meta) GetForbiddenContract() *protos.InvokeRequest {
-	t.MutexMeta.Lock()
-	defer t.MutexMeta.Unlock()
-	return t.Meta.GetForbiddenContract()
+	t.Mutex.Lock()
+	defer t.Mutex.Unlock()
+	return t.UtxoMeta.GetForbiddenContract()
 }
 
 func (t *Meta) GetGroupChainContract() *protos.InvokeRequest {
-	t.MutexMeta.Lock()
-	defer t.MutexMeta.Unlock()
-	return t.Meta.GetGroupChainContract()
+	t.Mutex.Lock()
+	defer t.Mutex.Unlock()
+	return t.UtxoMeta.GetGroupChainContract()
 }
 
 func (t *Meta) LoadGroupChainContract() (*protos.InvokeRequest, error) {
@@ -297,9 +301,9 @@ func (t *Meta) UpdateForbiddenContract(param *protos.InvokeRequest, batch storag
 	if err == nil {
 		t.log.Info("Update forbidden contract succeed")
 	}
-	t.MutexMeta.Lock()
-	defer t.MutexMeta.Unlock()
-	t.MetaTmp.ForbiddenContract = param
+	t.Mutex.Lock()
+	defer t.Mutex.Unlock()
+	t.TempMeta.ForbiddenContract = param
 	return err
 }
 
@@ -333,15 +337,15 @@ func (t *Meta) LoadIrreversibleSlideWindow() (int64, error) {
 }
 
 func (t *Meta) GetIrreversibleBlockHeight() int64 {
-	t.MutexMeta.Lock()
-	defer t.MutexMeta.Unlock()
-	return t.Meta.IrreversibleBlockHeight
+	t.Mutex.Lock()
+	defer t.Mutex.Unlock()
+	return t.UtxoMeta.IrreversibleBlockHeight
 }
 
 func (t *Meta) GetIrreversibleSlideWindow() int64 {
-	t.MutexMeta.Lock()
-	defer t.MutexMeta.Unlock()
-	return t.Meta.IrreversibleSlideWindow
+	t.Mutex.Lock()
+	defer t.Mutex.Unlock()
+	return t.UtxoMeta.IrreversibleSlideWindow
 }
 
 func (t *Meta) UpdateIrreversibleBlockHeight(nextIrreversibleBlockHeight int64, batch storage.Batch) error {
@@ -358,9 +362,9 @@ func (t *Meta) UpdateIrreversibleBlockHeight(nextIrreversibleBlockHeight int64, 
 		return err
 	}
 	t.log.Info("Update irreversibleBlockHeight succeed")
-	t.MutexMeta.Lock()
-	defer t.MutexMeta.Unlock()
-	t.MetaTmp.IrreversibleBlockHeight = nextIrreversibleBlockHeight
+	t.Mutex.Lock()
+	defer t.Mutex.Unlock()
+	t.TempMeta.IrreversibleBlockHeight = nextIrreversibleBlockHeight
 	return nil
 }
 
@@ -433,17 +437,17 @@ func (t *Meta) UpdateIrreversibleSlideWindow(nextIrreversibleSlideWindow int64, 
 		return err
 	}
 	t.log.Info("Update irreversibleSlideWindow succeed")
-	t.MutexMeta.Lock()
-	defer t.MutexMeta.Unlock()
-	t.MetaTmp.IrreversibleSlideWindow = nextIrreversibleSlideWindow
+	t.Mutex.Lock()
+	defer t.Mutex.Unlock()
+	t.TempMeta.IrreversibleSlideWindow = nextIrreversibleSlideWindow
 	return nil
 }
 
 // GetGasPrice get gas rate to utxo
 func (t *Meta) GetGasPrice() *protos.GasPrice {
-	t.MutexMeta.Lock()
-	defer t.MutexMeta.Unlock()
-	return t.Meta.GetGasPrice()
+	t.Mutex.Lock()
+	defer t.Mutex.Unlock()
+	return t.UtxoMeta.GetGasPrice()
 }
 
 // LoadGasPrice load gas rate
@@ -512,8 +516,8 @@ func (t *Meta) UpdateGasPrice(nextGasPrice *protos.GasPrice, batch storage.Batch
 		return err
 	}
 	t.log.Info("Update gas price succeed")
-	t.MutexMeta.Lock()
-	defer t.MutexMeta.Unlock()
-	t.MetaTmp.GasPrice = nextGasPrice
+	t.Mutex.Lock()
+	defer t.Mutex.Unlock()
+	t.TempMeta.GasPrice = nextGasPrice
 	return nil
 }

@@ -25,6 +25,7 @@ import (
 	"github.com/wooyang2018/corechain/permission/base"
 	"github.com/wooyang2018/corechain/protos"
 	stateBase "github.com/wooyang2018/corechain/state/base"
+	meta2 "github.com/wooyang2018/corechain/state/meta"
 	"github.com/wooyang2018/corechain/state/model"
 	"github.com/wooyang2018/corechain/state/utxo"
 	"github.com/wooyang2018/corechain/storage"
@@ -68,10 +69,10 @@ const (
 type State struct {
 	sctx           *stateBase.StateCtx // 状态机运行环境上下文
 	log            logger.Logger
-	utxo           *utxo.UtxoVM    //utxo表
-	xmodel         *model.XModel   //xmodel数据表和历史表
-	meta           *stateBase.Meta //meta表
-	tx             *ltx.TxHandler  //未确认交易表
+	utxo           *utxo.UtxoVM   //utxo表
+	xmodel         *model.XModel  //xmodel数据表和历史表
+	meta           *meta2.Meta    //meta表
+	tx             *ltx.TxHandler //未确认交易表
 	ldb            storage.Database
 	latestBlockid  []byte
 	heightNotifier *BlockHeightNotifier // 最新区块高度通知器
@@ -110,7 +111,7 @@ func NewState(sctx *stateBase.StateCtx) (*State, error) {
 		return nil, fmt.Errorf("create state failed because create xmodel error:%s", err)
 	}
 
-	obj.meta, err = stateBase.NewMeta(sctx, obj.ldb) //获取DataBase之上的Meta实例
+	obj.meta, err = meta2.NewMeta(sctx, obj.ldb) //获取DataBase之上的Meta实例
 	if err != nil {
 		return nil, fmt.Errorf("create state failed because create meta error:%s", err)
 	}
@@ -442,10 +443,10 @@ func (t *State) PlayForMiner(blockid []byte) error {
 	//写盘成功再清理unconfirm内存镜像
 	t.tx.Mempool.BatchConfirmTx(block.Transactions)
 	// 内存级别更新UtxoMeta信息
-	t.meta.MutexMeta.Lock()
-	newMeta := proto.Clone(t.meta.MetaTmp).(*protos.UtxoMeta)
-	t.meta.Meta = newMeta
-	t.meta.MutexMeta.Unlock()
+	t.meta.Mutex.Lock()
+	newMeta := proto.Clone(t.meta.TempMeta).(*protos.UtxoMeta)
+	t.meta.UtxoMeta = newMeta
+	t.meta.Mutex.Unlock()
 	t.log.Info("play for miner", "height", block.Height, "blockId", utils.F(block.Blockid), "costs", timer.Print())
 	return nil
 }
@@ -528,10 +529,10 @@ func (t *State) PlayAndRepost(blockid []byte, needRepost bool, isRootTx bool) er
 	t.tx.Mempool.BatchDeleteTx(undoTxs) // 删除 undo 的所有交易。
 
 	// 内存级别更新UtxoMeta信息
-	t.meta.MutexMeta.Lock()
-	newMeta := proto.Clone(t.meta.MetaTmp).(*protos.UtxoMeta)
-	t.meta.Meta = newMeta
-	t.meta.MutexMeta.Unlock()
+	t.meta.Mutex.Lock()
+	newMeta := proto.Clone(t.meta.TempMeta).(*protos.UtxoMeta)
+	t.meta.UtxoMeta = newMeta
+	t.meta.Mutex.Unlock()
 
 	t.log.Info("play and repost", "height", block.Height, "blockId", utils.F(block.Blockid), "unconfirmed", len(unconfirmToConfirm), "costs", timer.Print())
 	return nil
@@ -1090,10 +1091,10 @@ func (t *State) procUndoBlkForWalk(undoBlocks []*protos.InternalBlock,
 		}
 
 		// 每回滚完一个块，内存级别更新UtxoMeta信息
-		t.meta.MutexMeta.Lock()
-		newMeta := proto.Clone(t.meta.MetaTmp).(*protos.UtxoMeta)
-		t.meta.Meta = newMeta
-		t.meta.MutexMeta.Unlock()
+		t.meta.Mutex.Lock()
+		newMeta := proto.Clone(t.meta.TempMeta).(*protos.UtxoMeta)
+		t.meta.UtxoMeta = newMeta
+		t.meta.Mutex.Unlock()
 
 		t.log.Info("finish undo this block", "blockid", showBlkId)
 	}
@@ -1206,10 +1207,10 @@ func (t *State) procTodoBlkForWalk(todoBlocks []*protos.InternalBlock) (err erro
 		}
 
 		// 完成一个区块后，内存级别更新UtxoMeta信息
-		t.meta.MutexMeta.Lock()
-		newMeta := proto.Clone(t.meta.MetaTmp).(*protos.UtxoMeta)
-		t.meta.Meta = newMeta
-		t.meta.MutexMeta.Unlock()
+		t.meta.Mutex.Lock()
+		newMeta := proto.Clone(t.meta.TempMeta).(*protos.UtxoMeta)
+		t.meta.UtxoMeta = newMeta
+		t.meta.Mutex.Unlock()
 
 		t.log.Info("finish todo this block", "blockid", showBlkId)
 	}

@@ -63,7 +63,7 @@ func (s *XModel) CreateSnapshot(blkId []byte) (ledger.XReader, error) {
 			hex.EncodeToString(blkId), err)
 	}
 
-	xms := &xModSnapshot{
+	xms := &XSnapshot{
 		xmod:      s,
 		logger:    s.logger,
 		blkHeight: blkInfo.Height,

@@ -608,7 +608,7 @@ func (t *State) verifyTxRWSets(tx *protos.Transaction) (bool, error) {
 	t.log.Debug("get gas limit from ltx", "gasLimit", gasLimit, "txid", hex.EncodeToString(tx.Txid))
 
 	// get gas rate to utxo
-	gasPrice := t.meta.Meta.GetGasPrice()
+	gasPrice := t.meta.UtxoMeta.GetGasPrice()
 
 	for i, tmpReq := range tx.GetContractRequests() {
 		limits := contractBase.FromPbLimits(tmpReq.GetResourceLimits())

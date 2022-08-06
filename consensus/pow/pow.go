@@ -55,7 +55,7 @@ func NewPoWConsensus(cctx base.ConsensusCtx, ccfg base.ConsensusConfig) base.Com
 		return nil
 	}
 	if cctx.Ledger == nil {
-		cctx.XLog.Error("PoW::NewPoWConsensus::Ledger in context is nil")
+		cctx.XLog.Error("PoW::NewPoWConsensus::ledger in context is nil")
 		return nil
 	}
 	if ccfg.ConsensusName != "pow" {

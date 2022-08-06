@@ -228,7 +228,7 @@ type ViewOption int32
 const (
 	// Without any flag: Default
 	ViewOption_NONE ViewOption = 0
-	// Ledger flag: Get Ledger Info
+	// ledger flag: Get ledger Info
 	ViewOption_LEDGER ViewOption = 1
 	// Utxo flag: Get UTXO Info
 	ViewOption_UTXOINFO ViewOption = 2
@@ -1921,7 +1921,7 @@ func (x *Transaction) GetHDInfo() *HDInfo {
 	return nil
 }
 
-// Ledger metadata
+// ledger metadata
 type LedgerMeta struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

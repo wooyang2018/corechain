@@ -107,7 +107,7 @@ func TestCompeteMaster(t *testing.T) {
 	pc, _ := NewPluggableConsensus(ctx)
 	newHeight := l.GetTipBlock().GetHeight() + 1
 	if newHeight != 3 {
-		t.Fatal("Ledger Meta error, height=", newHeight)
+		t.Fatal("ledger UtxoMeta error, height=", newHeight)
 	}
 	_, _, err := pc.CompeteMaster(newHeight)
 	if err != nil {

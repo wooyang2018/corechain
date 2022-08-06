@@ -25,7 +25,7 @@ const (
 	BobAddress = "WNWk3ekXeM5M2232dY2uCJmEqWhfQiDYT"
 )
 
-func TestGet(t *testing.T) {
+func TestSnapshotGet(t *testing.T) {
 	workspace := mock.GetTempDirPath()
 	os.RemoveAll(workspace)
 	defer os.RemoveAll(workspace)

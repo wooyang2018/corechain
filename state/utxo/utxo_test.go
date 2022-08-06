@@ -15,6 +15,7 @@ import (
 	"github.com/wooyang2018/corechain/protos"
 	"github.com/wooyang2018/corechain/state"
 	"github.com/wooyang2018/corechain/state/base"
+	"github.com/wooyang2018/corechain/state/meta"
 	"github.com/wooyang2018/corechain/state/utxo"
 	_ "github.com/wooyang2018/corechain/storage/leveldb"
 )
@@ -138,7 +139,7 @@ func TestBasicFunc(t *testing.T) {
 		t.Fatal(playErr)
 	}
 
-	metaHandle, err := base.NewMeta(sctx, stateHandle.GetLDB())
+	metaHandle, err := meta.NewMeta(sctx, stateHandle.GetLDB())
 	if err != nil {
 		t.Fatal(err)
 	}
