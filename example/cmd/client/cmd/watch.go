@@ -7,7 +7,7 @@ import (
 	"io"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -42,7 +42,7 @@ func (c *watchCommand) addFlags() {
 }
 
 func (c *watchCommand) watch(ctx context.Context) error {
-	filter := &protos.BlockFilter{
+	filter := &pb.BlockFilter{
 		Bcname: c.cli.RootOptions.Name,
 	}
 	err := json.Unmarshal([]byte(c.filter), filter)
@@ -51,8 +51,8 @@ func (c *watchCommand) watch(ctx context.Context) error {
 	}
 
 	buf, _ := proto.Marshal(filter)
-	request := &protos.SubscribeRequest{
-		Type:   protos.SubscribeType_BLOCK,
+	request := &pb.SubscribeRequest{
+		Type:   pb.SubscribeType_BLOCK,
 		Filter: buf,
 	}
 
@@ -69,7 +69,7 @@ func (c *watchCommand) watch(ctx context.Context) error {
 		if err != nil {
 			return err
 		}
-		var block protos.FilteredBlock
+		var block pb.FilteredBlock
 		err = proto.Unmarshal(event.Payload, &block)
 		if err != nil {
 			return err
@@ -82,7 +82,7 @@ func (c *watchCommand) watch(ctx context.Context) error {
 	return nil
 }
 
-func (c *watchCommand) printBlock(pbblock *protos.FilteredBlock) {
+func (c *watchCommand) printBlock(pbblock *pb.FilteredBlock) {
 	block := FromFilteredBlockPB(pbblock)
 	var buf []byte
 	if c.oneline {

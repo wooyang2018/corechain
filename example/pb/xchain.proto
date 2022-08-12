@@ -1,6 +1,6 @@
 syntax = "proto3";
-option go_package = "github.com/wooyang2018/corechain/example/protos";
-package protos;
+option go_package = "github.com/wooyang2018/corechain/example/pb";
+package pb;
 
 import "google/api/annotations.proto";
 import "chainedbft.proto";

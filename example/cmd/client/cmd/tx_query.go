@@ -13,10 +13,9 @@ import (
 	"io/ioutil"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
-	"google.golang.org/protobuf/proto"
-
 	"github.com/wooyang2018/corechain/common/utils"
+	"github.com/wooyang2018/corechain/example/pb"
+	"google.golang.org/protobuf/proto"
 )
 
 // TxQueryCommand tx query cmd
@@ -57,8 +56,8 @@ func (t *TxQueryCommand) queryTx(ctx context.Context, txid string) error {
 	if err != nil {
 		return fmt.Errorf("bad txid:%s", txid)
 	}
-	txstatus := &protos.TxStatus{
-		Header: &protos.Header{
+	txstatus := &pb.TxStatus{
+		Header: &pb.Header{
 			Logid: utils.GenLogId(),
 		},
 		Bcname: t.cli.RootOptions.Name,
@@ -69,7 +68,7 @@ func (t *TxQueryCommand) queryTx(ctx context.Context, txid string) error {
 		return err
 	}
 
-	if reply.Header.Error != protos.XChainErrorEnum_SUCCESS {
+	if reply.Header.Error != pb.XChainErrorEnum_SUCCESS {
 		return errors.New(reply.Header.Error.String())
 	}
 	if reply.Tx == nil {

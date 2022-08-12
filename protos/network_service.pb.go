@@ -170,7 +170,7 @@ const (
 	// success
 	CoreMessage_SUCCESS CoreMessage_ErrorType = 0
 	CoreMessage_NONE    CoreMessage_ErrorType = 1
-	// base error
+	// common error
 	CoreMessage_UNKNOW_ERROR             CoreMessage_ErrorType = 2
 	CoreMessage_CHECK_SUM_ERROR          CoreMessage_ErrorType = 3
 	CoreMessage_UNMARSHAL_MSG_BODY_ERROR CoreMessage_ErrorType = 4

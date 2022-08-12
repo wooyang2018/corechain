@@ -10,7 +10,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
 )
 
 // QueryNominateRecordsCommand query Nominate cmd
@@ -42,7 +42,7 @@ func (c *QueryNominateRecordsCommand) addFlags() {
 
 func (c *QueryNominateRecordsCommand) queryNominateRecords(ctx context.Context) error {
 	client := c.cli.XchainClient()
-	request := &protos.DposNominateRecordsRequest{
+	request := &pb.DposNominateRecordsRequest{
 		Bcname:  c.cli.RootOptions.Name,
 		Address: c.addr,
 	}

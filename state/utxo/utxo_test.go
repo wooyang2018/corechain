@@ -17,6 +17,7 @@ import (
 	"github.com/wooyang2018/corechain/state/base"
 	"github.com/wooyang2018/corechain/state/meta"
 	"github.com/wooyang2018/corechain/state/utxo"
+
 	_ "github.com/wooyang2018/corechain/storage/leveldb"
 )
 

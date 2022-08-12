@@ -3,8 +3,10 @@ package config
 import (
 	"math"
 	"math/rand"
+	"os"
 	"path/filepath"
 	"strconv"
+	"time"
 
 	xconf "github.com/wooyang2018/corechain/common/config"
 	"github.com/wooyang2018/corechain/common/utils"
@@ -32,6 +34,15 @@ func GetLogConfFilePath() string {
 	return filepath.Join(dir, "conf/log.yaml")
 }
 
+func GetGenesisConfBytes(name string) []byte {
+	confPath := filepath.Join(dir, "data/genesis/"+name+".json")
+	confBytes, err := os.ReadFile(confPath)
+	if err != nil {
+		panic(err)
+	}
+	return confBytes
+}
+
 func GetLedgerConfFilePath() string {
 	return filepath.Join(dir, "conf/ledger.yaml")
 }
@@ -41,6 +52,7 @@ func GetEngineConfFilePath() string {
 }
 
 func GetTempDirPath() string {
+	rand.Seed(time.Now().UnixNano())
 	return filepath.Join("temp", strconv.Itoa(rand.Intn(math.MaxInt)))
 }
 

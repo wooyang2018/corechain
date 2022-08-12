@@ -148,7 +148,6 @@ func (t *State) ImmediateVerifyTx(tx *protos.Transaction, isRootTx bool) (bool, 
 
 // ImmediateVerifyTx verify auto ltx Immediately
 // Transaction verification workflow:
-//	 0. 其实可以直接判断二者的txid，相同，则包括读写集在内的内容都相同
 //   1. verify transaction ID is the same with data hash
 //   2. run contract requests and verify if the RWSet result is the same with preExed RWSet (heavy
 //      operation, keep it at last)

@@ -9,18 +9,17 @@ import (
 	"math/big"
 
 	"github.com/spf13/cobra"
-	protos2 "github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
+	"github.com/wooyang2018/corechain/state/utxo"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/proto"
-
-	"github.com/wooyang2018/corechain/state/utxo"
 )
 
 type GetComplianceCheckSignCommand struct {
 	cli             *Cli
 	cmd             *cobra.Command
 	from            string
-	xendorserclient protos2.XendorserClient
+	xendorserclient pb.XendorserClient
 	tx              string
 	version         int32
 	output          string
@@ -47,11 +46,11 @@ func (c *GetComplianceCheckSignCommand) initXendorserClient() error {
 	if err != nil {
 		return err
 	}
-	c.xendorserclient = protos2.NewXendorserClient(conn)
+	c.xendorserclient = pb.NewXendorserClient(conn)
 	return nil
 }
 
-func (c *GetComplianceCheckSignCommand) XEndorserClient() protos2.XendorserClient {
+func (c *GetComplianceCheckSignCommand) XEndorserClient() pb.XendorserClient {
 	c.initXendorserClient()
 	return c.xendorserclient
 }
@@ -68,7 +67,7 @@ func (c *GetComplianceCheckSignCommand) get(ctx context.Context) error {
 	if err != nil {
 		return errors.New("Fail to open serialized transaction data file")
 	}
-	tx := &protos2.Transaction{}
+	tx := &pb.Transaction{}
 	err = proto.Unmarshal(data, tx)
 	if err != nil {
 		return errors.New("Fail to Unmarshal proto")
@@ -97,7 +96,7 @@ func (c *GetComplianceCheckSignCommand) get(ctx context.Context) error {
 	}
 
 	totalNeed := big.NewInt(0).SetInt64(int64(c.cli.RootOptions.ComplianceCheck.ComplianceCheckEndorseServiceFee))
-	utxoInput := &protos2.UtxoInput{
+	utxoInput := &pb.UtxoInput{
 		Bcname:    ct.ChainName,
 		Address:   fromAddr,
 		TotalNeed: totalNeed.String(),
@@ -117,7 +116,7 @@ func (c *GetComplianceCheckSignCommand) get(ctx context.Context) error {
 		return err
 	}
 
-	txStatus := &protos2.TxStatus{
+	txStatus := &pb.TxStatus{
 		Bcname: c.cli.RootOptions.Name,
 		Tx:     tx,
 	}
@@ -126,7 +125,7 @@ func (c *GetComplianceCheckSignCommand) get(ctx context.Context) error {
 		fmt.Printf("json encode txStatus failed: %v", err)
 		return err
 	}
-	endorserRequest := &protos2.EndorserRequest{
+	endorserRequest := &pb.EndorserRequest{
 		RequestName: "ComplianceCheck",
 		BcName:      c.cli.RootOptions.Name,
 		Fee:         feeTx,
@@ -138,7 +137,7 @@ func (c *GetComplianceCheckSignCommand) get(ctx context.Context) error {
 		fmt.Println("check here new XendorserClient error", err)
 		return err
 	}
-	if reply.Header.Error != protos2.XChainErrorEnum_SUCCESS {
+	if reply.Header.Error != pb.XChainErrorEnum_SUCCESS {
 		return fmt.Errorf("Failed to get sign for tx:%s, logid:%s", reply.Header.Error.String(), reply.Header.Logid)
 	}
 	signInfo := reply.GetEndorserSign()

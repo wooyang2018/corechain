@@ -10,7 +10,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
 )
 
 // NetURLGetCommand get neturl cmd
@@ -35,7 +35,7 @@ func NewNetURLGetCommand(cli *Cli) *cobra.Command {
 
 func (n *NetURLGetCommand) getNetURL(ctx context.Context) error {
 	client := n.cli.XchainClient()
-	req := &protos.CommonIn{}
+	req := &pb.CommonIn{}
 	res, err := client.GetNetURL(ctx, req)
 	if err != nil {
 		return err

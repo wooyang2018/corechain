@@ -4,7 +4,7 @@
 // - protoc             v3.21.1
 // source: endorser.proto
 
-package protos
+package pb
 
 import (
 	context "context"
@@ -35,7 +35,7 @@ func NewXendorserClient(cc grpc.ClientConnInterface) XendorserClient {
 
 func (c *xendorserClient) EndorserCall(ctx context.Context, in *EndorserRequest, opts ...grpc.CallOption) (*EndorserResponse, error) {
 	out := new(EndorserResponse)
-	err := c.cc.Invoke(ctx, "/protos.xendorser/EndorserCall", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.xendorser/EndorserCall", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func _Xendorser_EndorserCall_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.xendorser/EndorserCall",
+		FullMethod: "/pb.xendorser/EndorserCall",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(XendorserServer).EndorserCall(ctx, req.(*EndorserRequest))
@@ -90,7 +90,7 @@ func _Xendorser_EndorserCall_Handler(srv interface{}, ctx context.Context, dec f
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Xendorser_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "protos.xendorser",
+	ServiceName: "pb.xendorser",
 	HandlerType: (*XendorserServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

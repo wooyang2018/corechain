@@ -11,7 +11,7 @@ import (
 	"io/ioutil"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -50,7 +50,7 @@ func (c *MultisigCheckCommand) check() error {
 	if err != nil {
 		return err
 	}
-	tx := &protos.Transaction{}
+	tx := &pb.Transaction{}
 	err = proto.Unmarshal(data, tx)
 	if err != nil {
 		return err

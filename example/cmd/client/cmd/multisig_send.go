@@ -14,12 +14,11 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
-	"google.golang.org/protobuf/proto"
-
 	"github.com/wooyang2018/corechain/common/utils"
 	cryptoClient "github.com/wooyang2018/corechain/crypto/client"
+	"github.com/wooyang2018/corechain/example/pb"
 	"github.com/wooyang2018/corechain/example/service/common"
+	"google.golang.org/protobuf/proto"
 )
 
 // MultisigSendCommand multisig send struct
@@ -74,7 +73,7 @@ func (c *MultisigSendCommand) send(ctx context.Context, initPath string, authPat
 	if err != nil {
 		return errors.New("Fail to open serialized transaction data file")
 	}
-	tx := &protos.Transaction{}
+	tx := &pb.Transaction{}
 	err = proto.Unmarshal(data, tx)
 	if err != nil {
 		return errors.New("Fail to Unmarshal proto")
@@ -112,7 +111,7 @@ func (c *MultisigSendCommand) sendXuper(ctx context.Context, signs string) error
 	if err != nil {
 		return errors.New("Fail to open serialized transaction data file")
 	}
-	tx := &protos.Transaction{}
+	tx := &pb.Transaction{}
 	err = proto.Unmarshal(data, tx)
 	if err != nil {
 		return errors.New("Fail to Unmarshal proto")
@@ -161,7 +160,7 @@ func (c *MultisigSendCommand) sendXuper(ctx context.Context, signs string) error
 	if err != nil {
 		return fmt.Errorf("GenerateMultiSignSignature failed, err=%v", err)
 	}
-	tx.XuperSign = &protos.XuperSignature{
+	tx.XuperSign = &pb.XuperSignature{
 		PublicKeys: msd.PubKeys,
 		Signature:  finalsign,
 	}
@@ -181,15 +180,15 @@ func (c *MultisigSendCommand) sendXuper(ctx context.Context, signs string) error
 }
 
 // getSigns 读文件，填充pb.SignatureInfo
-func (c *MultisigSendCommand) getSigns(path string) ([]*protos.SignatureInfo, error) {
-	signs := []*protos.SignatureInfo{}
+func (c *MultisigSendCommand) getSigns(path string) ([]*pb.SignatureInfo, error) {
+	signs := []*pb.SignatureInfo{}
 	for _, file := range strings.Split(path, ",") {
 		buf, err := ioutil.ReadFile(file)
 		if err != nil {
 			return nil, errors.New("Failed to open sign file")
 		}
 
-		sign := &protos.SignatureInfo{}
+		sign := &pb.SignatureInfo{}
 		err = json.Unmarshal(buf, sign)
 		if err != nil {
 			return nil, errors.New("Failed to json unmarshal sign file")
@@ -201,12 +200,12 @@ func (c *MultisigSendCommand) getSigns(path string) ([]*protos.SignatureInfo, er
 	return signs, nil
 }
 
-func (c *MultisigSendCommand) sendTx(ctx context.Context, tx *protos.Transaction) (string, error) {
-	txStatus := &protos.TxStatus{
+func (c *MultisigSendCommand) sendTx(ctx context.Context, tx *pb.Transaction) (string, error) {
+	txStatus := &pb.TxStatus{
 		Bcname: c.cli.RootOptions.Name,
-		Status: protos.TransactionStatus_UNCONFIRM,
+		Status: pb.TransactionStatus_UNCONFIRM,
 		Tx:     tx,
-		Header: &protos.Header{
+		Header: &pb.Header{
 			Logid: utils.GenLogId(),
 		},
 		Txid: tx.Txid,
@@ -218,7 +217,7 @@ func (c *MultisigSendCommand) sendTx(ctx context.Context, tx *protos.Transaction
 		return "", err
 	}
 
-	if reply.Header.Error != protos.XChainErrorEnum_SUCCESS {
+	if reply.Header.Error != pb.XChainErrorEnum_SUCCESS {
 		return "", fmt.Errorf("Failed to post tx:%s, logid:%s", reply.Header.Error.String(), reply.Header.Logid)
 	}
 

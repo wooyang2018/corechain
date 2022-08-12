@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
 )
 
 // QueryStatusCommand query vote records
@@ -33,7 +33,7 @@ func NewQueryStatusCommand(cli *Cli) *cobra.Command {
 
 func (c *QueryStatusCommand) queryConsensusStatus(ctx context.Context) error {
 	cli := c.cli.XchainClient()
-	request := &protos.DposStatusRequest{
+	request := &pb.DposStatusRequest{
 		Bcname: c.cli.RootOptions.Name,
 	}
 	response, err := cli.DposStatus(ctx, request)

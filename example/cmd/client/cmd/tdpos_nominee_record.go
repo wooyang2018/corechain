@@ -9,7 +9,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
 )
 
 // QueryNomineeRecordsCommand query nominee records
@@ -41,7 +41,7 @@ func (c *QueryNomineeRecordsCommand) addFlags() {
 
 func (c *QueryNomineeRecordsCommand) queryNomineeRecord(ctx context.Context) error {
 	client := c.cli.XchainClient()
-	request := &protos.DposNomineeRecordsRequest{
+	request := &pb.DposNomineeRecordsRequest{
 		Bcname:  c.cli.RootOptions.Name,
 		Address: c.addr,
 	}

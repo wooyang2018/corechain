@@ -13,11 +13,11 @@ import (
 	xconf "github.com/wooyang2018/corechain/common/config"
 	"github.com/wooyang2018/corechain/common/utils"
 	"github.com/wooyang2018/corechain/crypto/client"
+	"github.com/wooyang2018/corechain/example/pb"
 	"github.com/wooyang2018/corechain/ledger"
 	lctx "github.com/wooyang2018/corechain/ledger/context"
 	"github.com/wooyang2018/corechain/ledger/def"
 	"github.com/wooyang2018/corechain/logger"
-	"github.com/wooyang2018/corechain/protos"
 	"github.com/wooyang2018/corechain/state"
 	sctx "github.com/wooyang2018/corechain/state/base"
 	_ "github.com/wooyang2018/corechain/storage/leveldb"
@@ -116,7 +116,7 @@ func (c *PruneLedgerCommand) PruneLedger(econf *xconf.EnvConf) error {
 		return splitErr
 	}
 	// ledger主干切换的扫尾工作
-	newMeta := proto.Clone(xledger.GetMeta()).(*protos.LedgerMeta)
+	newMeta := proto.Clone(xledger.GetMeta()).(*pb.LedgerMeta)
 	newMeta.TrunkHeight = targetBlock.Height
 	newMeta.TipBlockid = targetBlock.Blockid
 	metaBuf, pbErr := proto.Marshal(newMeta)

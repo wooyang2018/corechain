@@ -9,7 +9,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
 )
 
 // QueryCheckResultCommand query res
@@ -41,7 +41,7 @@ func (c *QueryCheckResultCommand) addFlags() {
 
 func (c *QueryCheckResultCommand) queryCheckResult(ctx context.Context) error {
 	client := c.cli.XchainClient()
-	request := &protos.DposCheckResultsRequest{
+	request := &pb.DposCheckResultsRequest{
 		Bcname: c.cli.RootOptions.Name,
 		Term:   c.term,
 	}

@@ -1,4 +1,4 @@
-package ptree
+package rule
 
 import (
 	"strings"

@@ -10,7 +10,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
 )
 
 // ListUtxoCommand necessary parmeters for query utxo records
@@ -47,7 +47,7 @@ func (c *ListUtxoCommand) queryUtxoRecords(ctx context.Context) error {
 	if c.addr == "" {
 		c.addr, _ = readAddress(c.cli.RootOptions.Keys)
 	}
-	request := &protos.UtxoRecordDetail{
+	request := &pb.UtxoRecordDetail{
 		Bcname:       c.cli.RootOptions.Name,
 		AccountName:  c.addr,
 		DisplayCount: c.utxoItemNum,

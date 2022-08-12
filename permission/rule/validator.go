@@ -3,7 +3,6 @@ package rule
 import (
 	"errors"
 
-	"github.com/wooyang2018/corechain/permission/ptree"
 	"github.com/wooyang2018/corechain/protos"
 )
 
@@ -12,7 +11,7 @@ var InvalidErr = errors.New("Validate: Invalid Param")
 // ACLValidator interface defines base interface for ACL Validator
 // Validator only validate account/ak with 1~2 level height
 type ACLValidator interface {
-	Validate(pnode *ptree.PermNode) (bool, error)
+	Validate(pnode *PermNode) (bool, error)
 }
 
 // ACLValidatorFactory create ACLValidator for specified permission model

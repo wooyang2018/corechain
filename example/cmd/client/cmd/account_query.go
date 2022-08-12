@@ -11,9 +11,8 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
-
 	"github.com/wooyang2018/corechain/common/utils"
+	"github.com/wooyang2018/corechain/example/pb"
 )
 
 // AccountQueryCommand query acl struct
@@ -53,8 +52,8 @@ func (t *AccountQueryCommand) queryAccount(ctx context.Context) error {
 		}
 		t.address = address
 	}
-	accountResponse := &protos.AK2AccountRequest{
-		Header: &protos.Header{
+	accountResponse := &pb.AK2AccountRequest{
+		Header: &pb.Header{
 			Logid: utils.GenLogId(),
 		},
 		Bcname:  t.cli.RootOptions.Name,
@@ -65,7 +64,7 @@ func (t *AccountQueryCommand) queryAccount(ctx context.Context) error {
 		return err
 	}
 
-	if reply.GetHeader().GetError() != protos.XChainErrorEnum_SUCCESS {
+	if reply.GetHeader().GetError() != pb.XChainErrorEnum_SUCCESS {
 		return errors.New(reply.Header.Error.String())
 	}
 

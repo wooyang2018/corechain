@@ -7,9 +7,8 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
-
 	"github.com/wooyang2018/corechain/common/utils"
+	"github.com/wooyang2018/corechain/example/pb"
 )
 
 // ContractStatDataQueryCommand contract statistic data query cmd
@@ -39,8 +38,8 @@ func (c *ContractStatDataQueryCommand) addFlags() {
 
 func (c *ContractStatDataQueryCommand) queryContractStatData(ctx context.Context) error {
 	client := c.cli.XchainClient()
-	request := &protos.ContractStatDataRequest{
-		Header: &protos.Header{
+	request := &pb.ContractStatDataRequest{
+		Header: &pb.Header{
 			Logid: utils.GenLogId(),
 		},
 		Bcname: c.cli.RootOptions.Name,
@@ -50,7 +49,7 @@ func (c *ContractStatDataQueryCommand) queryContractStatData(ctx context.Context
 		return err
 	}
 
-	if reply.Header.Error != protos.XChainErrorEnum_SUCCESS {
+	if reply.Header.Error != pb.XChainErrorEnum_SUCCESS {
 		return errors.New(reply.Header.Error.String())
 	}
 

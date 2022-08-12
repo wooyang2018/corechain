@@ -117,12 +117,12 @@ func NewState(sctx *stateBase.StateCtx) (*State, error) {
 	}
 
 	obj.utxo, err = utxo.MakeUtxo(sctx, obj.meta, sctx.LedgerCfg.Utxo.CacheSize,
-		sctx.LedgerCfg.Utxo.TmpLockSeconds, obj.ldb) //构建UtxoVM对象
+		sctx.LedgerCfg.Utxo.TmpLockSeconds, obj.ldb) //在Meta之上构建UtxoVM对象
 	if err != nil {
 		return nil, fmt.Errorf("create state failed because create utxo error:%s", err)
 	}
 
-	obj.tx, err = ltx.NewTxHandler(sctx, obj.ldb)
+	obj.tx, err = ltx.NewTxHandler(sctx, obj.ldb) //获取账本的TxHandler
 	if err != nil {
 		return nil, fmt.Errorf("create state failed because create tx error:%s", err)
 	}

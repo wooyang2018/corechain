@@ -2,11 +2,11 @@
 // source: xchain.proto
 
 /*
-Package protos is a reverse proxy.
+Package pb is a reverse proxy.
 
 It translates gRPC into RESTful JSON APIs.
 */
-package protos
+package pb
 
 import (
 	"context"
@@ -1032,7 +1032,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/SelectUTXOBySize", runtime.WithHTTPPathPattern("/v1/select_utxo_by_size"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/SelectUTXOBySize", runtime.WithHTTPPathPattern("/v1/select_utxo_by_size"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1056,7 +1056,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/PostTx", runtime.WithHTTPPathPattern("/v1/post_tx"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/PostTx", runtime.WithHTTPPathPattern("/v1/post_tx"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1080,7 +1080,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/QueryACL", runtime.WithHTTPPathPattern("/v1/query_acl"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/QueryACL", runtime.WithHTTPPathPattern("/v1/query_acl"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1104,7 +1104,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/QueryUtxoRecord", runtime.WithHTTPPathPattern("/v1/query_utxo_record"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/QueryUtxoRecord", runtime.WithHTTPPathPattern("/v1/query_utxo_record"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1128,7 +1128,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/QueryContractStatData", runtime.WithHTTPPathPattern("/v1/query_contract_stat_data"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/QueryContractStatData", runtime.WithHTTPPathPattern("/v1/query_contract_stat_data"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1152,7 +1152,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/GetAccountContracts", runtime.WithHTTPPathPattern("/v1/get_account_contracts"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/GetAccountContracts", runtime.WithHTTPPathPattern("/v1/get_account_contracts"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1176,7 +1176,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/QueryTx", runtime.WithHTTPPathPattern("/v1/query_tx"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/QueryTx", runtime.WithHTTPPathPattern("/v1/query_tx"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1200,7 +1200,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/GetBalance", runtime.WithHTTPPathPattern("/v1/get_balance"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/GetBalance", runtime.WithHTTPPathPattern("/v1/get_balance"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1224,7 +1224,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/GetBalanceDetail", runtime.WithHTTPPathPattern("/v1/get_balance_detail"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/GetBalanceDetail", runtime.WithHTTPPathPattern("/v1/get_balance_detail"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1248,7 +1248,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/GetFrozenBalance", runtime.WithHTTPPathPattern("/v1/get_frozen_balance"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/GetFrozenBalance", runtime.WithHTTPPathPattern("/v1/get_frozen_balance"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1272,7 +1272,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/GetBlock", runtime.WithHTTPPathPattern("/v1/get_block"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/GetBlock", runtime.WithHTTPPathPattern("/v1/get_block"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1296,7 +1296,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/GetBlockByHeight", runtime.WithHTTPPathPattern("/v1/get_block_by_height"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/GetBlockByHeight", runtime.WithHTTPPathPattern("/v1/get_block_by_height"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1320,7 +1320,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/GetBlockChainStatus", runtime.WithHTTPPathPattern("/v1/get_bcstatus"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/GetBlockChainStatus", runtime.WithHTTPPathPattern("/v1/get_bcstatus"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1344,7 +1344,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/GetBlockChains", runtime.WithHTTPPathPattern("/v1/get_bcchains"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/GetBlockChains", runtime.WithHTTPPathPattern("/v1/get_bcchains"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1368,7 +1368,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/GetSystemStatus", runtime.WithHTTPPathPattern("/v1/get_sysstatus"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/GetSystemStatus", runtime.WithHTTPPathPattern("/v1/get_sysstatus"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1392,7 +1392,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/GetConsensusStatus", runtime.WithHTTPPathPattern("/v1/get_consensusstatus"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/GetConsensusStatus", runtime.WithHTTPPathPattern("/v1/get_consensusstatus"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1416,7 +1416,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/GetNetURL", runtime.WithHTTPPathPattern("/protos.MXchain/GetNetURL"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/GetNetURL", runtime.WithHTTPPathPattern("/pb.MXchain/GetNetURL"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1440,7 +1440,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/SelectUTXO", runtime.WithHTTPPathPattern("/v1/select_utxos_v2"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/SelectUTXO", runtime.WithHTTPPathPattern("/v1/select_utxos_v2"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1464,7 +1464,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/PreExecWithSelectUTXO", runtime.WithHTTPPathPattern("/v1/preexec_select_utxo"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/PreExecWithSelectUTXO", runtime.WithHTTPPathPattern("/v1/preexec_select_utxo"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1488,7 +1488,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/DposCandidates", runtime.WithHTTPPathPattern("/protos.MXchain/DposCandidates"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/DposCandidates", runtime.WithHTTPPathPattern("/pb.MXchain/DposCandidates"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1512,7 +1512,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/DposNominateRecords", runtime.WithHTTPPathPattern("/protos.MXchain/DposNominateRecords"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/DposNominateRecords", runtime.WithHTTPPathPattern("/pb.MXchain/DposNominateRecords"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1536,7 +1536,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/DposNomineeRecords", runtime.WithHTTPPathPattern("/protos.MXchain/DposNomineeRecords"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/DposNomineeRecords", runtime.WithHTTPPathPattern("/pb.MXchain/DposNomineeRecords"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1560,7 +1560,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/DposVoteRecords", runtime.WithHTTPPathPattern("/protos.MXchain/DposVoteRecords"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/DposVoteRecords", runtime.WithHTTPPathPattern("/pb.MXchain/DposVoteRecords"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1584,7 +1584,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/DposVotedRecords", runtime.WithHTTPPathPattern("/protos.MXchain/DposVotedRecords"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/DposVotedRecords", runtime.WithHTTPPathPattern("/pb.MXchain/DposVotedRecords"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1608,7 +1608,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/DposCheckResults", runtime.WithHTTPPathPattern("/protos.MXchain/DposCheckResults"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/DposCheckResults", runtime.WithHTTPPathPattern("/pb.MXchain/DposCheckResults"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1632,7 +1632,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/DposStatus", runtime.WithHTTPPathPattern("/protos.MXchain/DposStatus"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/DposStatus", runtime.WithHTTPPathPattern("/pb.MXchain/DposStatus"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1656,7 +1656,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/GetAccountByAK", runtime.WithHTTPPathPattern("/v1/get_account_by_ak"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/GetAccountByAK", runtime.WithHTTPPathPattern("/v1/get_account_by_ak"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1680,7 +1680,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/GetAddressContracts", runtime.WithHTTPPathPattern("/v1/get_address_contracts"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/GetAddressContracts", runtime.WithHTTPPathPattern("/v1/get_address_contracts"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1704,7 +1704,7 @@ func RegisterMXchainHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.MXchain/PreExec", runtime.WithHTTPPathPattern("/v1/preexec"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.MXchain/PreExec", runtime.WithHTTPPathPattern("/v1/preexec"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1767,7 +1767,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/SelectUTXOBySize", runtime.WithHTTPPathPattern("/v1/select_utxo_by_size"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/SelectUTXOBySize", runtime.WithHTTPPathPattern("/v1/select_utxo_by_size"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1788,7 +1788,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/PostTx", runtime.WithHTTPPathPattern("/v1/post_tx"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/PostTx", runtime.WithHTTPPathPattern("/v1/post_tx"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1809,7 +1809,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/QueryACL", runtime.WithHTTPPathPattern("/v1/query_acl"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/QueryACL", runtime.WithHTTPPathPattern("/v1/query_acl"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1830,7 +1830,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/QueryUtxoRecord", runtime.WithHTTPPathPattern("/v1/query_utxo_record"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/QueryUtxoRecord", runtime.WithHTTPPathPattern("/v1/query_utxo_record"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1851,7 +1851,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/QueryContractStatData", runtime.WithHTTPPathPattern("/v1/query_contract_stat_data"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/QueryContractStatData", runtime.WithHTTPPathPattern("/v1/query_contract_stat_data"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1872,7 +1872,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/GetAccountContracts", runtime.WithHTTPPathPattern("/v1/get_account_contracts"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/GetAccountContracts", runtime.WithHTTPPathPattern("/v1/get_account_contracts"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1893,7 +1893,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/QueryTx", runtime.WithHTTPPathPattern("/v1/query_tx"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/QueryTx", runtime.WithHTTPPathPattern("/v1/query_tx"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1914,7 +1914,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/GetBalance", runtime.WithHTTPPathPattern("/v1/get_balance"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/GetBalance", runtime.WithHTTPPathPattern("/v1/get_balance"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1935,7 +1935,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/GetBalanceDetail", runtime.WithHTTPPathPattern("/v1/get_balance_detail"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/GetBalanceDetail", runtime.WithHTTPPathPattern("/v1/get_balance_detail"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1956,7 +1956,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/GetFrozenBalance", runtime.WithHTTPPathPattern("/v1/get_frozen_balance"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/GetFrozenBalance", runtime.WithHTTPPathPattern("/v1/get_frozen_balance"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1977,7 +1977,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/GetBlock", runtime.WithHTTPPathPattern("/v1/get_block"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/GetBlock", runtime.WithHTTPPathPattern("/v1/get_block"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1998,7 +1998,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/GetBlockByHeight", runtime.WithHTTPPathPattern("/v1/get_block_by_height"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/GetBlockByHeight", runtime.WithHTTPPathPattern("/v1/get_block_by_height"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2019,7 +2019,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/GetBlockChainStatus", runtime.WithHTTPPathPattern("/v1/get_bcstatus"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/GetBlockChainStatus", runtime.WithHTTPPathPattern("/v1/get_bcstatus"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2040,7 +2040,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/GetBlockChains", runtime.WithHTTPPathPattern("/v1/get_bcchains"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/GetBlockChains", runtime.WithHTTPPathPattern("/v1/get_bcchains"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2061,7 +2061,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/GetSystemStatus", runtime.WithHTTPPathPattern("/v1/get_sysstatus"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/GetSystemStatus", runtime.WithHTTPPathPattern("/v1/get_sysstatus"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2082,7 +2082,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/GetConsensusStatus", runtime.WithHTTPPathPattern("/v1/get_consensusstatus"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/GetConsensusStatus", runtime.WithHTTPPathPattern("/v1/get_consensusstatus"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2103,7 +2103,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/GetNetURL", runtime.WithHTTPPathPattern("/protos.MXchain/GetNetURL"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/GetNetURL", runtime.WithHTTPPathPattern("/pb.MXchain/GetNetURL"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2124,7 +2124,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/SelectUTXO", runtime.WithHTTPPathPattern("/v1/select_utxos_v2"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/SelectUTXO", runtime.WithHTTPPathPattern("/v1/select_utxos_v2"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2145,7 +2145,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/PreExecWithSelectUTXO", runtime.WithHTTPPathPattern("/v1/preexec_select_utxo"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/PreExecWithSelectUTXO", runtime.WithHTTPPathPattern("/v1/preexec_select_utxo"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2166,7 +2166,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/DposCandidates", runtime.WithHTTPPathPattern("/protos.MXchain/DposCandidates"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/DposCandidates", runtime.WithHTTPPathPattern("/pb.MXchain/DposCandidates"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2187,7 +2187,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/DposNominateRecords", runtime.WithHTTPPathPattern("/protos.MXchain/DposNominateRecords"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/DposNominateRecords", runtime.WithHTTPPathPattern("/pb.MXchain/DposNominateRecords"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2208,7 +2208,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/DposNomineeRecords", runtime.WithHTTPPathPattern("/protos.MXchain/DposNomineeRecords"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/DposNomineeRecords", runtime.WithHTTPPathPattern("/pb.MXchain/DposNomineeRecords"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2229,7 +2229,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/DposVoteRecords", runtime.WithHTTPPathPattern("/protos.MXchain/DposVoteRecords"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/DposVoteRecords", runtime.WithHTTPPathPattern("/pb.MXchain/DposVoteRecords"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2250,7 +2250,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/DposVotedRecords", runtime.WithHTTPPathPattern("/protos.MXchain/DposVotedRecords"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/DposVotedRecords", runtime.WithHTTPPathPattern("/pb.MXchain/DposVotedRecords"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2271,7 +2271,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/DposCheckResults", runtime.WithHTTPPathPattern("/protos.MXchain/DposCheckResults"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/DposCheckResults", runtime.WithHTTPPathPattern("/pb.MXchain/DposCheckResults"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2292,7 +2292,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/DposStatus", runtime.WithHTTPPathPattern("/protos.MXchain/DposStatus"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/DposStatus", runtime.WithHTTPPathPattern("/pb.MXchain/DposStatus"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2313,7 +2313,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/GetAccountByAK", runtime.WithHTTPPathPattern("/v1/get_account_by_ak"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/GetAccountByAK", runtime.WithHTTPPathPattern("/v1/get_account_by_ak"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2334,7 +2334,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/GetAddressContracts", runtime.WithHTTPPathPattern("/v1/get_address_contracts"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/GetAddressContracts", runtime.WithHTTPPathPattern("/v1/get_address_contracts"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2355,7 +2355,7 @@ func RegisterMXchainHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.MXchain/PreExec", runtime.WithHTTPPathPattern("/v1/preexec"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.MXchain/PreExec", runtime.WithHTTPPathPattern("/v1/preexec"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -2407,25 +2407,25 @@ var (
 
 	pattern_MXchain_GetConsensusStatus_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "get_consensusstatus"}, ""))
 
-	pattern_MXchain_GetNetURL_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"protos.MXchain", "GetNetURL"}, ""))
+	pattern_MXchain_GetNetURL_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"pb.MXchain", "GetNetURL"}, ""))
 
 	pattern_MXchain_SelectUTXO_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "select_utxos_v2"}, ""))
 
 	pattern_MXchain_PreExecWithSelectUTXO_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "preexec_select_utxo"}, ""))
 
-	pattern_MXchain_DposCandidates_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"protos.MXchain", "DposCandidates"}, ""))
+	pattern_MXchain_DposCandidates_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"pb.MXchain", "DposCandidates"}, ""))
 
-	pattern_MXchain_DposNominateRecords_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"protos.MXchain", "DposNominateRecords"}, ""))
+	pattern_MXchain_DposNominateRecords_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"pb.MXchain", "DposNominateRecords"}, ""))
 
-	pattern_MXchain_DposNomineeRecords_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"protos.MXchain", "DposNomineeRecords"}, ""))
+	pattern_MXchain_DposNomineeRecords_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"pb.MXchain", "DposNomineeRecords"}, ""))
 
-	pattern_MXchain_DposVoteRecords_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"protos.MXchain", "DposVoteRecords"}, ""))
+	pattern_MXchain_DposVoteRecords_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"pb.MXchain", "DposVoteRecords"}, ""))
 
-	pattern_MXchain_DposVotedRecords_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"protos.MXchain", "DposVotedRecords"}, ""))
+	pattern_MXchain_DposVotedRecords_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"pb.MXchain", "DposVotedRecords"}, ""))
 
-	pattern_MXchain_DposCheckResults_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"protos.MXchain", "DposCheckResults"}, ""))
+	pattern_MXchain_DposCheckResults_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"pb.MXchain", "DposCheckResults"}, ""))
 
-	pattern_MXchain_DposStatus_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"protos.MXchain", "DposStatus"}, ""))
+	pattern_MXchain_DposStatus_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"pb.MXchain", "DposStatus"}, ""))
 
 	pattern_MXchain_GetAccountByAK_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "get_account_by_ak"}, ""))
 

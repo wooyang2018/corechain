@@ -9,7 +9,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
 )
 
 // AccountContractsCommand
@@ -62,7 +62,7 @@ func (c *AccountContractsCommand) queryContracts(ctx context.Context) error {
 
 func (c *AccountContractsCommand) queryAccountContracts(ctx context.Context) error {
 	client := c.cli.XchainClient()
-	req := &protos.GetAccountContractsRequest{
+	req := &pb.GetAccountContractsRequest{
 		Bcname:  c.cli.RootOptions.Name,
 		Account: c.accountName,
 	}
@@ -82,7 +82,7 @@ func (c *AccountContractsCommand) queryAccountContracts(ctx context.Context) err
 
 func (c *AccountContractsCommand) queryAddressContracts(ctx context.Context) error {
 	client := c.cli.XchainClient()
-	req := &protos.AddressContractsRequest{
+	req := &pb.AddressContractsRequest{
 		Bcname:      c.cli.RootOptions.Name,
 		Address:     c.address,
 		NeedContent: c.verbose,

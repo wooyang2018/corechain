@@ -7,7 +7,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/wooyang2018/corechain/common/utils"
-	"github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
 )
 
 // 本文件封装了和共识模块有关的client调用接口, 具体格式为:
@@ -38,8 +38,8 @@ func NewConsensusStatusCommand(cli *Cli) *cobra.Command {
 
 func (c *ConsensusStatusCommand) getStatus(ctx context.Context) error {
 	client := c.cli.XchainClient()
-	req := &protos.ConsensusStatRequest{
-		Header: &protos.Header{
+	req := &pb.ConsensusStatRequest{
+		Header: &pb.Header{
 			Logid: utils.GenLogId(),
 		},
 		Bcname: c.cli.RootOptions.Name,
@@ -48,7 +48,7 @@ func (c *ConsensusStatusCommand) getStatus(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	status := &protos.ConsensusStatus{
+	status := &pb.ConsensusStatus{
 		Version:        statusPb.Version,
 		ConsensusName:  statusPb.ConsensusName,
 		StartHeight:    statusPb.StartHeight,

@@ -4,7 +4,7 @@
 // - protoc             v3.21.1
 // source: mevent.proto
 
-package protos
+package pb
 
 import (
 	context "context"
@@ -34,7 +34,7 @@ func NewEventServiceClient(cc grpc.ClientConnInterface) EventServiceClient {
 }
 
 func (c *eventServiceClient) Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (EventService_SubscribeClient, error) {
-	stream, err := c.cc.NewStream(ctx, &EventService_ServiceDesc.Streams[0], "/protos.EventService/Subscribe", opts...)
+	stream, err := c.cc.NewStream(ctx, &EventService_ServiceDesc.Streams[0], "/pb.EventService/Subscribe", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -116,7 +116,7 @@ func (x *eventServiceSubscribeServer) Send(m *Event) error {
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var EventService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "protos.EventService",
+	ServiceName: "pb.EventService",
 	HandlerType: (*EventServiceServer)(nil),
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{

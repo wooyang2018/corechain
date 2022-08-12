@@ -9,7 +9,7 @@ import (
 	"encoding/json"
 	"math/big"
 
-	protos2 "github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
 )
 
 // HexID bytes
@@ -168,7 +168,7 @@ func (b *BigInt) MarshalJSON() ([]byte, error) {
 }
 
 // FromPBTx get tx
-func FromPBTx(tx *protos2.Transaction) *Transaction {
+func FromPBTx(tx *pb.Transaction) *Transaction {
 	t := &Transaction{
 		Txid:              tx.Txid,
 		Blockid:           tx.Blockid,
@@ -282,7 +282,7 @@ type InternalBlock struct {
 }
 
 // FromInternalBlockPB block info
-func FromInternalBlockPB(block *protos2.InternalBlock) *InternalBlock {
+func FromInternalBlockPB(block *pb.InternalBlock) *InternalBlock {
 	iblock := &InternalBlock{
 		Version:     block.Version,
 		Blockid:     block.Blockid,
@@ -313,7 +313,7 @@ func FromInternalBlockPB(block *protos2.InternalBlock) *InternalBlock {
 }
 
 // FromPBJustify use protos.QuorumCert to construct local QuorumCert in block
-func FromPBJustify(qc *protos2.QuorumCert) *QuorumCert {
+func FromPBJustify(qc *pb.QuorumCert) *QuorumCert {
 	justify := &QuorumCert{}
 	if qc != nil {
 		justify.ProposalId = hex.EncodeToString(qc.ProposalId)
@@ -390,13 +390,13 @@ type ChainStatus struct {
 
 // SystemStatus proto.SystemStatus
 type SystemStatus struct {
-	ChainStatus []ChainStatus   `json:"blockchains"`
-	Peers       []string        `json:"peers"`
-	Speeds      *protos2.Speeds `json:"speeds"`
+	ChainStatus []ChainStatus `json:"blockchains"`
+	Peers       []string      `json:"peers"`
+	Speeds      *pb.Speeds    `json:"speeds"`
 }
 
 // FromSystemStatusPB systemstatus info
-func FromSystemStatusPB(statuspb *protos2.SystemsStatus) *SystemStatus {
+func FromSystemStatusPB(statuspb *pb.SystemsStatus) *SystemStatus {
 	status := &SystemStatus{}
 	for _, chain := range statuspb.GetBcsStatus() {
 		ledgerMeta := chain.GetMeta()
@@ -504,7 +504,7 @@ type ContractEvent struct {
 }
 
 // FromFilteredBlockPB convert protos.FilteredBlock to FilteredBlock
-func FromFilteredBlockPB(pbblock *protos2.FilteredBlock) *FilteredBlock {
+func FromFilteredBlockPB(pbblock *pb.FilteredBlock) *FilteredBlock {
 	block := &FilteredBlock{
 		Bcname:      pbblock.Bcname,
 		Blockid:     pbblock.Blockid,

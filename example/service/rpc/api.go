@@ -8,7 +8,7 @@ import (
 	engineBase "github.com/wooyang2018/corechain/engines/base"
 	sctx "github.com/wooyang2018/corechain/example/base"
 	"github.com/wooyang2018/corechain/example/models"
-	epb "github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
 	scom "github.com/wooyang2018/corechain/example/service/common"
 	"github.com/wooyang2018/corechain/network"
 	"github.com/wooyang2018/corechain/protos"
@@ -21,9 +21,9 @@ import (
 // 4.rpc接口可以调用log库提供的SetInfoField方法附加输出到ending log
 
 // PostTx post transaction to blockchain network
-func (t *RPCServ) PostTx(gctx context.Context, req *epb.TxStatus) (*epb.CommonReply, error) {
+func (t *RPCServ) PostTx(gctx context.Context, req *pb.TxStatus) (*pb.CommonReply, error) {
 	// 默认响应
-	resp := &epb.CommonReply{}
+	resp := &pb.CommonReply{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -59,9 +59,9 @@ func (t *RPCServ) PostTx(gctx context.Context, req *epb.TxStatus) (*epb.CommonRe
 }
 
 // PreExec smart contract preExec process
-func (t *RPCServ) PreExec(gctx context.Context, req *epb.InvokeRPCRequest) (*epb.InvokeRPCResponse, error) {
+func (t *RPCServ) PreExec(gctx context.Context, req *pb.InvokeRPCRequest) (*pb.InvokeRPCResponse, error) {
 	// 默认响应
-	resp := &epb.InvokeRPCResponse{}
+	resp := &pb.InvokeRPCResponse{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -96,10 +96,10 @@ func (t *RPCServ) PreExec(gctx context.Context, req *epb.InvokeRPCRequest) (*epb
 
 // PreExecWithSelectUTXO preExec + selectUtxo
 func (t *RPCServ) PreExecWithSelectUTXO(gctx context.Context,
-	req *epb.PreExecWithSelectUTXORequest) (*epb.PreExecWithSelectUTXOResponse, error) {
+	req *pb.PreExecWithSelectUTXORequest) (*pb.PreExecWithSelectUTXOResponse, error) {
 
 	// 默认响应
-	resp := &epb.PreExecWithSelectUTXOResponse{}
+	resp := &pb.PreExecWithSelectUTXOResponse{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -120,7 +120,7 @@ func (t *RPCServ) PreExecWithSelectUTXO(gctx context.Context,
 	if totalAmount < 1 {
 		return resp, nil
 	}
-	utxoInput := &epb.UtxoInput{
+	utxoInput := &pb.UtxoInput{
 		Header:    req.GetHeader(),
 		Bcname:    req.GetBcname(),
 		Address:   req.GetAddress(),
@@ -144,9 +144,9 @@ func (t *RPCServ) PreExecWithSelectUTXO(gctx context.Context,
 }
 
 // SelectUTXO select utxo inputs depending on amount
-func (t *RPCServ) SelectUTXO(gctx context.Context, req *epb.UtxoInput) (*epb.UtxoOutput, error) {
+func (t *RPCServ) SelectUTXO(gctx context.Context, req *pb.UtxoInput) (*pb.UtxoOutput, error) {
 	// 默认响应
-	resp := &epb.UtxoOutput{}
+	resp := &pb.UtxoOutput{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -185,9 +185,9 @@ func (t *RPCServ) SelectUTXO(gctx context.Context, req *epb.UtxoInput) (*epb.Utx
 }
 
 // SelectUTXOBySize select utxo inputs depending on size
-func (t *RPCServ) SelectUTXOBySize(gctx context.Context, req *epb.UtxoInput) (*epb.UtxoOutput, error) {
+func (t *RPCServ) SelectUTXOBySize(gctx context.Context, req *pb.UtxoInput) (*pb.UtxoOutput, error) {
 	// 默认响应
-	resp := &epb.UtxoOutput{}
+	resp := &pb.UtxoOutput{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -222,9 +222,9 @@ func (t *RPCServ) SelectUTXOBySize(gctx context.Context, req *epb.UtxoInput) (*e
 
 // QueryContractStatData query statistic info about contract
 func (t *RPCServ) QueryContractStatData(gctx context.Context,
-	req *epb.ContractStatDataRequest) (*epb.ContractStatDataResponse, error) {
+	req *pb.ContractStatDataRequest) (*pb.ContractStatDataResponse, error) {
 	// 默认响应
-	resp := &epb.ContractStatDataResponse{}
+	resp := &pb.ContractStatDataResponse{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -245,7 +245,7 @@ func (t *RPCServ) QueryContractStatData(gctx context.Context,
 	}
 
 	resp.Bcname = req.GetBcname()
-	resp.Data = &epb.ContractStatData{
+	resp.Data = &pb.ContractStatData{
 		AccountCount:  res.GetAccountCount(),
 		ContractCount: res.GetContractCount(),
 	}
@@ -255,10 +255,10 @@ func (t *RPCServ) QueryContractStatData(gctx context.Context,
 
 // QueryUtxoRecord query utxo records
 func (t *RPCServ) QueryUtxoRecord(gctx context.Context,
-	req *epb.UtxoRecordDetail) (*epb.UtxoRecordDetail, error) {
+	req *pb.UtxoRecordDetail) (*pb.UtxoRecordDetail, error) {
 
 	// 默认响应
-	resp := &epb.UtxoRecordDetail{}
+	resp := &pb.UtxoRecordDetail{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -289,9 +289,9 @@ func (t *RPCServ) QueryUtxoRecord(gctx context.Context,
 }
 
 // QueryACL query some account info
-func (t *RPCServ) QueryACL(gctx context.Context, req *epb.AclStatus) (*epb.AclStatus, error) {
+func (t *RPCServ) QueryACL(gctx context.Context, req *pb.AclStatus) (*pb.AclStatus, error) {
 	// 默认响应
-	resp := &epb.AclStatus{}
+	resp := &pb.AclStatus{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -342,9 +342,9 @@ func (t *RPCServ) QueryACL(gctx context.Context, req *epb.AclStatus) (*epb.AclSt
 }
 
 // GetAccountContracts get account request
-func (t *RPCServ) GetAccountContracts(gctx context.Context, req *epb.GetAccountContractsRequest) (*epb.GetAccountContractsResponse, error) {
+func (t *RPCServ) GetAccountContracts(gctx context.Context, req *pb.GetAccountContractsRequest) (*pb.GetAccountContractsResponse, error) {
 	// 默认响应
-	resp := &epb.GetAccountContractsResponse{}
+	resp := &pb.GetAccountContractsResponse{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -379,9 +379,9 @@ func (t *RPCServ) GetAccountContracts(gctx context.Context, req *epb.GetAccountC
 }
 
 // QueryTx Get transaction details
-func (t *RPCServ) QueryTx(gctx context.Context, req *epb.TxStatus) (*epb.TxStatus, error) {
+func (t *RPCServ) QueryTx(gctx context.Context, req *pb.TxStatus) (*pb.TxStatus, error) {
 	// 默认响应
-	resp := &epb.TxStatus{}
+	resp := &pb.TxStatus{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -410,7 +410,7 @@ func (t *RPCServ) QueryTx(gctx context.Context, req *epb.TxStatus) (*epb.TxStatu
 	resp.Bcname = req.GetBcname()
 	resp.Txid = req.GetTxid()
 	resp.Tx = tx
-	resp.Status = epb.TransactionStatus(txInfo.Status)
+	resp.Status = pb.TransactionStatus(txInfo.Status)
 	resp.Distance = txInfo.Distance
 
 	rctx.GetLog().SetInfoField("bc_name", req.GetBcname())
@@ -419,10 +419,10 @@ func (t *RPCServ) QueryTx(gctx context.Context, req *epb.TxStatus) (*epb.TxStatu
 }
 
 // GetBalance get balance for account or addr
-func (t *RPCServ) GetBalance(gctx context.Context, req *epb.AddressStatus) (*epb.AddressStatus, error) {
+func (t *RPCServ) GetBalance(gctx context.Context, req *pb.AddressStatus) (*pb.AddressStatus, error) {
 	// 默认响应
-	resp := &epb.AddressStatus{
-		Bcs: make([]*epb.TokenDetail, 0),
+	resp := &pb.AddressStatus{
+		Bcs: make([]*pb.TokenDetail, 0),
 	}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
@@ -433,20 +433,20 @@ func (t *RPCServ) GetBalance(gctx context.Context, req *epb.AddressStatus) (*epb
 	}
 
 	for i := 0; i < len(req.Bcs); i++ {
-		tmpTokenDetail := &epb.TokenDetail{}
+		tmpTokenDetail := &pb.TokenDetail{}
 		handle, err := models.NewChainHandle(req.Bcs[i].Bcname, rctx)
 		if err != nil {
-			tmpTokenDetail.Error = epb.XChainErrorEnum_BLOCKCHAIN_NOTEXIST
+			tmpTokenDetail.Error = pb.XChainErrorEnum_BLOCKCHAIN_NOTEXIST
 			tmpTokenDetail.Balance = ""
 			resp.Bcs = append(resp.Bcs, tmpTokenDetail)
 			continue
 		}
 		balance, err := handle.GetBalance(req.Address)
 		if err != nil {
-			tmpTokenDetail.Error = epb.XChainErrorEnum_UNKNOW_ERROR
+			tmpTokenDetail.Error = pb.XChainErrorEnum_UNKNOW_ERROR
 			tmpTokenDetail.Balance = ""
 		} else {
-			tmpTokenDetail.Error = epb.XChainErrorEnum_SUCCESS
+			tmpTokenDetail.Error = pb.XChainErrorEnum_SUCCESS
 			tmpTokenDetail.Balance = balance
 		}
 		resp.Bcs = append(resp.Bcs, tmpTokenDetail)
@@ -458,10 +458,10 @@ func (t *RPCServ) GetBalance(gctx context.Context, req *epb.AddressStatus) (*epb
 }
 
 // GetFrozenBalance get balance frozened for account or addr
-func (t *RPCServ) GetFrozenBalance(gctx context.Context, req *epb.AddressStatus) (*epb.AddressStatus, error) {
+func (t *RPCServ) GetFrozenBalance(gctx context.Context, req *pb.AddressStatus) (*pb.AddressStatus, error) {
 	// 默认响应
-	resp := &epb.AddressStatus{
-		Bcs: make([]*epb.TokenDetail, 0),
+	resp := &pb.AddressStatus{
+		Bcs: make([]*pb.TokenDetail, 0),
 	}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
@@ -472,22 +472,22 @@ func (t *RPCServ) GetFrozenBalance(gctx context.Context, req *epb.AddressStatus)
 	}
 
 	for i := 0; i < len(req.Bcs); i++ {
-		tmpTokenDetail := &epb.TokenDetail{
+		tmpTokenDetail := &pb.TokenDetail{
 			Bcname: req.Bcs[i].Bcname,
 		}
 		handle, err := models.NewChainHandle(req.Bcs[i].Bcname, rctx)
 		if err != nil {
-			tmpTokenDetail.Error = epb.XChainErrorEnum_BLOCKCHAIN_NOTEXIST
+			tmpTokenDetail.Error = pb.XChainErrorEnum_BLOCKCHAIN_NOTEXIST
 			tmpTokenDetail.Balance = ""
 			resp.Bcs = append(resp.Bcs, tmpTokenDetail)
 			continue
 		}
 		balance, err := handle.GetFrozenBalance(req.Address)
 		if err != nil {
-			tmpTokenDetail.Error = epb.XChainErrorEnum_UNKNOW_ERROR
+			tmpTokenDetail.Error = pb.XChainErrorEnum_UNKNOW_ERROR
 			tmpTokenDetail.Balance = ""
 		} else {
-			tmpTokenDetail.Error = epb.XChainErrorEnum_SUCCESS
+			tmpTokenDetail.Error = pb.XChainErrorEnum_SUCCESS
 			tmpTokenDetail.Balance = balance
 		}
 		resp.Bcs = append(resp.Bcs, tmpTokenDetail)
@@ -499,10 +499,10 @@ func (t *RPCServ) GetFrozenBalance(gctx context.Context, req *epb.AddressStatus)
 }
 
 // GetBalanceDetail get balance frozened for account or addr
-func (t *RPCServ) GetBalanceDetail(gctx context.Context, req *epb.AddressBalanceStatus) (*epb.AddressBalanceStatus, error) {
+func (t *RPCServ) GetBalanceDetail(gctx context.Context, req *pb.AddressBalanceStatus) (*pb.AddressBalanceStatus, error) {
 	// 默认响应
-	resp := &epb.AddressBalanceStatus{
-		Tfds: make([]*epb.TokenFrozenDetails, 0),
+	resp := &pb.AddressBalanceStatus{
+		Tfds: make([]*pb.TokenFrozenDetails, 0),
 	}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
@@ -513,27 +513,27 @@ func (t *RPCServ) GetBalanceDetail(gctx context.Context, req *epb.AddressBalance
 	}
 
 	for i := 0; i < len(req.Tfds); i++ {
-		tmpFrozenDetails := &epb.TokenFrozenDetails{
+		tmpFrozenDetails := &pb.TokenFrozenDetails{
 			Bcname: req.Tfds[i].Bcname,
 		}
 		handle, err := models.NewChainHandle(req.Tfds[i].Bcname, rctx)
 		if err != nil {
-			tmpFrozenDetails.Error = epb.XChainErrorEnum_BLOCKCHAIN_NOTEXIST
+			tmpFrozenDetails.Error = pb.XChainErrorEnum_BLOCKCHAIN_NOTEXIST
 			tmpFrozenDetails.Tfd = nil
 			resp.Tfds = append(resp.Tfds, tmpFrozenDetails)
 			continue
 		}
 		tfd, err := handle.GetBalanceDetail(req.GetAddress())
 		if err != nil {
-			tmpFrozenDetails.Error = epb.XChainErrorEnum_UNKNOW_ERROR
+			tmpFrozenDetails.Error = pb.XChainErrorEnum_UNKNOW_ERROR
 			tmpFrozenDetails.Tfd = nil
 		} else {
 			xchainTfd, err := scom.BalanceDetailsToXchain(tfd)
 			if err != nil {
-				tmpFrozenDetails.Error = epb.XChainErrorEnum_UNKNOW_ERROR
+				tmpFrozenDetails.Error = pb.XChainErrorEnum_UNKNOW_ERROR
 				tmpFrozenDetails.Tfd = nil
 			}
-			tmpFrozenDetails.Error = epb.XChainErrorEnum_SUCCESS
+			tmpFrozenDetails.Error = pb.XChainErrorEnum_SUCCESS
 			tmpFrozenDetails.Tfd = xchainTfd
 		}
 		resp.Tfds = append(resp.Tfds, tmpFrozenDetails)
@@ -545,9 +545,9 @@ func (t *RPCServ) GetBalanceDetail(gctx context.Context, req *epb.AddressBalance
 }
 
 // GetBlock get block info according to blockID
-func (t *RPCServ) GetBlock(gctx context.Context, req *epb.BlockID) (*epb.Block, error) {
+func (t *RPCServ) GetBlock(gctx context.Context, req *pb.BlockID) (*pb.Block, error) {
 	// 默认响应
-	resp := &epb.Block{}
+	resp := &pb.Block{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -575,7 +575,7 @@ func (t *RPCServ) GetBlock(gctx context.Context, req *epb.BlockID) (*epb.Block, 
 	}
 
 	resp.Block = block
-	resp.Status = epb.Block_EBlockStatus(blockInfo.Status)
+	resp.Status = pb.Block_EBlockStatus(blockInfo.Status)
 	resp.Bcname = req.Bcname
 	resp.Blockid = req.Blockid
 
@@ -585,9 +585,9 @@ func (t *RPCServ) GetBlock(gctx context.Context, req *epb.BlockID) (*epb.Block, 
 }
 
 // GetBlockChainStatus get systemstatus
-func (t *RPCServ) GetBlockChainStatus(gctx context.Context, req *epb.BCStatus) (*epb.BCStatus, error) {
+func (t *RPCServ) GetBlockChainStatus(gctx context.Context, req *pb.BCStatus) (*pb.BCStatus, error) {
 	// 默认响应
-	resp := &epb.BCStatus{}
+	resp := &pb.BCStatus{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -635,9 +635,9 @@ func (t *RPCServ) GetBlockChainStatus(gctx context.Context, req *epb.BCStatus) (
 }
 
 // ConfirmBlockChainStatus confirm is_trunk
-func (t *RPCServ) ConfirmBlockChainStatus(gctx context.Context, req *epb.BCStatus) (*epb.BCTipStatus, error) {
+func (t *RPCServ) ConfirmBlockChainStatus(gctx context.Context, req *pb.BCStatus) (*pb.BCTipStatus, error) {
 	// 默认响应
-	resp := &epb.BCTipStatus{}
+	resp := &pb.BCTipStatus{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -666,9 +666,9 @@ func (t *RPCServ) ConfirmBlockChainStatus(gctx context.Context, req *epb.BCStatu
 }
 
 // GetBlockChains get BlockChains
-func (t *RPCServ) GetBlockChains(gctx context.Context, req *epb.CommonIn) (*epb.BlockChains, error) {
+func (t *RPCServ) GetBlockChains(gctx context.Context, req *pb.CommonIn) (*pb.BlockChains, error) {
 	// 默认响应
-	resp := &epb.BlockChains{}
+	resp := &pb.BlockChains{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -681,9 +681,9 @@ func (t *RPCServ) GetBlockChains(gctx context.Context, req *epb.CommonIn) (*epb.
 }
 
 // GetSystemStatus get systemstatus
-func (t *RPCServ) GetSystemStatus(gctx context.Context, req *epb.CommonIn) (*epb.SystemsStatusReply, error) {
+func (t *RPCServ) GetSystemStatus(gctx context.Context, req *pb.CommonIn) (*pb.SystemsStatusReply, error) {
 	// 默认响应
-	resp := &epb.SystemsStatusReply{}
+	resp := &pb.SystemsStatusReply{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -692,15 +692,15 @@ func (t *RPCServ) GetSystemStatus(gctx context.Context, req *epb.CommonIn) (*epb
 		return resp, engineBase.ErrParameter
 	}
 
-	systemsStatus := &epb.SystemsStatus{
-		Speeds: &epb.Speeds{
+	systemsStatus := &pb.SystemsStatus{
+		Speeds: &pb.Speeds{
 			SumSpeeds: make(map[string]float64),
-			BcSpeeds:  make(map[string]*epb.BCSpeeds),
+			BcSpeeds:  make(map[string]*pb.BCSpeeds),
 		},
 	}
 	bcs := t.engine.GetChains()
 	for _, bcName := range bcs {
-		bcStatus := &epb.BCStatus{Header: req.Header, Bcname: bcName}
+		bcStatus := &pb.BCStatus{Header: req.Header, Bcname: bcName}
 		status, err := t.GetBlockChainStatus(gctx, bcStatus)
 		if err != nil {
 			rctx.GetLog().Warn("get chain status error", "error", err)
@@ -709,7 +709,7 @@ func (t *RPCServ) GetSystemStatus(gctx context.Context, req *epb.CommonIn) (*epb
 		systemsStatus.BcsStatus = append(systemsStatus.BcsStatus, status)
 	}
 
-	if req.ViewOption == epb.ViewOption_NONE || req.ViewOption == epb.ViewOption_PEERS {
+	if req.ViewOption == pb.ViewOption_NONE || req.ViewOption == pb.ViewOption_PEERS {
 		peerInfo := t.engine.Context().Net.PeerInfo()
 		peerUrls := scom.PeerInfoToStrings(peerInfo)
 		systemsStatus.PeerUrls = peerUrls
@@ -720,9 +720,9 @@ func (t *RPCServ) GetSystemStatus(gctx context.Context, req *epb.CommonIn) (*epb
 }
 
 // GetNetURL get net url in p2p_base
-func (t *RPCServ) GetNetURL(gctx context.Context, req *epb.CommonIn) (*epb.RawUrl, error) {
+func (t *RPCServ) GetNetURL(gctx context.Context, req *pb.CommonIn) (*pb.RawUrl, error) {
 	// 默认响应
-	resp := &epb.RawUrl{}
+	resp := &pb.RawUrl{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -738,9 +738,9 @@ func (t *RPCServ) GetNetURL(gctx context.Context, req *epb.CommonIn) (*epb.RawUr
 }
 
 // GetBlockByHeight  get trunk block by height
-func (t *RPCServ) GetBlockByHeight(gctx context.Context, req *epb.BlockHeight) (*epb.Block, error) {
+func (t *RPCServ) GetBlockByHeight(gctx context.Context, req *pb.BlockHeight) (*pb.Block, error) {
 	// 默认响应
-	resp := &epb.Block{}
+	resp := &pb.Block{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -766,7 +766,7 @@ func (t *RPCServ) GetBlockByHeight(gctx context.Context, req *epb.BlockHeight) (
 		return resp, engineBase.ErrInternal
 	}
 	resp.Block = block
-	resp.Status = epb.Block_EBlockStatus(blockInfo.Status)
+	resp.Status = pb.Block_EBlockStatus(blockInfo.Status)
 	resp.Bcname = req.GetBcname()
 	resp.Blockid = blockInfo.Block.Blockid
 
@@ -776,9 +776,9 @@ func (t *RPCServ) GetBlockByHeight(gctx context.Context, req *epb.BlockHeight) (
 }
 
 // GetAccountByAK get account list with contain ak
-func (t *RPCServ) GetAccountByAK(gctx context.Context, req *epb.AK2AccountRequest) (*epb.AK2AccountResponse, error) {
+func (t *RPCServ) GetAccountByAK(gctx context.Context, req *pb.AK2AccountRequest) (*pb.AK2AccountResponse, error) {
 	// 默认响应
-	resp := &epb.AK2AccountResponse{}
+	resp := &pb.AK2AccountResponse{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -807,9 +807,9 @@ func (t *RPCServ) GetAccountByAK(gctx context.Context, req *epb.AK2AccountReques
 }
 
 // GetAddressContracts get contracts of accounts contain a specific address
-func (t *RPCServ) GetAddressContracts(gctx context.Context, req *epb.AddressContractsRequest) (*epb.AddressContractsResponse, error) {
+func (t *RPCServ) GetAddressContracts(gctx context.Context, req *pb.AddressContractsRequest) (*pb.AddressContractsResponse, error) {
 	// 默认响应
-	resp := &epb.AddressContractsResponse{}
+	resp := &pb.AddressContractsResponse{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -831,7 +831,7 @@ func (t *RPCServ) GetAddressContracts(gctx context.Context, req *epb.AddressCont
 	}
 
 	// get contracts for each account
-	resp.Contracts = make(map[string]*epb.ContractList)
+	resp.Contracts = make(map[string]*pb.ContractList)
 	for _, account := range accounts {
 		contracts, err := handle.GetAccountContracts(account)
 		if err != nil {
@@ -845,7 +845,7 @@ func (t *RPCServ) GetAddressContracts(gctx context.Context, req *epb.AddressCont
 				rctx.GetLog().Warn("convert contracts failed")
 				continue
 			}
-			resp.Contracts[account] = &epb.ContractList{
+			resp.Contracts[account] = &pb.ContractList{
 				ContractStatus: xchainContracts,
 			}
 		}
@@ -855,9 +855,9 @@ func (t *RPCServ) GetAddressContracts(gctx context.Context, req *epb.AddressCont
 	return resp, nil
 }
 
-func (t *RPCServ) GetConsensusStatus(gctx context.Context, req *epb.ConsensusStatRequest) (*epb.ConsensusStatus, error) {
+func (t *RPCServ) GetConsensusStatus(gctx context.Context, req *pb.ConsensusStatRequest) (*pb.ConsensusStatus, error) {
 	// 默认响应
-	resp := &epb.ConsensusStatus{}
+	resp := &pb.ConsensusStatus{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -884,9 +884,9 @@ func (t *RPCServ) GetConsensusStatus(gctx context.Context, req *epb.ConsensusSta
 }
 
 // DposCandidates get all candidates of the xpos consensus
-func (t *RPCServ) DposCandidates(gctx context.Context, req *epb.DposCandidatesRequest) (*epb.DposCandidatesResponse, error) {
+func (t *RPCServ) DposCandidates(gctx context.Context, req *pb.DposCandidatesRequest) (*pb.DposCandidatesResponse, error) {
 	// 默认响应
-	resp := &epb.DposCandidatesResponse{}
+	resp := &pb.DposCandidatesResponse{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -899,9 +899,9 @@ func (t *RPCServ) DposCandidates(gctx context.Context, req *epb.DposCandidatesRe
 }
 
 // DposNominateRecords get all records nominated by an user
-func (t *RPCServ) DposNominateRecords(gctx context.Context, req *epb.DposNominateRecordsRequest) (*epb.DposNominateRecordsResponse, error) {
+func (t *RPCServ) DposNominateRecords(gctx context.Context, req *pb.DposNominateRecordsRequest) (*pb.DposNominateRecordsResponse, error) {
 	// 默认响应
-	resp := &epb.DposNominateRecordsResponse{}
+	resp := &pb.DposNominateRecordsResponse{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -914,9 +914,9 @@ func (t *RPCServ) DposNominateRecords(gctx context.Context, req *epb.DposNominat
 }
 
 // DposNomineeRecords get nominated record of a candidate
-func (t *RPCServ) DposNomineeRecords(gctx context.Context, req *epb.DposNomineeRecordsRequest) (*epb.DposNomineeRecordsResponse, error) {
+func (t *RPCServ) DposNomineeRecords(gctx context.Context, req *pb.DposNomineeRecordsRequest) (*pb.DposNomineeRecordsResponse, error) {
 	// 默认响应
-	resp := &epb.DposNomineeRecordsResponse{}
+	resp := &pb.DposNomineeRecordsResponse{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -929,9 +929,9 @@ func (t *RPCServ) DposNomineeRecords(gctx context.Context, req *epb.DposNomineeR
 }
 
 // DposVoteRecords get all vote records voted by an user
-func (t *RPCServ) DposVoteRecords(gctx context.Context, req *epb.DposVoteRecordsRequest) (*epb.DposVoteRecordsResponse, error) {
+func (t *RPCServ) DposVoteRecords(gctx context.Context, req *pb.DposVoteRecordsRequest) (*pb.DposVoteRecordsResponse, error) {
 	// 默认响应
-	resp := &epb.DposVoteRecordsResponse{}
+	resp := &pb.DposVoteRecordsResponse{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -944,9 +944,9 @@ func (t *RPCServ) DposVoteRecords(gctx context.Context, req *epb.DposVoteRecords
 }
 
 // DposVotedRecords get all vote records of a candidate
-func (t *RPCServ) DposVotedRecords(gctx context.Context, req *epb.DposVotedRecordsRequest) (*epb.DposVotedRecordsResponse, error) {
+func (t *RPCServ) DposVotedRecords(gctx context.Context, req *pb.DposVotedRecordsRequest) (*pb.DposVotedRecordsResponse, error) {
 	// 默认响应
-	resp := &epb.DposVotedRecordsResponse{}
+	resp := &pb.DposVotedRecordsResponse{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -959,9 +959,9 @@ func (t *RPCServ) DposVotedRecords(gctx context.Context, req *epb.DposVotedRecor
 }
 
 // DposCheckResults get check results of a specific term
-func (t *RPCServ) DposCheckResults(gctx context.Context, req *epb.DposCheckResultsRequest) (*epb.DposCheckResultsResponse, error) {
+func (t *RPCServ) DposCheckResults(gctx context.Context, req *pb.DposCheckResultsRequest) (*pb.DposCheckResultsResponse, error) {
 	// 默认响应
-	resp := &epb.DposCheckResultsResponse{}
+	resp := &pb.DposCheckResultsResponse{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 
@@ -974,9 +974,9 @@ func (t *RPCServ) DposCheckResults(gctx context.Context, req *epb.DposCheckResul
 }
 
 // DposStatus get dpos status
-func (t *RPCServ) DposStatus(gctx context.Context, req *epb.DposStatusRequest) (*epb.DposStatusResponse, error) {
+func (t *RPCServ) DposStatus(gctx context.Context, req *pb.DposStatusRequest) (*pb.DposStatusResponse, error) {
 	// 默认响应
-	resp := &epb.DposStatusResponse{}
+	resp := &pb.DposStatusResponse{}
 	// 获取请求上下文，对内传递rctx
 	rctx := sctx.ValueReqCtx(gctx)
 

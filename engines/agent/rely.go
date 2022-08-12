@@ -19,7 +19,6 @@ import (
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/permission"
 	"github.com/wooyang2018/corechain/permission/base"
-	pctx "github.com/wooyang2018/corechain/permission/context"
 	"github.com/wooyang2018/corechain/state"
 	sctx "github.com/wooyang2018/corechain/state/base"
 )
@@ -78,7 +77,7 @@ func (t *ChainRelyAgentImpl) CreateCrypto(cryptoType string) (cryptoBase.CryptoC
 // Acl权限
 func (t *ChainRelyAgentImpl) CreateAcl() (base.AclManager, error) {
 	legAgent := NewLedgerAgent(t.ctx)
-	aclCtx, err := pctx.NewAclCtx(t.ctx.BCName, legAgent, t.ctx.Contract)
+	aclCtx, err := base.NewAclCtx(t.ctx.BCName, legAgent, t.ctx.Contract)
 	if err != nil {
 		return nil, fmt.Errorf("create permission ctx failed.err:%v", err)
 	}

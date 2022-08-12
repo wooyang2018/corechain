@@ -3768,7 +3768,7 @@ func (x *Transaction) GetHDInfo() *HDInfo {
 	return nil
 }
 
-// ledger metadata
+// Ledger metadata
 type LedgerMeta struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

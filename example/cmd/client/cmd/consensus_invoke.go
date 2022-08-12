@@ -7,9 +7,8 @@ import (
 	"io/ioutil"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
-
 	"github.com/wooyang2018/corechain/common/utils"
+	"github.com/wooyang2018/corechain/example/pb"
 	"github.com/wooyang2018/corechain/state/utxo"
 )
 
@@ -148,8 +147,8 @@ func (c *ConsensusInvokeCommand) xpoaInvoke(ctx context.Context, ct *CommTrans) 
 	ct.From = c.account
 	// xpoa的account必须严格鉴权, 首先吊起acl访问
 	client := c.cli.XchainClient()
-	aclStatus := &protos.AclStatus{
-		Header: &protos.Header{
+	aclStatus := &pb.AclStatus{
+		Header: &pb.Header{
 			Logid: utils.GenLogId(),
 		},
 		Bcname:      c.cli.RootOptions.Name,

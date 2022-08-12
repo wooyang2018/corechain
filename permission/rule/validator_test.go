@@ -3,7 +3,6 @@ package rule
 import (
 	"testing"
 
-	"github.com/wooyang2018/corechain/permission/ptree"
 	"github.com/wooyang2018/corechain/protos"
 )
 
@@ -37,9 +36,9 @@ func Test_NullValidator(t *testing.T) {
 	}
 
 	// build perm tree
-	rootNode := ptree.NewPermNode("Alice", nil)
-	ak1Node := ptree.NewPermNode("ak1", nil)
-	ak1Node.Status = ptree.Success
+	rootNode := NewPermNode("Alice", nil)
+	ak1Node := NewPermNode("ak1", nil)
+	ak1Node.Status = Success
 	rootNode.Children = append(rootNode.Children, ak1Node)
 	result, err := tv.Validate(rootNode)
 
@@ -71,9 +70,9 @@ func Test_ThresholdValidator(t *testing.T) {
 	aclObj.AksWeight["ak3"] = 1
 
 	// build perm tree
-	rootNode := ptree.NewPermNode("Alice", aclObj)
-	ak1Node := ptree.NewPermNode("ak1", nil)
-	ak1Node.Status = ptree.Success
+	rootNode := NewPermNode("Alice", aclObj)
+	ak1Node := NewPermNode("ak1", nil)
+	ak1Node.Status = Success
 	rootNode.Children = append(rootNode.Children, ak1Node)
 	result, err := tv.Validate(rootNode)
 
@@ -83,8 +82,8 @@ func Test_ThresholdValidator(t *testing.T) {
 		return
 	}
 
-	ak3Node := ptree.NewPermNode("ak3", nil)
-	ak3Node.Status = ptree.Success
+	ak3Node := NewPermNode("ak3", nil)
+	ak3Node.Status = Success
 	rootNode.Children = append(rootNode.Children, ak3Node)
 	result, err = tv.Validate(rootNode)
 	// should success
@@ -126,9 +125,9 @@ func Test_AkSetsValidator(t *testing.T) {
 	aclObj.AkSets.Sets["2"] = set2
 
 	// build perm tree
-	rootNode := ptree.NewPermNode("Alice", aclObj)
-	ak1Node := ptree.NewPermNode("ak1", nil)
-	ak1Node.Status = ptree.Success
+	rootNode := NewPermNode("Alice", aclObj)
+	ak1Node := NewPermNode("ak1", nil)
+	ak1Node.Status = Success
 	//ak2Node := ptree.NewPermNode("ak2", nil)
 	rootNode.Children = append(rootNode.Children, ak1Node)
 	//rootNode.Children = append(rootNode.Children, ak2Node)
@@ -140,8 +139,8 @@ func Test_AkSetsValidator(t *testing.T) {
 		return
 	}
 
-	ak3Node := ptree.NewPermNode("ak3", nil)
-	ak3Node.Status = ptree.Success
+	ak3Node := NewPermNode("ak3", nil)
+	ak3Node.Status = Success
 	rootNode.Children = append(rootNode.Children, ak3Node)
 	result, err = akv.Validate(rootNode)
 	// should success

@@ -11,11 +11,10 @@ import (
 	"io/ioutil"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
-	"google.golang.org/protobuf/proto"
-
 	cryptoClient "github.com/wooyang2018/corechain/crypto/client"
+	"github.com/wooyang2018/corechain/example/pb"
 	"github.com/wooyang2018/corechain/example/service/common"
+	"google.golang.org/protobuf/proto"
 )
 
 // MultisigSignCommand multisig sign struct
@@ -55,7 +54,7 @@ func (c *MultisigSignCommand) sign() error {
 	if err != nil {
 		return err
 	}
-	tx := &protos.Transaction{}
+	tx := &pb.Transaction{}
 	err = proto.Unmarshal(data, tx)
 	if err != nil {
 		return err
@@ -130,7 +129,7 @@ func (c *MultisigSignCommand) sign() error {
 }
 
 // GetSignTx use privatekey to get sign
-func (c *MultisigSignCommand) genSignTx(tx *protos.Transaction) ([]byte, error) {
+func (c *MultisigSignCommand) genSignTx(tx *pb.Transaction) ([]byte, error) {
 	// create crypto client
 	cryptoClient, err := cryptoClient.CreateCryptoClient(c.cli.RootOptions.Crypto)
 	if err != nil {
@@ -151,7 +150,7 @@ func (c *MultisigSignCommand) genSignTx(tx *protos.Transaction) ([]byte, error) 
 
 // genSignFile output to file
 func (c *MultisigSignCommand) genSignFile(pubkey string, sign []byte) error {
-	signInfo := &protos.SignatureInfo{
+	signInfo := &pb.SignatureInfo{
 		PublicKey: pubkey,
 		Sign:      sign,
 	}

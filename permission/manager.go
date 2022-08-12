@@ -6,17 +6,16 @@ import (
 	"fmt"
 
 	"github.com/wooyang2018/corechain/permission/base"
-	pctx "github.com/wooyang2018/corechain/permission/context"
 	"github.com/wooyang2018/corechain/protos"
 )
 
 // Manager manages all ACL releated data, providing read/write interface for ACL table
 type Manager struct {
-	Ctx *pctx.AclCtx
+	Ctx *base.AclCtx
 }
 
 // NewACLManager create instance of ACLManager
-func NewACLManager(ctx *pctx.AclCtx) (base.AclManager, error) {
+func NewACLManager(ctx *base.AclCtx) (base.AclManager, error) {
 	if ctx == nil || ctx.Ledger == nil || ctx.Contract == nil || ctx.BcName == "" {
 		return nil, fmt.Errorf("acl ctx set error")
 	}

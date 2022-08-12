@@ -12,7 +12,7 @@ import (
 
 	middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
-	protos2 "github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/reflection"
@@ -112,11 +112,11 @@ func (t *RpcServMG) runRpcServ() error {
 	}
 
 	t.servHD = grpc.NewServer(rpcOptions...)
-	protos2.RegisterMXchainServer(t.servHD, t.rpcServ)
+	pb.RegisterMXchainServer(t.servHD, t.rpcServ)
 
 	// event involved rpc
 	eventService := newEventService(t.scfg, t.engine)
-	protos2.RegisterEventServiceServer(t.servHD, eventService)
+	pb.RegisterEventServiceServer(t.servHD, eventService)
 
 	if t.scfg.EnableEndorser {
 		endorserService, err := newEndorserService(t.scfg, t.engine, t.rpcServ)
@@ -124,7 +124,7 @@ func (t *RpcServMG) runRpcServ() error {
 			t.log.Error("failed to register endorser", "err", err)
 			return fmt.Errorf("failed to register endorser")
 		}
-		protos2.RegisterXendorserServer(t.servHD, endorserService)
+		pb.RegisterXendorserServer(t.servHD, endorserService)
 	}
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", t.scfg.RpcPort))

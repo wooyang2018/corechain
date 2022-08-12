@@ -13,9 +13,8 @@ import (
 	"strconv"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
-
 	"github.com/wooyang2018/corechain/common/utils"
+	"github.com/wooyang2018/corechain/example/pb"
 )
 
 // BlockCommand query block
@@ -58,8 +57,8 @@ func (b *BlockCommand) queryBlock(ctx context.Context, blockid string) error {
 	if err != nil {
 		return err
 	}
-	blockIDPB := &protos.BlockID{
-		Header: &protos.Header{
+	blockIDPB := &pb.BlockID{
+		Header: &pb.Header{
 			Logid: utils.GenLogId(),
 		},
 		Bcname:      b.cli.RootOptions.Name,
@@ -71,7 +70,7 @@ func (b *BlockCommand) queryBlock(ctx context.Context, blockid string) error {
 		return err
 	}
 
-	if block.Header.Error != protos.XChainErrorEnum_SUCCESS {
+	if block.Header.Error != pb.XChainErrorEnum_SUCCESS {
 		return errors.New(block.Header.Error.String())
 	}
 	if block.Block == nil {
@@ -88,8 +87,8 @@ func (b *BlockCommand) queryBlock(ctx context.Context, blockid string) error {
 
 func (b *BlockCommand) queryBlockByHeight(ctx context.Context, height int64) error {
 	client := b.cli.XchainClient()
-	blockHeightPB := &protos.BlockHeight{
-		Header: &protos.Header{
+	blockHeightPB := &pb.BlockHeight{
+		Header: &pb.Header{
 			Logid: utils.GenLogId(),
 		},
 		Bcname: b.cli.RootOptions.Name,
@@ -99,7 +98,7 @@ func (b *BlockCommand) queryBlockByHeight(ctx context.Context, height int64) err
 	if err != nil {
 		return err
 	}
-	if block.Header.Error != protos.XChainErrorEnum_SUCCESS {
+	if block.Header.Error != pb.XChainErrorEnum_SUCCESS {
 		return errors.New(block.Header.Error.String())
 	}
 	if block.Block == nil {

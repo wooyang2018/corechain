@@ -10,7 +10,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
 )
 
 // AccountBalanceCommand account balance command
@@ -56,9 +56,9 @@ func (b *AccountBalanceCommand) addFlags() {
 
 func (b *AccountBalanceCommand) queryBalance(ctx context.Context, account string) error {
 	client := b.cli.XchainClient()
-	addrstatus := &protos.AddressStatus{
+	addrstatus := &pb.AddressStatus{
 		Address: account,
-		Bcs: []*protos.TokenDetail{
+		Bcs: []*pb.TokenDetail{
 			{Bcname: b.cli.RootOptions.Name},
 		},
 	}
@@ -72,7 +72,7 @@ func (b *AccountBalanceCommand) queryBalance(ctx context.Context, account string
 	if err != nil {
 		return err
 	}
-	if reply.Header.Error != protos.XChainErrorEnum_SUCCESS {
+	if reply.Header.Error != pb.XChainErrorEnum_SUCCESS {
 		return errors.New(reply.Header.Error.String())
 	}
 	fmt.Println(reply.Bcs[0].Balance)

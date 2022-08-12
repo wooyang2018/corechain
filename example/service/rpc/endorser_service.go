@@ -12,17 +12,16 @@ import (
 	"sync"
 	"time"
 
-	sctx "github.com/wooyang2018/corechain/example/base"
-	protos2 "github.com/wooyang2018/corechain/example/protos"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/peer"
-
 	cryptoClient "github.com/wooyang2018/corechain/crypto/client"
 	"github.com/wooyang2018/corechain/crypto/core/hash"
 	engineBase "github.com/wooyang2018/corechain/engines/base"
+	sctx "github.com/wooyang2018/corechain/example/base"
+	"github.com/wooyang2018/corechain/example/pb"
 	scom "github.com/wooyang2018/corechain/example/service/common"
 	sconf "github.com/wooyang2018/corechain/example/service/config"
 	"github.com/wooyang2018/corechain/state/txhash"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/peer"
 )
 
 const (
@@ -31,7 +30,7 @@ const (
 )
 
 type XEndorser interface {
-	EndorserCall(gctx context.Context, req *protos2.EndorserRequest) (*protos2.EndorserResponse, error)
+	EndorserCall(gctx context.Context, req *pb.EndorserRequest) (*pb.EndorserResponse, error)
 }
 
 type ProxyXEndorser struct {
@@ -57,8 +56,8 @@ func newEndorserService(cfg *sconf.ServConf, engine engineBase.Engine, svr XEndo
 
 }
 
-func (pxe *ProxyXEndorser) EndorserCall(gctx context.Context, req *protos2.EndorserRequest) (*protos2.EndorserResponse, error) {
-	resp := &protos2.EndorserResponse{}
+func (pxe *ProxyXEndorser) EndorserCall(gctx context.Context, req *pb.EndorserRequest) (*pb.EndorserResponse, error) {
+	resp := &pb.EndorserResponse{}
 	rctx := sctx.ValueReqCtx(gctx)
 	endc, err := pxe.getClient(pxe.getHost())
 	if err != nil {
@@ -88,38 +87,38 @@ func (pxe *ProxyXEndorser) getHost() string {
 	return host
 }
 
-func (pxe *ProxyXEndorser) getClient(host string) (protos2.XendorserClient, error) {
+func (pxe *ProxyXEndorser) getClient(host string) (pb.XendorserClient, error) {
 	if host == "" {
 		return nil, fmt.Errorf("empty host")
 	}
 	if c, ok := pxe.clientCache.Load(host); ok {
-		return c.(protos2.XendorserClient), nil
+		return c.(pb.XendorserClient), nil
 	}
 
 	pxe.mutex.Lock()
 	defer pxe.mutex.Unlock()
 	if c, ok := pxe.clientCache.Load(host); ok {
-		return c.(protos2.XendorserClient), nil
+		return c.(pb.XendorserClient), nil
 	}
 	conn, err := grpc.Dial(host, grpc.WithInsecure())
 	if err != nil {
 		return nil, err
 	}
-	c := protos2.NewXendorserClient(conn)
+	c := pb.NewXendorserClient(conn)
 	pxe.clientCache.Store(host, c)
 	return c, nil
 }
 
 type XEndorserServer interface {
 	// PostTx post Transaction to a node
-	PostTx(context.Context, *protos2.TxStatus) (*protos2.CommonReply, error)
+	PostTx(context.Context, *pb.TxStatus) (*pb.CommonReply, error)
 	// QueryTx query Transaction by TxStatus,
 	// Bcname and Txid are required for this
-	QueryTx(context.Context, *protos2.TxStatus) (*protos2.TxStatus, error)
+	QueryTx(context.Context, *pb.TxStatus) (*pb.TxStatus, error)
 	// PreExecWithSelectUTXO preExec & selectUtxo
-	PreExecWithSelectUTXO(context.Context, *protos2.PreExecWithSelectUTXORequest) (*protos2.PreExecWithSelectUTXOResponse, error)
+	PreExecWithSelectUTXO(context.Context, *pb.PreExecWithSelectUTXORequest) (*pb.PreExecWithSelectUTXOResponse, error)
 	// 预执行合约
-	PreExec(context.Context, *protos2.InvokeRPCRequest) (*protos2.InvokeRPCResponse, error)
+	PreExec(context.Context, *pb.InvokeRPCRequest) (*pb.InvokeRPCResponse, error)
 }
 
 type DefaultXEndorser struct {
@@ -149,10 +148,10 @@ func NewDefaultXEndorser(svr XEndorserServer, engine engineBase.Engine) *Default
 }
 
 // EndorserCall process endorser call
-func (dxe *DefaultXEndorser) EndorserCall(ctx context.Context, req *protos2.EndorserRequest) (*protos2.EndorserResponse, error) {
+func (dxe *DefaultXEndorser) EndorserCall(ctx context.Context, req *pb.EndorserRequest) (*pb.EndorserResponse, error) {
 	// make response header
-	resHeader := &protos2.Header{
-		Error: protos2.XChainErrorEnum_SUCCESS,
+	resHeader := &pb.Header{
+		Error: pb.XChainErrorEnum_SUCCESS,
 	}
 	if req.GetHeader() == nil {
 		resHeader.Logid = req.GetHeader().GetLogid()
@@ -160,7 +159,7 @@ func (dxe *DefaultXEndorser) EndorserCall(ctx context.Context, req *protos2.Endo
 
 	// check param
 	if _, ok := dxe.requestType[req.GetRequestName()]; !ok {
-		resHeader.Error = protos2.XChainErrorEnum_SERVICE_REFUSED_ERROR
+		resHeader.Error = pb.XChainErrorEnum_SERVICE_REFUSED_ERROR
 		return dxe.generateErrorResponse(req, resHeader, errors.New("request name not supported"))
 	}
 
@@ -179,18 +178,18 @@ func (dxe *DefaultXEndorser) EndorserCall(ctx context.Context, req *protos2.Endo
 		}
 		addr, sign, err := dxe.generateTxSign(ctx, req)
 		if err != nil {
-			resHeader.Error = protos2.XChainErrorEnum_SERVICE_REFUSED_ERROR
+			resHeader.Error = pb.XChainErrorEnum_SERVICE_REFUSED_ERROR
 			return dxe.generateErrorResponse(req, resHeader, err)
 		}
 
-		reply := &protos2.CommonReply{
-			Header: &protos2.Header{
-				Error: protos2.XChainErrorEnum_SUCCESS,
+		reply := &pb.CommonReply{
+			Header: &pb.Header{
+				Error: pb.XChainErrorEnum_SUCCESS,
 			},
 		}
 		resData, err := json.Marshal(reply)
 		if err != nil {
-			resHeader.Error = protos2.XChainErrorEnum_SERVICE_REFUSED_ERROR
+			resHeader.Error = pb.XChainErrorEnum_SERVICE_REFUSED_ERROR
 			return dxe.generateErrorResponse(req, resHeader, err)
 		}
 		return dxe.generateSuccessResponse(req, resData, addr, sign, resHeader)
@@ -236,11 +235,11 @@ func (dxe *DefaultXEndorser) EndorserCall(ctx context.Context, req *protos2.Endo
 	return nil, nil
 }
 
-func (dxe *DefaultXEndorser) getPreExecResult(ctx context.Context, req *protos2.EndorserRequest) ([]byte, protos2.XChainErrorEnum, error) {
-	request := &protos2.PreExecWithSelectUTXORequest{}
+func (dxe *DefaultXEndorser) getPreExecResult(ctx context.Context, req *pb.EndorserRequest) ([]byte, pb.XChainErrorEnum, error) {
+	request := &pb.PreExecWithSelectUTXORequest{}
 	err := json.Unmarshal(req.GetRequestData(), request)
 	if err != nil {
-		return nil, protos2.XChainErrorEnum_SERVICE_REFUSED_ERROR, err
+		return nil, pb.XChainErrorEnum_SERVICE_REFUSED_ERROR, err
 	}
 
 	res, err := dxe.svr.PreExecWithSelectUTXO(ctx, request)
@@ -250,19 +249,19 @@ func (dxe *DefaultXEndorser) getPreExecResult(ctx context.Context, req *protos2.
 
 	sData, err := json.Marshal(res)
 	if err != nil {
-		return nil, protos2.XChainErrorEnum_SERVICE_REFUSED_ERROR, err
+		return nil, pb.XChainErrorEnum_SERVICE_REFUSED_ERROR, err
 	}
-	return sData, protos2.XChainErrorEnum_SUCCESS, nil
+	return sData, pb.XChainErrorEnum_SUCCESS, nil
 }
 
-func (dxe *DefaultXEndorser) getCrossQueryResult(ctx context.Context, req *protos2.EndorserRequest) ([]byte, protos2.XChainErrorEnum, error) {
-	cqReq := &protos2.CrossQueryRequest{}
+func (dxe *DefaultXEndorser) getCrossQueryResult(ctx context.Context, req *pb.EndorserRequest) ([]byte, pb.XChainErrorEnum, error) {
+	cqReq := &pb.CrossQueryRequest{}
 	err := json.Unmarshal(req.GetRequestData(), cqReq)
 	if err != nil {
-		return nil, protos2.XChainErrorEnum_SERVICE_REFUSED_ERROR, err
+		return nil, pb.XChainErrorEnum_SERVICE_REFUSED_ERROR, err
 	}
 
-	preExecReq := &protos2.InvokeRPCRequest{
+	preExecReq := &pb.InvokeRPCRequest{
 		Header:      req.GetHeader(),
 		Bcname:      cqReq.GetBcname(),
 		Initiator:   cqReq.GetInitiator(),
@@ -275,11 +274,11 @@ func (dxe *DefaultXEndorser) getCrossQueryResult(ctx context.Context, req *proto
 		return nil, preExecRes.GetHeader().GetError(), err
 	}
 
-	if preExecRes.GetHeader().GetError() != protos2.XChainErrorEnum_SUCCESS {
+	if preExecRes.GetHeader().GetError() != pb.XChainErrorEnum_SUCCESS {
 		return nil, preExecRes.GetHeader().GetError(), errors.New("PreExec not success")
 	}
 
-	res := &protos2.CrossQueryResponse{}
+	res := &pb.CrossQueryResponse{}
 	contractRes := preExecRes.GetResponse().GetResponses()
 	if len(contractRes) > 0 {
 		res.Response = contractRes[len(contractRes)-1]
@@ -287,17 +286,17 @@ func (dxe *DefaultXEndorser) getCrossQueryResult(ctx context.Context, req *proto
 
 	sData, err := json.Marshal(res)
 	if err != nil {
-		return nil, protos2.XChainErrorEnum_SERVICE_REFUSED_ERROR, err
+		return nil, pb.XChainErrorEnum_SERVICE_REFUSED_ERROR, err
 	}
 
-	return sData, protos2.XChainErrorEnum_SUCCESS, nil
+	return sData, pb.XChainErrorEnum_SUCCESS, nil
 }
 
-func (dxe *DefaultXEndorser) getTxResult(ctx context.Context, req *protos2.EndorserRequest) ([]byte, protos2.XChainErrorEnum, error) {
-	request := &protos2.TxStatus{}
+func (dxe *DefaultXEndorser) getTxResult(ctx context.Context, req *pb.EndorserRequest) ([]byte, pb.XChainErrorEnum, error) {
+	request := &pb.TxStatus{}
 	err := json.Unmarshal(req.GetRequestData(), request)
 	if err != nil {
-		return nil, protos2.XChainErrorEnum_SERVICE_REFUSED_ERROR, err
+		return nil, pb.XChainErrorEnum_SERVICE_REFUSED_ERROR, err
 	}
 
 	reply, err := dxe.svr.QueryTx(ctx, request)
@@ -305,7 +304,7 @@ func (dxe *DefaultXEndorser) getTxResult(ctx context.Context, req *protos2.Endor
 		return nil, reply.GetHeader().GetError(), err
 	}
 
-	if reply.GetHeader().GetError() != protos2.XChainErrorEnum_SUCCESS {
+	if reply.GetHeader().GetError() != pb.XChainErrorEnum_SUCCESS {
 		return nil, reply.GetHeader().GetError(), errors.New("QueryTx not success")
 	}
 
@@ -315,19 +314,19 @@ func (dxe *DefaultXEndorser) getTxResult(ctx context.Context, req *protos2.Endor
 
 	sData, err := json.Marshal(reply.Tx)
 	if err != nil {
-		return nil, protos2.XChainErrorEnum_SERVICE_REFUSED_ERROR, err
+		return nil, pb.XChainErrorEnum_SERVICE_REFUSED_ERROR, err
 	}
 
-	return sData, protos2.XChainErrorEnum_SUCCESS, nil
+	return sData, pb.XChainErrorEnum_SUCCESS, nil
 }
 
-func (dxe *DefaultXEndorser) processFee(ctx context.Context, req *protos2.EndorserRequest) (bool, protos2.XChainErrorEnum, error) {
+func (dxe *DefaultXEndorser) processFee(ctx context.Context, req *pb.EndorserRequest) (bool, pb.XChainErrorEnum, error) {
 	if req.GetFee() == nil {
 		// no fee provided, default to true
-		return true, protos2.XChainErrorEnum_SUCCESS, nil
+		return true, pb.XChainErrorEnum_SUCCESS, nil
 	}
 
-	txStatus := &protos2.TxStatus{
+	txStatus := &pb.TxStatus{
 		Txid:   req.GetFee().GetTxid(),
 		Bcname: req.GetBcName(),
 		Tx:     req.GetFee(),
@@ -336,19 +335,19 @@ func (dxe *DefaultXEndorser) processFee(ctx context.Context, req *protos2.Endors
 	res, err := dxe.svr.PostTx(ctx, txStatus)
 	if err != nil {
 		return false, res.GetHeader().GetError(), err
-	} else if res.GetHeader().GetError() != protos2.XChainErrorEnum_SUCCESS {
+	} else if res.GetHeader().GetError() != pb.XChainErrorEnum_SUCCESS {
 		return false, res.GetHeader().GetError(), errors.New("Fee post to chain failed")
 	}
 
-	return true, protos2.XChainErrorEnum_SUCCESS, nil
+	return true, pb.XChainErrorEnum_SUCCESS, nil
 }
 
-func (dxe *DefaultXEndorser) generateTxSign(ctx context.Context, req *protos2.EndorserRequest) ([]byte, *protos2.SignatureInfo, error) {
+func (dxe *DefaultXEndorser) generateTxSign(ctx context.Context, req *pb.EndorserRequest) ([]byte, *pb.SignatureInfo, error) {
 	if req.GetRequestData() == nil {
 		return nil, nil, errors.New("request data is empty")
 	}
 
-	txStatus := &protos2.TxStatus{}
+	txStatus := &pb.TxStatus{}
 	err := json.Unmarshal(req.GetRequestData(), txStatus)
 	if err != nil {
 		return nil, nil, err
@@ -363,7 +362,7 @@ func (dxe *DefaultXEndorser) generateTxSign(ctx context.Context, req *protos2.En
 	return dxe.signData(ctx, digest, DefaultKeyPath)
 }
 
-func (dxe *DefaultXEndorser) signData(ctx context.Context, data []byte, keypath string) ([]byte, *protos2.SignatureInfo, error) {
+func (dxe *DefaultXEndorser) signData(ctx context.Context, data []byte, keypath string) ([]byte, *pb.SignatureInfo, error) {
 	addr, jsonSKey, jsonAKey, err := dxe.getEndorserKey(keypath)
 	if err != nil {
 		return nil, nil, err
@@ -384,25 +383,25 @@ func (dxe *DefaultXEndorser) signData(ctx context.Context, data []byte, keypath 
 		return nil, nil, err
 	}
 
-	signInfo := &protos2.SignatureInfo{
+	signInfo := &pb.SignatureInfo{
 		PublicKey: string(jsonAKey),
 		Sign:      sign,
 	}
 	return addr, signInfo, nil
 }
 
-func (dxe *DefaultXEndorser) generateErrorResponse(req *protos2.EndorserRequest, header *protos2.Header,
-	err error) (*protos2.EndorserResponse, error) {
-	res := &protos2.EndorserResponse{
+func (dxe *DefaultXEndorser) generateErrorResponse(req *pb.EndorserRequest, header *pb.Header,
+	err error) (*pb.EndorserResponse, error) {
+	res := &pb.EndorserResponse{
 		Header:       header,
 		ResponseName: req.GetRequestName(),
 	}
 	return res, err
 }
 
-func (dxe *DefaultXEndorser) generateSuccessResponse(req *protos2.EndorserRequest, resData []byte,
-	addr []byte, sign *protos2.SignatureInfo, header *protos2.Header) (*protos2.EndorserResponse, error) {
-	res := &protos2.EndorserResponse{
+func (dxe *DefaultXEndorser) generateSuccessResponse(req *pb.EndorserRequest, resData []byte,
+	addr []byte, sign *pb.SignatureInfo, header *pb.Header) (*pb.EndorserResponse, error) {
+	res := &pb.EndorserResponse{
 		Header:          header,
 		ResponseName:    req.GetRequestName(),
 		ResponseData:    resData,
@@ -427,7 +426,7 @@ func (dxe *DefaultXEndorser) getEndorserKey(keypath string) ([]byte, []byte, []b
 	return addr, sk, ak, err
 }
 
-func (dxe *DefaultXEndorser) createReqCtx(gctx context.Context, reqHeader *protos2.Header) (sctx.ReqCtx, error) {
+func (dxe *DefaultXEndorser) createReqCtx(gctx context.Context, reqHeader *pb.Header) (sctx.ReqCtx, error) {
 	// 获取客户端ip
 	clientIp, err := dxe.getClietIP(gctx)
 	if err != nil {

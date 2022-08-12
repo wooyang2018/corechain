@@ -4,12 +4,12 @@ import (
 	"fmt"
 
 	cryptoBase "github.com/wooyang2018/corechain/crypto/client/base"
-	"github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
 	"github.com/wooyang2018/corechain/state/txhash"
 )
 
 // 适配原结构计算txid
-func MakeTxId(tx *protos.Transaction) ([]byte, error) {
+func MakeTxId(tx *pb.Transaction) ([]byte, error) {
 	// 转化结构
 	xldgTx := TxToXledger(tx)
 	if xldgTx == nil {
@@ -24,7 +24,7 @@ func MakeTxId(tx *protos.Transaction) ([]byte, error) {
 }
 
 // 适配原结构签名
-func ComputeTxSign(cryptoClient cryptoBase.CryptoClient, tx *protos.Transaction, jsonSK []byte) ([]byte, error) {
+func ComputeTxSign(cryptoClient cryptoBase.CryptoClient, tx *pb.Transaction, jsonSK []byte) ([]byte, error) {
 	// 转换结构
 	xldgTx := TxToXledger(tx)
 	if xldgTx == nil {
@@ -37,7 +37,7 @@ func ComputeTxSign(cryptoClient cryptoBase.CryptoClient, tx *protos.Transaction,
 	return txSign, nil
 }
 
-func MakeTxDigestHash(tx *protos.Transaction) ([]byte, error) {
+func MakeTxDigestHash(tx *pb.Transaction) ([]byte, error) {
 	// 转换结构
 	xldgTx := TxToXledger(tx)
 	if xldgTx == nil {

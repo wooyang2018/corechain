@@ -2,7 +2,6 @@ package base
 
 import (
 	"encoding/json"
-	//	"log"
 
 	"github.com/wooyang2018/corechain/crypto/common/account"
 	"github.com/wooyang2018/corechain/crypto/core/ecies"

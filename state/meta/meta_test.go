@@ -109,7 +109,7 @@ func TestMetaGetFunc(t *testing.T) {
 	t.Logf("blockid %x", block.Blockid)
 	confirmStatus := mledger.ConfirmBlock(block, true)
 	if !confirmStatus.Succ {
-		t.Log("confirm block fail")
+		t.Fatal("confirm block fail")
 	}
 
 	crypt, err := cryptoClient.CreateCryptoClient(cryptoClient.CryptoTypeDefault)
@@ -117,7 +117,7 @@ func TestMetaGetFunc(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	sctx, err := base.NewStateCtx(econf, "xuper", mledger, crypt)
+	sctx, err := base.NewStateCtx(econf, "corecahin", mledger, crypt)
 	if err != nil {
 		t.Fatal(err)
 	}

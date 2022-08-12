@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func TestNotify(t *testing.T) {
+func TestHeightNotifier(t *testing.T) {
 	notifier := NewBlockHeightNotifier()
 	closedch := make(chan struct{})
 

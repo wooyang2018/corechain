@@ -10,7 +10,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
 )
 
 // QueryCandidatesCommand query candidates cmd
@@ -36,7 +36,7 @@ func NewQueryCandidatesCommand(cli *Cli) *cobra.Command {
 
 func (c *QueryCandidatesCommand) queryCandidates(ctx context.Context) error {
 	client := c.cli.XchainClient()
-	request := &protos.DposCandidatesRequest{
+	request := &pb.DposCandidatesRequest{
 		Bcname: c.cli.RootOptions.Name,
 	}
 	res, err := client.DposCandidates(ctx, request)

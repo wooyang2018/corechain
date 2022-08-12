@@ -10,9 +10,8 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
-
 	"github.com/wooyang2018/corechain/common/utils"
+	"github.com/wooyang2018/corechain/example/pb"
 	"github.com/wooyang2018/corechain/example/service/common"
 	aclBase "github.com/wooyang2018/corechain/permission/base"
 	"github.com/wooyang2018/corechain/state/utxo"
@@ -74,7 +73,7 @@ func (c *SplitUtxoCommand) splitUtxo(ctx context.Context) error {
 		return errors.New("parse account error")
 	}
 
-	tx := &protos.Transaction{
+	tx := &pb.Transaction{
 		Version:   utxo.TxVersion,
 		Coinbase:  false,
 		Nonce:     utils.GenNonce(),
@@ -133,10 +132,10 @@ func (c *SplitUtxoCommand) splitUtxo(ctx context.Context) error {
 	}
 
 	// preExec
-	preExeRPCReq := &protos.InvokeRPCRequest{
+	preExeRPCReq := &pb.InvokeRPCRequest{
 		Bcname:   c.cli.RootOptions.Name,
-		Requests: []*protos.InvokeRequest{},
-		Header: &protos.Header{
+		Requests: []*pb.InvokeRequest{},
+		Header: &pb.Header{
 			Logid: utils.GenLogId(),
 		},
 		Initiator:   initAk,
@@ -174,10 +173,10 @@ func (c *SplitUtxoCommand) splitUtxo(ctx context.Context) error {
 }
 
 func (c *SplitUtxoCommand) getBalanceHelper() (string, error) {
-	as := &protos.AddressStatus{}
+	as := &pb.AddressStatus{}
 	as.Address = c.account
-	var tokens []*protos.TokenDetail
-	token := protos.TokenDetail{Bcname: c.cli.RootOptions.Name}
+	var tokens []*pb.TokenDetail
+	token := pb.TokenDetail{Bcname: c.cli.RootOptions.Name}
 	tokens = append(tokens, &token)
 	as.Bcs = tokens
 	r, err := c.cli.XchainClient().GetBalance(context.Background(), as)
@@ -187,15 +186,15 @@ func (c *SplitUtxoCommand) getBalanceHelper() (string, error) {
 	return r.Bcs[0].Balance, nil
 }
 
-func (c *SplitUtxoCommand) genSplitOutputs(toralNeed *big.Int) ([]*protos.TxOutput, error) {
-	txOutputs := []*protos.TxOutput{}
+func (c *SplitUtxoCommand) genSplitOutputs(toralNeed *big.Int) ([]*pb.TxOutput, error) {
+	txOutputs := []*pb.TxOutput{}
 	amount := big.NewInt(0)
 	rest := toralNeed
 	if big.NewInt(c.num).Cmp(rest) == 1 {
 		return nil, errors.New("illegal splitutxo, splitutxo <= BALANCE required")
 	}
 	amount.Div(rest, big.NewInt(c.num))
-	output := protos.TxOutput{}
+	output := pb.TxOutput{}
 	output.Amount = amount.Bytes()
 	output.ToAddr = []byte(c.account)
 	for i := int64(1); i < c.num && rest.Cmp(amount) == 1; i++ {

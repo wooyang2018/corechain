@@ -2,11 +2,11 @@
 // source: endorser.proto
 
 /*
-Package protos is a reverse proxy.
+Package pb is a reverse proxy.
 
 It translates gRPC into RESTful JSON APIs.
 */
-package protos
+package pb
 
 import (
 	"context"
@@ -78,7 +78,7 @@ func RegisterXendorserHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/protos.Xendorser/EndorserCall", runtime.WithHTTPPathPattern("/v1/endorsercall"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.Xendorser/EndorserCall", runtime.WithHTTPPathPattern("/v1/endorsercall"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -141,7 +141,7 @@ func RegisterXendorserHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.Xendorser/EndorserCall", runtime.WithHTTPPathPattern("/v1/endorsercall"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.Xendorser/EndorserCall", runtime.WithHTTPPathPattern("/v1/endorsercall"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return

@@ -12,7 +12,7 @@ import (
 	"io/ioutil"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
 	aclBase "github.com/wooyang2018/corechain/permission/base"
 	"github.com/wooyang2018/corechain/state/utxo"
 )
@@ -136,7 +136,7 @@ func (c *AccountNewCommand) printRealAccountName(name string) error {
 	return nil
 }
 
-func (c *AccountNewCommand) readPreExeParamWithDesc(buf []byte) (*protos.InvokeRequest, error) {
+func (c *AccountNewCommand) readPreExeParamWithDesc(buf []byte) (*pb.InvokeRequest, error) {
 	params := new(invokeRequestWraper)
 	err := json.Unmarshal(buf, params)
 	if err != nil {

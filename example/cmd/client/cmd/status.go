@@ -11,9 +11,8 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
-
 	"github.com/wooyang2018/corechain/common/utils"
+	"github.com/wooyang2018/corechain/example/pb"
 )
 
 // StatusCommand status cmd
@@ -52,8 +51,8 @@ func (s *StatusCommand) addFlags() {
 
 func (s *StatusCommand) printXchainStatus(ctx context.Context) error {
 	client := s.cli.XchainClient()
-	req := &protos.CommonIn{
-		Header: &protos.Header{
+	req := &pb.CommonIn{
+		Header: &pb.Header{
 			Logid: utils.GenLogId(),
 		},
 		ViewOption: s.convertToFlag(),
@@ -62,7 +61,7 @@ func (s *StatusCommand) printXchainStatus(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	if reply.Header.Error != protos.XChainErrorEnum_SUCCESS {
+	if reply.Header.Error != pb.XChainErrorEnum_SUCCESS {
 		return errors.New(reply.Header.Error.String())
 	}
 	status := FromSystemStatusPB(reply.GetSystemsStatus())
@@ -78,17 +77,17 @@ func (s *StatusCommand) printXchainStatus(ctx context.Context) error {
 }
 
 // convert to flag(viewOption)
-func (s *StatusCommand) convertToFlag() protos.ViewOption {
+func (s *StatusCommand) convertToFlag() pb.ViewOption {
 	if s.ledger {
-		return protos.ViewOption_LEDGER
+		return pb.ViewOption_LEDGER
 	} else if s.utxo {
-		return protos.ViewOption_UTXOINFO
+		return pb.ViewOption_UTXOINFO
 	} else if s.branch {
-		return protos.ViewOption_BRANCHINFO
+		return pb.ViewOption_BRANCHINFO
 	} else if s.peers {
-		return protos.ViewOption_PEERS
+		return pb.ViewOption_PEERS
 	} else {
-		return protos.ViewOption_NONE
+		return pb.ViewOption_NONE
 	}
 }
 

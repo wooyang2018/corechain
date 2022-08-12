@@ -1,4 +1,4 @@
-package context
+package base
 
 import (
 	"fmt"
@@ -8,10 +8,6 @@ import (
 	"github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/ledger"
 	"github.com/wooyang2018/corechain/logger"
-)
-
-const (
-	SubModName = "permission"
 )
 
 type LedgerRely interface {

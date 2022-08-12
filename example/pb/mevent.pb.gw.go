@@ -2,11 +2,11 @@
 // source: mevent.proto
 
 /*
-Package protos is a reverse proxy.
+Package pb is a reverse proxy.
 
 It translates gRPC into RESTful JSON APIs.
 */
-package protos
+package pb
 
 import (
 	"context"
@@ -115,7 +115,7 @@ func RegisterEventServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/protos.EventService/Subscribe", runtime.WithHTTPPathPattern("/protos.EventService/Subscribe"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/pb.EventService/Subscribe", runtime.WithHTTPPathPattern("/pb.EventService/Subscribe"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -135,7 +135,7 @@ func RegisterEventServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 }
 
 var (
-	pattern_EventService_Subscribe_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"protos.EventService", "Subscribe"}, ""))
+	pattern_EventService_Subscribe_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"pb.EventService", "Subscribe"}, ""))
 )
 
 var (

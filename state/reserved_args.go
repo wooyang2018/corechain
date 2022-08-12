@@ -7,7 +7,7 @@ import (
 	"github.com/wooyang2018/corechain/protos"
 )
 
-// reservedArgs used to get contractnames from InvokeRPCRequest
+// reservedArgs used to get contract names from InvokeRPCRequest
 type reservedArgs struct {
 	ContractNames string
 }
@@ -115,7 +115,7 @@ func (t *State) VerifyReservedContractRequests(reservedReqs, txReqs []*protos.In
 	return true
 }
 
-// geReservedContractRequest get reserved contract requests from system params, it doesn't consume gas.
+// GetReservedContractRequests get reserved contract requests from system params, it doesn't consume gas.
 func (t *State) GetReservedContractRequests(req []*protos.InvokeRequest, isPreExec bool) ([]*protos.InvokeRequest, error) {
 	MetaReservedContracts := t.meta.GetReservedContracts()
 	if MetaReservedContracts == nil {

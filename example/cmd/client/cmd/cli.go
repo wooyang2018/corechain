@@ -20,7 +20,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	protos2 "github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
@@ -57,9 +57,9 @@ type Cli struct {
 	RootOptions RootOptions
 
 	rootCmd *cobra.Command
-	xclient protos2.MXchainClient
+	xclient pb.MXchainClient
 
-	eventClient protos2.EventServiceClient
+	eventClient pb.EventServiceClient
 }
 
 // NewCli new cli cmd
@@ -83,8 +83,8 @@ func (c *Cli) initXchainClient() error {
 	if err != nil {
 		return err
 	}
-	c.xclient = protos2.NewMXchainClient(conn)
-	c.eventClient = protos2.NewEventServiceClient(conn)
+	c.xclient = pb.NewMXchainClient(conn)
+	c.eventClient = pb.NewEventServiceClient(conn)
 	return nil
 }
 
@@ -145,19 +145,19 @@ func (c *Cli) Execute() {
 }
 
 // XchainClient get xchain client
-func (c *Cli) XchainClient() protos2.MXchainClient {
+func (c *Cli) XchainClient() pb.MXchainClient {
 	return c.xclient
 }
 
 // EventClient get EventService client
-func (c *Cli) EventClient() protos2.EventServiceClient {
+func (c *Cli) EventClient() pb.EventServiceClient {
 	return c.eventClient
 }
 
 // GetNodes get all nodes
 func (c *Cli) GetNodes(ctx context.Context) ([]string, error) {
-	req := &protos2.CommonIn{
-		Header: &protos2.Header{
+	req := &pb.CommonIn{
+		Header: &pb.Header{
 			Logid: utils.GenLogId(),
 		},
 	}
@@ -165,7 +165,7 @@ func (c *Cli) GetNodes(ctx context.Context) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	if reply.Header.Error != protos2.XChainErrorEnum_SUCCESS {
+	if reply.Header.Error != pb.XChainErrorEnum_SUCCESS {
 		return nil, errors.New(reply.Header.Error.String())
 	}
 	nodes := reply.GetSystemsStatus().GetPeerUrls()
@@ -200,7 +200,7 @@ func genCreds(certPath, serverName string) (credentials.TransportCredentials, er
 }
 
 // RangeNodes exe func in all nodes
-func (c *Cli) RangeNodes(ctx context.Context, f func(addr string, client protos2.MXchainClient, err error) error) error {
+func (c *Cli) RangeNodes(ctx context.Context, f func(addr string, client pb.MXchainClient, err error) error) error {
 	nodes, err := c.GetNodes(ctx)
 	if err != nil {
 		return err
@@ -224,7 +224,7 @@ func (c *Cli) RangeNodes(ctx context.Context, f func(addr string, client protos2
 				return err
 			}
 		}
-		client := protos2.NewMXchainClient(conn)
+		client := pb.NewMXchainClient(conn)
 		err = f(addr, client, err)
 		if err != nil {
 			return err
@@ -236,7 +236,7 @@ func (c *Cli) RangeNodes(ctx context.Context, f func(addr string, client protos2
 	if err != nil {
 		return err
 	}
-	client := protos2.NewMXchainClient(conn)
+	client := pb.NewMXchainClient(conn)
 	err = f(c.RootOptions.Host, client, err)
 	if err != nil {
 		return err
@@ -270,7 +270,7 @@ func (c *Cli) Transfer(ctx context.Context, opt *TransferOptions) (string, error
 	return c.transfer(ctx, c.xclient, opt, fromAddr, fromPubkey, fromScrkey, cryptoClient)
 }
 
-func (c *Cli) transfer(ctx context.Context, client protos2.MXchainClient, opt *TransferOptions, fromAddr,
+func (c *Cli) transfer(ctx context.Context, client pb.MXchainClient, opt *TransferOptions, fromAddr,
 	fromPubkey, fromScrkey string, cryptoClient cryptoBase.CryptoClient) (string, error) {
 	if opt.From == "" {
 		opt.From = fromAddr
@@ -278,7 +278,7 @@ func (c *Cli) transfer(ctx context.Context, client protos2.MXchainClient, opt *T
 	return c.tansferSupportAccount(ctx, client, opt, fromAddr, fromPubkey, fromScrkey, cryptoClient)
 }
 
-func (c *Cli) tansferSupportAccount(ctx context.Context, client protos2.MXchainClient, opt *TransferOptions,
+func (c *Cli) tansferSupportAccount(ctx context.Context, client pb.MXchainClient, opt *TransferOptions,
 	initAddr, initPubkey, initScrkey string, cryptoClient cryptoBase.CryptoClient) (string, error) {
 	// 组装交易
 	txStatus, err := assembleTxSupportAccount(ctx, client, opt, initAddr, initPubkey, initScrkey, cryptoClient)
@@ -291,7 +291,7 @@ func (c *Cli) tansferSupportAccount(ctx context.Context, client protos2.MXchainC
 	if err != nil {
 		return "", err
 	}
-	signInfo := &protos2.SignatureInfo{
+	signInfo := &pb.SignatureInfo{
 		PublicKey: initPubkey,
 		Sign:      signTx,
 	}
@@ -318,17 +318,17 @@ func (c *Cli) tansferSupportAccount(ctx context.Context, client protos2.MXchainC
 	if err != nil {
 		return "", fmt.Errorf("transferSupportAccount post tx err %s", err)
 	}
-	if reply.Header.Error != protos2.XChainErrorEnum_SUCCESS {
+	if reply.Header.Error != pb.XChainErrorEnum_SUCCESS {
 		return "", fmt.Errorf("Failed to post tx: %s", reply.Header.String())
 	}
 	return hex.EncodeToString(txStatus.GetTxid()), nil
 }
 
-func assembleTxSupportAccount(ctx context.Context, client protos2.MXchainClient, opt *TransferOptions, initAddr, initPubkey,
-	initScrkey string, cryptoClient cryptoBase.CryptoClient) (*protos2.TxStatus, error) {
+func assembleTxSupportAccount(ctx context.Context, client pb.MXchainClient, opt *TransferOptions, initAddr, initPubkey,
+	initScrkey string, cryptoClient cryptoBase.CryptoClient) (*pb.TxStatus, error) {
 	bigZero := big.NewInt(0)
 	totalNeed := big.NewInt(0)
-	tx := &protos2.Transaction{
+	tx := &pb.Transaction{
 		Version:   opt.Version,
 		Coinbase:  false,
 		Desc:      opt.Desc,
@@ -336,12 +336,12 @@ func assembleTxSupportAccount(ctx context.Context, client protos2.MXchainClient,
 		Timestamp: time.Now().UnixNano(),
 		Initiator: initAddr,
 	}
-	account := &protos2.TxDataAccount{
+	account := &pb.TxDataAccount{
 		Address:      opt.To,
 		Amount:       opt.Amount,
 		FrozenHeight: opt.FrozenHeight,
 	}
-	accounts := []*protos2.TxDataAccount{account}
+	accounts := []*pb.TxDataAccount{account}
 	if opt.Fee != "" && opt.Fee != "0" {
 		accounts = append(accounts, newFeeAccount(opt.Fee))
 	}
@@ -355,7 +355,7 @@ func assembleTxSupportAccount(ctx context.Context, client protos2.MXchainClient,
 			return nil, ErrNegativeAmount
 		}
 		totalNeed.Add(totalNeed, amount)
-		txOutput := &protos2.TxOutput{}
+		txOutput := &pb.TxOutput{}
 		txOutput.ToAddr = []byte(acc.Address)
 		txOutput.Amount = amount.Bytes()
 		txOutput.FrozenHeight = acc.FrozenHeight
@@ -377,10 +377,10 @@ func assembleTxSupportAccount(ctx context.Context, client protos2.MXchainClient,
 		return nil, err
 	}
 
-	preExeRPCReq := &protos2.InvokeRPCRequest{
+	preExeRPCReq := &pb.InvokeRPCRequest{
 		Bcname:   opt.BlockchainName,
-		Requests: []*protos2.InvokeRequest{},
-		Header: &protos2.Header{
+		Requests: []*pb.InvokeRequest{},
+		Header: &pb.Header{
 			Logid: utils.GenLogId(),
 		},
 		Initiator:   initAddr,
@@ -396,12 +396,12 @@ func assembleTxSupportAccount(ctx context.Context, client protos2.MXchainClient,
 	tx.TxInputsExt = preExeRes.GetResponse().GetInputs()
 	tx.TxOutputsExt = preExeRes.GetResponse().GetOutputs()
 
-	txStatus := &protos2.TxStatus{
+	txStatus := &pb.TxStatus{
 		Bcname: opt.BlockchainName,
-		Status: protos2.TransactionStatus_UNCONFIRM,
+		Status: pb.TransactionStatus_UNCONFIRM,
 		Tx:     tx,
 	}
-	txStatus.Header = &protos2.Header{
+	txStatus.Header = &pb.Header{
 		Logid: utils.GenLogId(),
 	}
 	return txStatus, nil
@@ -429,14 +429,14 @@ func genAuthRequire(from, path string) ([]string, error) {
 	return authRequire, nil
 }
 
-func genAuthRequireSigns(opt *TransferOptions, cryptoClient cryptoBase.CryptoClient, tx *protos2.Transaction, initScrkey, initPubkey string) ([]*protos2.SignatureInfo, error) {
-	authRequireSigns := []*protos2.SignatureInfo{}
+func genAuthRequireSigns(opt *TransferOptions, cryptoClient cryptoBase.CryptoClient, tx *pb.Transaction, initScrkey, initPubkey string) ([]*pb.SignatureInfo, error) {
+	authRequireSigns := []*pb.SignatureInfo{}
 	if opt.AccountPath == "" {
 		signTx, err := common.ComputeTxSign(cryptoClient, tx, []byte(initScrkey))
 		if err != nil {
 			return nil, err
 		}
-		signInfo := &protos2.SignatureInfo{
+		signInfo := &pb.SignatureInfo{
 			PublicKey: initPubkey,
 			Sign:      signTx,
 		}
@@ -462,7 +462,7 @@ func genAuthRequireSigns(opt *TransferOptions, cryptoClient cryptoBase.CryptoCli
 			if err != nil {
 				return nil, err
 			}
-			signInfo := &protos2.SignatureInfo{
+			signInfo := &pb.SignatureInfo{
 				PublicKey: pk,
 				Sign:      signTx,
 			}
@@ -472,9 +472,9 @@ func genAuthRequireSigns(opt *TransferOptions, cryptoClient cryptoBase.CryptoCli
 	return authRequireSigns, nil
 }
 
-func assembleTxInputsSupportAccount(ctx context.Context, client protos2.MXchainClient, opt *TransferOptions, totalNeed *big.Int,
-	initAddr, initPubkey, initScrkey string, cryptoClient cryptoBase.CryptoClient) ([]*protos2.TxInput, *protos2.TxOutput, error) {
-	ui := &protos2.UtxoInput{
+func assembleTxInputsSupportAccount(ctx context.Context, client pb.MXchainClient, opt *TransferOptions, totalNeed *big.Int,
+	initAddr, initPubkey, initScrkey string, cryptoClient cryptoBase.CryptoClient) ([]*pb.TxInput, *pb.TxOutput, error) {
+	ui := &pb.UtxoInput{
 		Bcname:    opt.BlockchainName,
 		Address:   opt.From,
 		TotalNeed: totalNeed.String(),
@@ -488,13 +488,13 @@ func assembleTxInputsSupportAccount(ctx context.Context, client protos2.MXchainC
 	}
 	ui.UserSign = sign
 	utxoRes, selectErr := client.SelectUTXO(ctx, ui)
-	if selectErr != nil || utxoRes.Header.Error != protos2.XChainErrorEnum_SUCCESS {
+	if selectErr != nil || utxoRes.Header.Error != pb.XChainErrorEnum_SUCCESS {
 		return nil, nil, ErrSelectUtxo
 	}
-	var txTxInputs []*protos2.TxInput
-	var txOutput *protos2.TxOutput
+	var txTxInputs []*pb.TxInput
+	var txOutput *pb.TxOutput
 	for _, utxo := range utxoRes.UtxoList {
-		txInput := new(protos2.TxInput)
+		txInput := new(pb.TxInput)
 		txInput.RefTxid = utxo.RefTxid
 		txInput.RefOffset = utxo.RefOffset
 		txInput.FromAddr = utxo.ToAddr
@@ -508,7 +508,7 @@ func assembleTxInputsSupportAccount(ctx context.Context, client protos2.MXchainC
 	// 多出来的utxo需要再转给自己
 	if utxoTotal.Cmp(totalNeed) > 0 {
 		delta := utxoTotal.Sub(utxoTotal, totalNeed)
-		txOutput = &protos2.TxOutput{
+		txOutput = &pb.TxOutput{
 			ToAddr: []byte(opt.From), // 收款人就是汇款人自己
 			Amount: delta.Bytes(),
 		}

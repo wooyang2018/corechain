@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	sctx "github.com/wooyang2018/corechain/example/base"
-	"github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/peer"
 
@@ -38,7 +38,7 @@ func (t *RPCServ) UnaryInterceptor() grpc.UnaryServerInterceptor {
 		handler grpc.UnaryHandler) (respRes interface{}, err error) {
 		// set request header
 		type HeaderInterface interface {
-			GetHeader() *protos.Header
+			GetHeader() *pb.Header
 		}
 		if req.(HeaderInterface).GetHeader() == nil {
 			header := reflect.ValueOf(req).Elem().FieldByName("Header")
@@ -82,7 +82,7 @@ func (t *RPCServ) UnaryInterceptor() grpc.UnaryServerInterceptor {
 			stdErr = base.CastError(err)
 		}
 		// 根据错误统一设置header，对外统一响应err=nil，通过Header.ErrCode判断
-		respHeader := &protos.Header{
+		respHeader := &pb.Header{
 			Logid:    reqHeader.GetLogid(),
 			FromNode: t.genTraceId(),
 			Error:    t.convertErr(stdErr),
@@ -101,15 +101,15 @@ func (t *RPCServ) UnaryInterceptor() grpc.UnaryServerInterceptor {
 	}
 }
 
-func (t *RPCServ) defReqHeader() *protos.Header {
-	return &protos.Header{
+func (t *RPCServ) defReqHeader() *pb.Header {
+	return &pb.Header{
 		Logid:    utils.GenLogId(),
 		FromNode: "",
-		Error:    protos.XChainErrorEnum_UNKNOW_ERROR,
+		Error:    pb.XChainErrorEnum_UNKNOW_ERROR,
 	}
 }
 
-func (t *RPCServ) createReqCtx(gctx context.Context, reqHeader *protos.Header) (sctx.ReqCtx, error) {
+func (t *RPCServ) createReqCtx(gctx context.Context, reqHeader *pb.Header) (sctx.ReqCtx, error) {
 	// 获取客户端ip
 	clientIp, err := t.getClietIP(gctx)
 	if err != nil {
@@ -147,14 +147,14 @@ func (t *RPCServ) genTraceId() string {
 }
 
 // 转化错误类型为原接口错误
-func (t *RPCServ) convertErr(stdErr *base.Error) protos.XChainErrorEnum {
+func (t *RPCServ) convertErr(stdErr *base.Error) pb.XChainErrorEnum {
 	if stdErr == nil {
-		return protos.XChainErrorEnum_UNKNOW_ERROR
+		return pb.XChainErrorEnum_UNKNOW_ERROR
 	}
 
 	if errCode, ok := scom.StdErrToXchainErrMap[stdErr.Code]; ok {
 		return errCode
 	}
 
-	return protos.XChainErrorEnum_UNKNOW_ERROR
+	return pb.XChainErrorEnum_UNKNOW_ERROR
 }

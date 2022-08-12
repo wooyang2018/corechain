@@ -10,11 +10,10 @@ import (
 	"io/ioutil"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
-	"google.golang.org/protobuf/proto"
-
 	"github.com/wooyang2018/corechain/contract/bridge"
+	"github.com/wooyang2018/corechain/example/pb"
 	"github.com/wooyang2018/corechain/state/utxo"
+	"google.golang.org/protobuf/proto"
 )
 
 // ContractDeployCommand wasm/native/evm deploy cmd
@@ -145,7 +144,7 @@ func (c *ContractDeployCommand) deploy(ctx context.Context, codepath string) err
 }
 
 func (c *ContractDeployCommand) prepareCodeDesc() []byte {
-	desc := &protos.WasmCodeDesc{
+	desc := &pb.WasmCodeDesc{
 		Runtime:      c.runtime,
 		ContractType: c.module,
 	}

@@ -7,7 +7,6 @@ import (
 
 	cryptoClient "github.com/wooyang2018/corechain/crypto/client"
 	"github.com/wooyang2018/corechain/permission/base"
-	"github.com/wooyang2018/corechain/permission/ptree"
 	"github.com/wooyang2018/corechain/permission/rule"
 	"github.com/wooyang2018/corechain/protos"
 )
@@ -31,7 +30,7 @@ func IdentifyAccount(aclMgr base.AclManager, account string, aksuri []string) (b
 	}
 
 	// build perm tree
-	pnode, err := ptree.BuildAccountPermTree(aclMgr, account, aksuri)
+	pnode, err := rule.BuildAccountPermTree(aclMgr, account, aksuri)
 	if err != nil {
 		return false, err
 	}
@@ -48,7 +47,7 @@ func CheckContractMethodPerm(aclMgr base.AclManager, aksuri []string,
 	}
 
 	// build perm tree
-	pnode, err := ptree.BuildMethodPermTree(aclMgr, contractName, methodName, aksuri)
+	pnode, err := rule.BuildMethodPermTree(aclMgr, contractName, methodName, aksuri)
 	if err != nil {
 		return false, err
 	}
@@ -57,13 +56,13 @@ func CheckContractMethodPerm(aclMgr base.AclManager, aksuri []string,
 	return validatePermTree(pnode, false)
 }
 
-func validatePermTree(root *ptree.PermNode, isAccount bool) (bool, error) {
+func validatePermTree(root *rule.PermNode, isAccount bool) (bool, error) {
 	if root == nil {
 		return false, errors.New("Root is null")
 	}
 
 	// get BFS list of perm tree
-	plist, err := ptree.GetPermTreeList(root)
+	plist, err := rule.GetPermTreeList(root)
 	if err != nil {
 		return false, err
 	}
@@ -112,12 +111,12 @@ func validatePermTree(root *ptree.PermNode, isAccount bool) (bool, error) {
 
 		// set validation status
 		if checkResult {
-			pnode.Status = ptree.Success
+			pnode.Status = rule.Success
 		} else {
-			pnode.Status = ptree.Failed
+			pnode.Status = rule.Failed
 		}
 	}
-	return (root.Status == ptree.Success), nil
+	return (root.Status == rule.Success), nil
 }
 
 // GetAccountACL return account acl

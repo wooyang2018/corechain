@@ -4,7 +4,7 @@
 // - protoc             v3.21.1
 // source: xchain.proto
 
-package protos
+package pb
 
 import (
 	context "context"
@@ -94,7 +94,7 @@ func NewMXchainClient(cc grpc.ClientConnInterface) MXchainClient {
 
 func (c *mXchainClient) SelectUTXOBySize(ctx context.Context, in *UtxoInput, opts ...grpc.CallOption) (*UtxoOutput, error) {
 	out := new(UtxoOutput)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/SelectUTXOBySize", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/SelectUTXOBySize", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -103,7 +103,7 @@ func (c *mXchainClient) SelectUTXOBySize(ctx context.Context, in *UtxoInput, opt
 
 func (c *mXchainClient) PostTx(ctx context.Context, in *TxStatus, opts ...grpc.CallOption) (*CommonReply, error) {
 	out := new(CommonReply)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/PostTx", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/PostTx", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -112,7 +112,7 @@ func (c *mXchainClient) PostTx(ctx context.Context, in *TxStatus, opts ...grpc.C
 
 func (c *mXchainClient) QueryACL(ctx context.Context, in *AclStatus, opts ...grpc.CallOption) (*AclStatus, error) {
 	out := new(AclStatus)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/QueryACL", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/QueryACL", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -121,7 +121,7 @@ func (c *mXchainClient) QueryACL(ctx context.Context, in *AclStatus, opts ...grp
 
 func (c *mXchainClient) QueryUtxoRecord(ctx context.Context, in *UtxoRecordDetail, opts ...grpc.CallOption) (*UtxoRecordDetail, error) {
 	out := new(UtxoRecordDetail)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/QueryUtxoRecord", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/QueryUtxoRecord", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -130,7 +130,7 @@ func (c *mXchainClient) QueryUtxoRecord(ctx context.Context, in *UtxoRecordDetai
 
 func (c *mXchainClient) QueryContractStatData(ctx context.Context, in *ContractStatDataRequest, opts ...grpc.CallOption) (*ContractStatDataResponse, error) {
 	out := new(ContractStatDataResponse)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/QueryContractStatData", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/QueryContractStatData", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -139,7 +139,7 @@ func (c *mXchainClient) QueryContractStatData(ctx context.Context, in *ContractS
 
 func (c *mXchainClient) GetAccountContracts(ctx context.Context, in *GetAccountContractsRequest, opts ...grpc.CallOption) (*GetAccountContractsResponse, error) {
 	out := new(GetAccountContractsResponse)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/GetAccountContracts", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/GetAccountContracts", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -148,7 +148,7 @@ func (c *mXchainClient) GetAccountContracts(ctx context.Context, in *GetAccountC
 
 func (c *mXchainClient) QueryTx(ctx context.Context, in *TxStatus, opts ...grpc.CallOption) (*TxStatus, error) {
 	out := new(TxStatus)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/QueryTx", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/QueryTx", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -157,7 +157,7 @@ func (c *mXchainClient) QueryTx(ctx context.Context, in *TxStatus, opts ...grpc.
 
 func (c *mXchainClient) GetBalance(ctx context.Context, in *AddressStatus, opts ...grpc.CallOption) (*AddressStatus, error) {
 	out := new(AddressStatus)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/GetBalance", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/GetBalance", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -166,7 +166,7 @@ func (c *mXchainClient) GetBalance(ctx context.Context, in *AddressStatus, opts 
 
 func (c *mXchainClient) GetBalanceDetail(ctx context.Context, in *AddressBalanceStatus, opts ...grpc.CallOption) (*AddressBalanceStatus, error) {
 	out := new(AddressBalanceStatus)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/GetBalanceDetail", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/GetBalanceDetail", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -175,7 +175,7 @@ func (c *mXchainClient) GetBalanceDetail(ctx context.Context, in *AddressBalance
 
 func (c *mXchainClient) GetFrozenBalance(ctx context.Context, in *AddressStatus, opts ...grpc.CallOption) (*AddressStatus, error) {
 	out := new(AddressStatus)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/GetFrozenBalance", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/GetFrozenBalance", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -184,7 +184,7 @@ func (c *mXchainClient) GetFrozenBalance(ctx context.Context, in *AddressStatus,
 
 func (c *mXchainClient) GetBlock(ctx context.Context, in *BlockID, opts ...grpc.CallOption) (*Block, error) {
 	out := new(Block)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/GetBlock", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/GetBlock", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -193,7 +193,7 @@ func (c *mXchainClient) GetBlock(ctx context.Context, in *BlockID, opts ...grpc.
 
 func (c *mXchainClient) GetBlockByHeight(ctx context.Context, in *BlockHeight, opts ...grpc.CallOption) (*Block, error) {
 	out := new(Block)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/GetBlockByHeight", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/GetBlockByHeight", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -202,7 +202,7 @@ func (c *mXchainClient) GetBlockByHeight(ctx context.Context, in *BlockHeight, o
 
 func (c *mXchainClient) GetBlockChainStatus(ctx context.Context, in *BCStatus, opts ...grpc.CallOption) (*BCStatus, error) {
 	out := new(BCStatus)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/GetBlockChainStatus", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/GetBlockChainStatus", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -211,7 +211,7 @@ func (c *mXchainClient) GetBlockChainStatus(ctx context.Context, in *BCStatus, o
 
 func (c *mXchainClient) GetBlockChains(ctx context.Context, in *CommonIn, opts ...grpc.CallOption) (*BlockChains, error) {
 	out := new(BlockChains)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/GetBlockChains", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/GetBlockChains", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -220,7 +220,7 @@ func (c *mXchainClient) GetBlockChains(ctx context.Context, in *CommonIn, opts .
 
 func (c *mXchainClient) GetSystemStatus(ctx context.Context, in *CommonIn, opts ...grpc.CallOption) (*SystemsStatusReply, error) {
 	out := new(SystemsStatusReply)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/GetSystemStatus", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/GetSystemStatus", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -229,7 +229,7 @@ func (c *mXchainClient) GetSystemStatus(ctx context.Context, in *CommonIn, opts 
 
 func (c *mXchainClient) GetConsensusStatus(ctx context.Context, in *ConsensusStatRequest, opts ...grpc.CallOption) (*ConsensusStatus, error) {
 	out := new(ConsensusStatus)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/GetConsensusStatus", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/GetConsensusStatus", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -238,7 +238,7 @@ func (c *mXchainClient) GetConsensusStatus(ctx context.Context, in *ConsensusSta
 
 func (c *mXchainClient) GetNetURL(ctx context.Context, in *CommonIn, opts ...grpc.CallOption) (*RawUrl, error) {
 	out := new(RawUrl)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/GetNetURL", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/GetNetURL", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -247,7 +247,7 @@ func (c *mXchainClient) GetNetURL(ctx context.Context, in *CommonIn, opts ...grp
 
 func (c *mXchainClient) SelectUTXO(ctx context.Context, in *UtxoInput, opts ...grpc.CallOption) (*UtxoOutput, error) {
 	out := new(UtxoOutput)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/SelectUTXO", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/SelectUTXO", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -256,7 +256,7 @@ func (c *mXchainClient) SelectUTXO(ctx context.Context, in *UtxoInput, opts ...g
 
 func (c *mXchainClient) PreExecWithSelectUTXO(ctx context.Context, in *PreExecWithSelectUTXORequest, opts ...grpc.CallOption) (*PreExecWithSelectUTXOResponse, error) {
 	out := new(PreExecWithSelectUTXOResponse)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/PreExecWithSelectUTXO", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/PreExecWithSelectUTXO", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -265,7 +265,7 @@ func (c *mXchainClient) PreExecWithSelectUTXO(ctx context.Context, in *PreExecWi
 
 func (c *mXchainClient) DposCandidates(ctx context.Context, in *DposCandidatesRequest, opts ...grpc.CallOption) (*DposCandidatesResponse, error) {
 	out := new(DposCandidatesResponse)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/DposCandidates", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/DposCandidates", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -274,7 +274,7 @@ func (c *mXchainClient) DposCandidates(ctx context.Context, in *DposCandidatesRe
 
 func (c *mXchainClient) DposNominateRecords(ctx context.Context, in *DposNominateRecordsRequest, opts ...grpc.CallOption) (*DposNominateRecordsResponse, error) {
 	out := new(DposNominateRecordsResponse)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/DposNominateRecords", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/DposNominateRecords", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -283,7 +283,7 @@ func (c *mXchainClient) DposNominateRecords(ctx context.Context, in *DposNominat
 
 func (c *mXchainClient) DposNomineeRecords(ctx context.Context, in *DposNomineeRecordsRequest, opts ...grpc.CallOption) (*DposNomineeRecordsResponse, error) {
 	out := new(DposNomineeRecordsResponse)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/DposNomineeRecords", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/DposNomineeRecords", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -292,7 +292,7 @@ func (c *mXchainClient) DposNomineeRecords(ctx context.Context, in *DposNomineeR
 
 func (c *mXchainClient) DposVoteRecords(ctx context.Context, in *DposVoteRecordsRequest, opts ...grpc.CallOption) (*DposVoteRecordsResponse, error) {
 	out := new(DposVoteRecordsResponse)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/DposVoteRecords", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/DposVoteRecords", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -301,7 +301,7 @@ func (c *mXchainClient) DposVoteRecords(ctx context.Context, in *DposVoteRecords
 
 func (c *mXchainClient) DposVotedRecords(ctx context.Context, in *DposVotedRecordsRequest, opts ...grpc.CallOption) (*DposVotedRecordsResponse, error) {
 	out := new(DposVotedRecordsResponse)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/DposVotedRecords", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/DposVotedRecords", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -310,7 +310,7 @@ func (c *mXchainClient) DposVotedRecords(ctx context.Context, in *DposVotedRecor
 
 func (c *mXchainClient) DposCheckResults(ctx context.Context, in *DposCheckResultsRequest, opts ...grpc.CallOption) (*DposCheckResultsResponse, error) {
 	out := new(DposCheckResultsResponse)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/DposCheckResults", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/DposCheckResults", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -319,7 +319,7 @@ func (c *mXchainClient) DposCheckResults(ctx context.Context, in *DposCheckResul
 
 func (c *mXchainClient) DposStatus(ctx context.Context, in *DposStatusRequest, opts ...grpc.CallOption) (*DposStatusResponse, error) {
 	out := new(DposStatusResponse)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/DposStatus", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/DposStatus", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -328,7 +328,7 @@ func (c *mXchainClient) DposStatus(ctx context.Context, in *DposStatusRequest, o
 
 func (c *mXchainClient) GetAccountByAK(ctx context.Context, in *AK2AccountRequest, opts ...grpc.CallOption) (*AK2AccountResponse, error) {
 	out := new(AK2AccountResponse)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/GetAccountByAK", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/GetAccountByAK", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -337,7 +337,7 @@ func (c *mXchainClient) GetAccountByAK(ctx context.Context, in *AK2AccountReques
 
 func (c *mXchainClient) GetAddressContracts(ctx context.Context, in *AddressContractsRequest, opts ...grpc.CallOption) (*AddressContractsResponse, error) {
 	out := new(AddressContractsResponse)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/GetAddressContracts", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/GetAddressContracts", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -346,7 +346,7 @@ func (c *mXchainClient) GetAddressContracts(ctx context.Context, in *AddressCont
 
 func (c *mXchainClient) PreExec(ctx context.Context, in *InvokeRPCRequest, opts ...grpc.CallOption) (*InvokeRPCResponse, error) {
 	out := new(InvokeRPCResponse)
-	err := c.cc.Invoke(ctx, "/protos.MXchain/PreExec", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.MXchain/PreExec", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -532,7 +532,7 @@ func _MXchain_SelectUTXOBySize_Handler(srv interface{}, ctx context.Context, dec
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/SelectUTXOBySize",
+		FullMethod: "/pb.MXchain/SelectUTXOBySize",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).SelectUTXOBySize(ctx, req.(*UtxoInput))
@@ -550,7 +550,7 @@ func _MXchain_PostTx_Handler(srv interface{}, ctx context.Context, dec func(inte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/PostTx",
+		FullMethod: "/pb.MXchain/PostTx",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).PostTx(ctx, req.(*TxStatus))
@@ -568,7 +568,7 @@ func _MXchain_QueryACL_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/QueryACL",
+		FullMethod: "/pb.MXchain/QueryACL",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).QueryACL(ctx, req.(*AclStatus))
@@ -586,7 +586,7 @@ func _MXchain_QueryUtxoRecord_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/QueryUtxoRecord",
+		FullMethod: "/pb.MXchain/QueryUtxoRecord",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).QueryUtxoRecord(ctx, req.(*UtxoRecordDetail))
@@ -604,7 +604,7 @@ func _MXchain_QueryContractStatData_Handler(srv interface{}, ctx context.Context
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/QueryContractStatData",
+		FullMethod: "/pb.MXchain/QueryContractStatData",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).QueryContractStatData(ctx, req.(*ContractStatDataRequest))
@@ -622,7 +622,7 @@ func _MXchain_GetAccountContracts_Handler(srv interface{}, ctx context.Context, 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/GetAccountContracts",
+		FullMethod: "/pb.MXchain/GetAccountContracts",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).GetAccountContracts(ctx, req.(*GetAccountContractsRequest))
@@ -640,7 +640,7 @@ func _MXchain_QueryTx_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/QueryTx",
+		FullMethod: "/pb.MXchain/QueryTx",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).QueryTx(ctx, req.(*TxStatus))
@@ -658,7 +658,7 @@ func _MXchain_GetBalance_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/GetBalance",
+		FullMethod: "/pb.MXchain/GetBalance",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).GetBalance(ctx, req.(*AddressStatus))
@@ -676,7 +676,7 @@ func _MXchain_GetBalanceDetail_Handler(srv interface{}, ctx context.Context, dec
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/GetBalanceDetail",
+		FullMethod: "/pb.MXchain/GetBalanceDetail",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).GetBalanceDetail(ctx, req.(*AddressBalanceStatus))
@@ -694,7 +694,7 @@ func _MXchain_GetFrozenBalance_Handler(srv interface{}, ctx context.Context, dec
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/GetFrozenBalance",
+		FullMethod: "/pb.MXchain/GetFrozenBalance",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).GetFrozenBalance(ctx, req.(*AddressStatus))
@@ -712,7 +712,7 @@ func _MXchain_GetBlock_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/GetBlock",
+		FullMethod: "/pb.MXchain/GetBlock",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).GetBlock(ctx, req.(*BlockID))
@@ -730,7 +730,7 @@ func _MXchain_GetBlockByHeight_Handler(srv interface{}, ctx context.Context, dec
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/GetBlockByHeight",
+		FullMethod: "/pb.MXchain/GetBlockByHeight",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).GetBlockByHeight(ctx, req.(*BlockHeight))
@@ -748,7 +748,7 @@ func _MXchain_GetBlockChainStatus_Handler(srv interface{}, ctx context.Context, 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/GetBlockChainStatus",
+		FullMethod: "/pb.MXchain/GetBlockChainStatus",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).GetBlockChainStatus(ctx, req.(*BCStatus))
@@ -766,7 +766,7 @@ func _MXchain_GetBlockChains_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/GetBlockChains",
+		FullMethod: "/pb.MXchain/GetBlockChains",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).GetBlockChains(ctx, req.(*CommonIn))
@@ -784,7 +784,7 @@ func _MXchain_GetSystemStatus_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/GetSystemStatus",
+		FullMethod: "/pb.MXchain/GetSystemStatus",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).GetSystemStatus(ctx, req.(*CommonIn))
@@ -802,7 +802,7 @@ func _MXchain_GetConsensusStatus_Handler(srv interface{}, ctx context.Context, d
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/GetConsensusStatus",
+		FullMethod: "/pb.MXchain/GetConsensusStatus",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).GetConsensusStatus(ctx, req.(*ConsensusStatRequest))
@@ -820,7 +820,7 @@ func _MXchain_GetNetURL_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/GetNetURL",
+		FullMethod: "/pb.MXchain/GetNetURL",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).GetNetURL(ctx, req.(*CommonIn))
@@ -838,7 +838,7 @@ func _MXchain_SelectUTXO_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/SelectUTXO",
+		FullMethod: "/pb.MXchain/SelectUTXO",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).SelectUTXO(ctx, req.(*UtxoInput))
@@ -856,7 +856,7 @@ func _MXchain_PreExecWithSelectUTXO_Handler(srv interface{}, ctx context.Context
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/PreExecWithSelectUTXO",
+		FullMethod: "/pb.MXchain/PreExecWithSelectUTXO",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).PreExecWithSelectUTXO(ctx, req.(*PreExecWithSelectUTXORequest))
@@ -874,7 +874,7 @@ func _MXchain_DposCandidates_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/DposCandidates",
+		FullMethod: "/pb.MXchain/DposCandidates",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).DposCandidates(ctx, req.(*DposCandidatesRequest))
@@ -892,7 +892,7 @@ func _MXchain_DposNominateRecords_Handler(srv interface{}, ctx context.Context, 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/DposNominateRecords",
+		FullMethod: "/pb.MXchain/DposNominateRecords",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).DposNominateRecords(ctx, req.(*DposNominateRecordsRequest))
@@ -910,7 +910,7 @@ func _MXchain_DposNomineeRecords_Handler(srv interface{}, ctx context.Context, d
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/DposNomineeRecords",
+		FullMethod: "/pb.MXchain/DposNomineeRecords",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).DposNomineeRecords(ctx, req.(*DposNomineeRecordsRequest))
@@ -928,7 +928,7 @@ func _MXchain_DposVoteRecords_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/DposVoteRecords",
+		FullMethod: "/pb.MXchain/DposVoteRecords",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).DposVoteRecords(ctx, req.(*DposVoteRecordsRequest))
@@ -946,7 +946,7 @@ func _MXchain_DposVotedRecords_Handler(srv interface{}, ctx context.Context, dec
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/DposVotedRecords",
+		FullMethod: "/pb.MXchain/DposVotedRecords",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).DposVotedRecords(ctx, req.(*DposVotedRecordsRequest))
@@ -964,7 +964,7 @@ func _MXchain_DposCheckResults_Handler(srv interface{}, ctx context.Context, dec
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/DposCheckResults",
+		FullMethod: "/pb.MXchain/DposCheckResults",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).DposCheckResults(ctx, req.(*DposCheckResultsRequest))
@@ -982,7 +982,7 @@ func _MXchain_DposStatus_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/DposStatus",
+		FullMethod: "/pb.MXchain/DposStatus",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).DposStatus(ctx, req.(*DposStatusRequest))
@@ -1000,7 +1000,7 @@ func _MXchain_GetAccountByAK_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/GetAccountByAK",
+		FullMethod: "/pb.MXchain/GetAccountByAK",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).GetAccountByAK(ctx, req.(*AK2AccountRequest))
@@ -1018,7 +1018,7 @@ func _MXchain_GetAddressContracts_Handler(srv interface{}, ctx context.Context, 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/GetAddressContracts",
+		FullMethod: "/pb.MXchain/GetAddressContracts",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).GetAddressContracts(ctx, req.(*AddressContractsRequest))
@@ -1036,7 +1036,7 @@ func _MXchain_PreExec_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.MXchain/PreExec",
+		FullMethod: "/pb.MXchain/PreExec",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MXchainServer).PreExec(ctx, req.(*InvokeRPCRequest))
@@ -1048,7 +1048,7 @@ func _MXchain_PreExec_Handler(srv interface{}, ctx context.Context, dec func(int
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var MXchain_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "protos.MXchain",
+	ServiceName: "pb.MXchain",
 	HandlerType: (*MXchainServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

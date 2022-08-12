@@ -16,9 +16,6 @@ import (
 	xconf "github.com/wooyang2018/corechain/common/config"
 	"github.com/wooyang2018/corechain/common/timer"
 	contractBase "github.com/wooyang2018/corechain/contract/base"
-	_ "github.com/wooyang2018/corechain/contract/evm"
-	_ "github.com/wooyang2018/corechain/contract/kernel"
-	_ "github.com/wooyang2018/corechain/contract/native"
 	"github.com/wooyang2018/corechain/crypto/client"
 	"github.com/wooyang2018/corechain/ledger"
 	lctx "github.com/wooyang2018/corechain/ledger/context"
@@ -27,11 +24,14 @@ import (
 	mock "github.com/wooyang2018/corechain/mock/config"
 	"github.com/wooyang2018/corechain/permission"
 	"github.com/wooyang2018/corechain/permission/base"
-	pctx "github.com/wooyang2018/corechain/permission/context"
 	"github.com/wooyang2018/corechain/protos"
 	sctx "github.com/wooyang2018/corechain/state/base"
 	"github.com/wooyang2018/corechain/state/txhash"
 	"github.com/wooyang2018/corechain/state/utxo"
+
+	_ "github.com/wooyang2018/corechain/contract/evm"
+	_ "github.com/wooyang2018/corechain/contract/kernel"
+	_ "github.com/wooyang2018/corechain/contract/native"
 	_ "github.com/wooyang2018/corechain/storage/leveldb"
 )
 
@@ -255,7 +255,7 @@ func TestStateWorkWithLedger(t *testing.T) {
 	t.Logf("blockid %x", block.Blockid)
 	confirmStatus := mledger.ConfirmBlock(block, true)
 	if !confirmStatus.Succ {
-		t.Log("confirm block fail")
+		t.Fatal("confirm block fail")
 	}
 
 	crypt, err := client.CreateCryptoClient(client.CryptoTypeDefault)
@@ -269,7 +269,7 @@ func TestStateWorkWithLedger(t *testing.T) {
 	}
 	stateCtx.EnvCfg.ChainDir = workspace
 	stateHandle, _ := NewState(stateCtx)
-	_, _, err = stateHandle.QueryTx([]byte("123"))
+	_, _, err = stateHandle.QueryTx([]byte("123")) //理论上来说应该找不到
 	if err != ledger.ErrTxNotFound {
 		t.Fatal(err)
 	}
@@ -696,7 +696,7 @@ func CreateContract(xmreader ledger.XReader, state *State, envcfg *xconf.EnvConf
 }
 
 func NewAcl(legAgent *LedgerAgent, cmg contractBase.Manager) (base.AclManager, error) {
-	aclCtx, err := pctx.NewAclCtx("xuper", legAgent, cmg)
+	aclCtx, err := base.NewAclCtx("xuper", legAgent, cmg)
 	if err != nil {
 		return nil, fmt.Errorf("create acl ctx failed.err:%v", err)
 	}

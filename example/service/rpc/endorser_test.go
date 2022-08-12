@@ -9,11 +9,16 @@ import (
 	"os"
 	"testing"
 
-	protos2 "github.com/wooyang2018/corechain/example/protos"
+	xconf "github.com/wooyang2018/corechain/common/config"
+	"github.com/wooyang2018/corechain/engines"
+	engineBase "github.com/wooyang2018/corechain/engines/base"
+	"github.com/wooyang2018/corechain/example/pb"
 	scom "github.com/wooyang2018/corechain/example/service/common"
+	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
+	ltx "github.com/wooyang2018/corechain/ledger/tx"
+	"github.com/wooyang2018/corechain/logger"
 	mock "github.com/wooyang2018/corechain/mock/config"
 
-	xconf "github.com/wooyang2018/corechain/common/config"
 	// import要使用的内核核心组件驱动
 	_ "github.com/wooyang2018/corechain/consensus/pow"
 	_ "github.com/wooyang2018/corechain/consensus/single"
@@ -23,11 +28,6 @@ import (
 	_ "github.com/wooyang2018/corechain/contract/kernel"
 	_ "github.com/wooyang2018/corechain/contract/native"
 	_ "github.com/wooyang2018/corechain/crypto/client"
-	"github.com/wooyang2018/corechain/engines"
-	engineBase "github.com/wooyang2018/corechain/engines/base"
-	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
-	ltx "github.com/wooyang2018/corechain/ledger/tx"
-	"github.com/wooyang2018/corechain/logger"
 	_ "github.com/wooyang2018/corechain/network/p2pv1"
 	_ "github.com/wooyang2018/corechain/storage/leveldb"
 )
@@ -57,7 +57,7 @@ func TestEndorserCall(t *testing.T) {
 	endor := NewDefaultXEndorser(rpcServ, engine)
 	awardTx, err := ltx.GenerateAwardTx("miner", "1000", []byte("award"))
 
-	txStatus := &protos2.TxStatus{
+	txStatus := &pb.TxStatus{
 		Bcname: "xuper",
 		Tx:     scom.TxToXchain(awardTx),
 	}
@@ -67,7 +67,7 @@ func TestEndorserCall(t *testing.T) {
 		t.Fatal(err)
 	}
 	ctx := context.TODO()
-	req := &protos2.EndorserRequest{
+	req := &pb.EndorserRequest{
 		RequestName: "ComplianceCheck",
 		BcName:      "xuper",
 		Fee:         nil,
@@ -78,24 +78,24 @@ func TestEndorserCall(t *testing.T) {
 		t.Log(err)
 	}
 	t.Log(resp)
-	invokeReq := make([]*protos2.InvokeRequest, 0)
-	invoke := &protos2.InvokeRequest{
+	invokeReq := make([]*pb.InvokeRequest, 0)
+	invoke := &pb.InvokeRequest{
 		ModuleName:   "wasm",
 		ContractName: "counter",
 		MethodName:   "increase",
 		Args:         map[string][]byte{"key": []byte("test")},
 	}
 	invokeReq = append(invokeReq, invoke)
-	preq := &protos2.PreExecWithSelectUTXORequest{
+	preq := &pb.PreExecWithSelectUTXORequest{
 		Bcname:      "xuper",
 		Address:     address,
 		TotalAmount: 100,
-		SignInfo: &protos2.SignatureInfo{
+		SignInfo: &pb.SignatureInfo{
 			PublicKey: publickey,
 			Sign:      []byte("sign"),
 		},
 		NeedLock: false,
-		Request: &protos2.InvokeRPCRequest{
+		Request: &pb.InvokeRPCRequest{
 			Bcname:      "xuper",
 			Requests:    invokeReq,
 			Initiator:   address,
@@ -104,7 +104,7 @@ func TestEndorserCall(t *testing.T) {
 	}
 
 	reqJSON, _ := json.Marshal(preq)
-	xreq := &protos2.EndorserRequest{
+	xreq := &pb.EndorserRequest{
 		RequestName: "PreExecWithFee",
 		BcName:      "xuper",
 		Fee:         nil,
@@ -116,7 +116,7 @@ func TestEndorserCall(t *testing.T) {
 		t.Log(err)
 	}
 	t.Log(resp)
-	qtxTxStatus := &protos2.TxStatus{
+	qtxTxStatus := &pb.TxStatus{
 		Bcname: "xuper",
 		Txid:   []byte("70c64d6cb9b5647048d067c6775575fc52e3c51c6425cec3881d8564ad8e887c"),
 	}
@@ -125,7 +125,7 @@ func TestEndorserCall(t *testing.T) {
 		fmt.Printf("json encode txStatus failed: %v", err)
 		t.Fatal(err)
 	}
-	req = &protos2.EndorserRequest{
+	req = &pb.EndorserRequest{
 		RequestName: "TxQuery",
 		BcName:      "xuper",
 		RequestData: requestData,

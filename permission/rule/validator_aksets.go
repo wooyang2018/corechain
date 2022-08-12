@@ -1,7 +1,6 @@
 package rule
 
 import (
-	"github.com/wooyang2018/corechain/permission/ptree"
 	"github.com/wooyang2018/corechain/protos"
 )
 
@@ -15,7 +14,7 @@ func NewAKSetsValidator() *AKSetsValidator {
 }
 
 // Validate implements the interface of ACLValidator
-func (asv *AKSetsValidator) Validate(pnode *ptree.PermNode) (bool, error) {
+func (asv *AKSetsValidator) Validate(pnode *PermNode) (bool, error) {
 	expResult := false
 	if pnode == nil {
 		return false, InvalidErr
@@ -45,7 +44,7 @@ func (asv *AKSetsValidator) Validate(pnode *ptree.PermNode) (bool, error) {
 }
 
 // validateAkSet validate single AkSet 验证是否每个人都成功了
-func (asv *AKSetsValidator) validateAkSet(set *protos.AkSet, signedAks []*ptree.PermNode) bool {
+func (asv *AKSetsValidator) validateAkSet(set *protos.AkSet, signedAks []*PermNode) bool {
 	// empty set or empty signature means validate failed
 	if len(set.Aks) == 0 || len(signedAks) == 0 {
 		return false
@@ -54,7 +53,7 @@ func (asv *AKSetsValidator) validateAkSet(set *protos.AkSet, signedAks []*ptree.
 	isValid := true
 	for _, ak := range set.Aks {
 		node := asv.findAkInNodeList(ak, signedAks)
-		if node == nil || node.Status != ptree.Success {
+		if node == nil || node.Status != Success {
 			// found one ak without valid signature, this set validate failed
 			isValid = false
 			break
@@ -64,8 +63,8 @@ func (asv *AKSetsValidator) validateAkSet(set *protos.AkSet, signedAks []*ptree.
 }
 
 // findAkInNodeList find permnode with specified name
-func (asv *AKSetsValidator) findAkInNodeList(name string, signedAks []*ptree.PermNode) *ptree.PermNode {
-	var pnode *ptree.PermNode
+func (asv *AKSetsValidator) findAkInNodeList(name string, signedAks []*PermNode) *PermNode {
+	var pnode *PermNode
 	pnode = nil
 	//TODO 但凡写一个Map也不至于要遍历啊
 	for _, node := range signedAks {

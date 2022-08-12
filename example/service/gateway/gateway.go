@@ -9,7 +9,7 @@ import (
 	"sync"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	protos2 "github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
 	scom "github.com/wooyang2018/corechain/example/service/common"
 	sconf "github.com/wooyang2018/corechain/example/service/config"
 	"github.com/wooyang2018/corechain/logger"
@@ -83,13 +83,13 @@ func (t *Gateway) runGateway() error {
 	}
 
 	rpcEndpoint := fmt.Sprintf(":%d", t.scfg.GWPort)
-	err := protos2.RegisterMXchainHandlerFromEndpoint(ctx, mux, rpcEndpoint, opts)
+	err := pb.RegisterMXchainHandlerFromEndpoint(ctx, mux, rpcEndpoint, opts)
 	if err != nil {
 		return err
 	}
 
 	if t.scfg.EnableEndorser {
-		err = protos2.RegisterXendorserHandlerFromEndpoint(ctx, mux, rpcEndpoint, opts)
+		err = pb.RegisterXendorserHandlerFromEndpoint(ctx, mux, rpcEndpoint, opts)
 		if err != nil {
 			return err
 		}

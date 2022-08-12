@@ -1,7 +1,6 @@
 package rule
 
 import (
-	"github.com/wooyang2018/corechain/permission/ptree"
 	"github.com/wooyang2018/corechain/protos"
 )
 
@@ -14,7 +13,7 @@ func NewThresholdValidator() *ThresholdValidator {
 }
 
 // Validate implements the interface of ACLValidator
-func (tv *ThresholdValidator) Validate(pnode *ptree.PermNode) (bool, error) {
+func (tv *ThresholdValidator) Validate(pnode *PermNode) (bool, error) {
 	var weightSum float64
 
 	if pnode == nil {
@@ -24,7 +23,7 @@ func (tv *ThresholdValidator) Validate(pnode *ptree.PermNode) (bool, error) {
 	weightSum = 0
 	for _, node := range pnode.Children {
 		// the child account/ak must be passed the validation before
-		if node.Status != ptree.Success {
+		if node.Status != Success {
 			continue
 		}
 

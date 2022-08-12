@@ -13,8 +13,7 @@ import (
 	"path/filepath"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
-
+	"github.com/wooyang2018/corechain/example/pb"
 	"github.com/wooyang2018/corechain/state/utxo"
 )
 
@@ -113,13 +112,13 @@ func readPrivateKey(keypath string) (string, error) {
 }
 
 type invokeRequestWraper struct {
-	protos.InvokeRequest
+	pb.InvokeRequest
 	// 取巧的手段来shadow pb.InvokeRequest里面的Args字段
 	Args map[string]string `json:"args,omitempty"`
 }
 
-func newFeeAccount(fee string) *protos.TxDataAccount {
-	return &protos.TxDataAccount{
+func newFeeAccount(fee string) *pb.TxDataAccount {
+	return &pb.TxDataAccount{
 		Address: utxo.FeePlaceholder,
 		Amount:  fee,
 	}

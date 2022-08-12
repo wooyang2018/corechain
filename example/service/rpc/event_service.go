@@ -5,7 +5,7 @@ import (
 	"net"
 	"sync"
 
-	protos2 "github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/peer"
 
@@ -33,7 +33,7 @@ func newEventService(cfg *sconf.ServConf, engine engineBase.Engine) *eventServic
 }
 
 // Subscribe start an event subscribe
-func (e *eventService) Subscribe(req *protos2.SubscribeRequest, stream protos2.EventService_SubscribeServer) error {
+func (e *eventService) Subscribe(req *pb.SubscribeRequest, stream pb.EventService_SubscribeServer) error {
 	if !e.cfg.EnableEvent {
 		return errors.New("event service disabled")
 	}
@@ -52,7 +52,7 @@ func (e *eventService) Subscribe(req *protos2.SubscribeRequest, stream protos2.E
 	for iter.Next() {
 		payload := iter.Data()
 		buf, _ := encfunc(payload)
-		event := &protos2.Event{
+		event := &pb.Event{
 			Payload: buf,
 		}
 		err := stream.Send(event)

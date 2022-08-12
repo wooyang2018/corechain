@@ -17,15 +17,14 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/wooyang2018/corechain/contract/base"
-	protos2 "github.com/wooyang2018/corechain/example/protos"
-	"google.golang.org/grpc"
-	"google.golang.org/protobuf/proto"
-
 	"github.com/wooyang2018/corechain/common/utils"
+	"github.com/wooyang2018/corechain/contract/base"
 	cryptoClient "github.com/wooyang2018/corechain/crypto/client"
+	"github.com/wooyang2018/corechain/example/pb"
 	"github.com/wooyang2018/corechain/example/service/common"
 	"github.com/wooyang2018/corechain/state/utxo"
+	"google.golang.org/grpc"
+	"google.golang.org/protobuf/proto"
 )
 
 const (
@@ -55,7 +54,7 @@ type CommTrans struct {
 
 	ChainName    string
 	Keys         string
-	XchainClient protos2.MXchainClient
+	XchainClient pb.MXchainClient
 	CryptoType   string
 	RootOptions  RootOptions
 
@@ -64,7 +63,7 @@ type CommTrans struct {
 }
 
 // GenerateTx generate raw tx
-func (c *CommTrans) GenerateTx(ctx context.Context) (*protos2.Transaction, error) {
+func (c *CommTrans) GenerateTx(ctx context.Context) (*pb.Transaction, error) {
 	preExeRPCRes, preExeReqs, err := c.GenPreExeRes(ctx)
 	if err != nil {
 		return nil, err
@@ -78,18 +77,18 @@ func (c *CommTrans) GenerateTx(ctx context.Context) (*protos2.Transaction, error
 
 // GenPreExeRes 得到预执行的结果
 func (c *CommTrans) GenPreExeRes(ctx context.Context) (
-	*protos2.InvokeRPCResponse, []*protos2.InvokeRequest, error) {
-	preExeReqs := []*protos2.InvokeRequest{}
+	*pb.InvokeRPCResponse, []*pb.InvokeRequest, error) {
+	preExeReqs := []*pb.InvokeRequest{}
 	if c.ModuleName != "" {
 		if c.ModuleName == "xkernel" {
-			preExeReqs = append(preExeReqs, &protos2.InvokeRequest{
+			preExeReqs = append(preExeReqs, &pb.InvokeRequest{
 				ModuleName:   c.ModuleName,
 				ContractName: c.ContractName,
 				MethodName:   c.MethodName,
 				Args:         c.Args,
 			})
 		} else {
-			invokeReq := &protos2.InvokeRequest{
+			invokeReq := &pb.InvokeRequest{
 				ModuleName:   c.ModuleName,
 				ContractName: c.ContractName,
 				MethodName:   c.MethodName,
@@ -111,9 +110,9 @@ func (c *CommTrans) GenPreExeRes(ctx context.Context) (
 		}
 	}
 
-	preExeRPCReq := &protos2.InvokeRPCRequest{
+	preExeRPCReq := &pb.InvokeRPCRequest{
 		Bcname: c.ChainName,
-		Header: &protos2.Header{
+		Header: &pb.Header{
 			Logid: utils.GenLogId(),
 		},
 		Requests: preExeReqs,
@@ -150,13 +149,13 @@ func (c *CommTrans) GenPreExeRes(ctx context.Context) (
 }
 
 // GetInvokeRequestFromDesc get invokerequest from desc file
-func (c *CommTrans) GetInvokeRequestFromDesc() (*protos2.InvokeRequest, error) {
+func (c *CommTrans) GetInvokeRequestFromDesc() (*pb.InvokeRequest, error) {
 	desc, err := c.GetDesc()
 	if err != nil {
 		return nil, fmt.Errorf("get desc error:%s", err)
 	}
 
-	var preExeReq *protos2.InvokeRequest
+	var preExeReq *pb.InvokeRequest
 	preExeReq, err = c.ReadPreExeReq(desc)
 	if err != nil {
 		return nil, err
@@ -174,7 +173,7 @@ func (c *CommTrans) GetDesc() ([]byte, error) {
 }
 
 // ReadPreExeReq 从desc中填充出发起合约调用的结构体
-func (c *CommTrans) ReadPreExeReq(buf []byte) (*protos2.InvokeRequest, error) {
+func (c *CommTrans) ReadPreExeReq(buf []byte) (*pb.InvokeRequest, error) {
 	params := new(invokeRequestWraper)
 	err := json.Unmarshal(buf, params)
 	if err != nil {
@@ -193,9 +192,9 @@ func (c *CommTrans) ReadPreExeReq(buf []byte) (*protos2.InvokeRequest, error) {
 }
 
 // GenRawTx 生成一个完整raw的交易
-func (c *CommTrans) GenRawTx(ctx context.Context, desc []byte, preExeRes *protos2.InvokeResponse,
-	preExeReqs []*protos2.InvokeRequest) (*protos2.Transaction, error) {
-	tx := &protos2.Transaction{
+func (c *CommTrans) GenRawTx(ctx context.Context, desc []byte, preExeRes *pb.InvokeResponse,
+	preExeReqs []*pb.InvokeRequest) (*pb.Transaction, error) {
+	tx := &pb.Transaction{
 		Desc:      desc,
 		Coinbase:  false,
 		Nonce:     utils.GenNonce(),
@@ -262,15 +261,15 @@ func (c *CommTrans) genInitiator() (string, error) {
 }
 
 // GenTxOutputs 填充得到transaction的repeated TxOutput tx_outputs
-func (c *CommTrans) GenTxOutputs(gasUsed int64) ([]*protos2.TxOutput, *big.Int, error) {
+func (c *CommTrans) GenTxOutputs(gasUsed int64) ([]*pb.TxOutput, *big.Int, error) {
 	// 组装转账的账户信息
-	account := &protos2.TxDataAccount{
+	account := &pb.TxDataAccount{
 		Address:      c.To,
 		Amount:       c.Amount,
 		FrozenHeight: c.FrozenHeight,
 	}
 
-	accounts := []*protos2.TxDataAccount{}
+	accounts := []*pb.TxDataAccount{}
 	if c.To != "" {
 		accounts = append(accounts, account)
 	}
@@ -296,7 +295,7 @@ func (c *CommTrans) GenTxOutputs(gasUsed int64) ([]*protos2.TxOutput, *big.Int, 
 	// 组装txOutputs
 	bigZero := big.NewInt(0)
 	totalNeed := big.NewInt(0)
-	txOutputs := []*protos2.TxOutput{}
+	txOutputs := []*pb.TxOutput{}
 	for _, acc := range accounts {
 		amount, ok := big.NewInt(0).SetString(acc.Amount, 10)
 		if !ok {
@@ -312,7 +311,7 @@ func (c *CommTrans) GenTxOutputs(gasUsed int64) ([]*protos2.TxOutput, *big.Int, 
 		// 得到总的转账金额
 		totalNeed.Add(totalNeed, amount)
 
-		txOutput := &protos2.TxOutput{}
+		txOutput := &pb.TxOutput{}
 		txOutput.Amount = amount.Bytes()
 		txOutput.ToAddr = []byte(acc.Address)
 		txOutput.FrozenHeight = acc.FrozenHeight
@@ -325,7 +324,7 @@ func (c *CommTrans) GenTxOutputs(gasUsed int64) ([]*protos2.TxOutput, *big.Int, 
 // GenTxInputs 填充得到transaction的repeated TxInput tx_inputs,
 // 如果输入大于输出，增加一个转给自己(data/keys/)的输入-输出的交易
 func (c *CommTrans) GenTxInputs(ctx context.Context, totalNeed *big.Int) (
-	[]*protos2.TxInput, *protos2.TxOutput, error) {
+	[]*pb.TxInput, *pb.TxOutput, error) {
 	var fromAddr string
 	var err error
 	if c.From != "" {
@@ -337,7 +336,7 @@ func (c *CommTrans) GenTxInputs(ctx context.Context, totalNeed *big.Int) (
 		}
 	}
 
-	utxoInput := &protos2.UtxoInput{
+	utxoInput := &pb.UtxoInput{
 		Bcname:    c.ChainName,
 		Address:   fromAddr,
 		TotalNeed: totalNeed.String(),
@@ -348,15 +347,15 @@ func (c *CommTrans) GenTxInputs(ctx context.Context, totalNeed *big.Int) (
 	if err != nil {
 		return nil, nil, fmt.Errorf("%v, details:%v", ErrSelectUtxo, err)
 	}
-	if utxoOutputs.Header.Error != protos2.XChainErrorEnum_SUCCESS {
+	if utxoOutputs.Header.Error != pb.XChainErrorEnum_SUCCESS {
 		return nil, nil, fmt.Errorf("%v, details:%v", ErrSelectUtxo, utxoOutputs.Header.Error)
 	}
 
 	// 组装txInputs
-	var txInputs []*protos2.TxInput
-	var txOutput *protos2.TxOutput
+	var txInputs []*pb.TxInput
+	var txOutput *pb.TxOutput
 	for _, utxo := range utxoOutputs.UtxoList {
-		txInput := &protos2.TxInput{}
+		txInput := &pb.TxInput{}
 		txInput.RefTxid = utxo.RefTxid
 		txInput.RefOffset = utxo.RefOffset
 		txInput.FromAddr = utxo.ToAddr
@@ -373,7 +372,7 @@ func (c *CommTrans) GenTxInputs(ctx context.Context, totalNeed *big.Int) (
 	// 则多出来再生成一笔交易转给自己
 	if utxoTotal.Cmp(totalNeed) > 0 {
 		delta := utxoTotal.Sub(utxoTotal, totalNeed)
-		txOutput = &protos2.TxOutput{
+		txOutput = &pb.TxOutput{
 			ToAddr: []byte(fromAddr),
 			Amount: delta.Bytes(),
 		}
@@ -385,7 +384,7 @@ func (c *CommTrans) GenTxInputs(ctx context.Context, totalNeed *big.Int) (
 // Transfer quick access to transfer
 func (c *CommTrans) Transfer(ctx context.Context) error {
 	var err error
-	tx := &protos2.Transaction{}
+	tx := &pb.Transaction{}
 	if c.RootOptions.ComplianceCheck.IsNeedComplianceCheck == true {
 		preSelectUTXORes, err := c.GenPreExeWithSelectUtxoRes(ctx)
 		if err != nil {
@@ -410,7 +409,7 @@ func (c *CommTrans) Transfer(ctx context.Context) error {
 }
 
 // SendTx post tx
-func (c *CommTrans) SendTx(ctx context.Context, tx *protos2.Transaction) error {
+func (c *CommTrans) SendTx(ctx context.Context, tx *pb.Transaction) error {
 	fromAddr, err := readAddress(c.Keys)
 	if err != nil {
 		return err
@@ -445,7 +444,7 @@ func (c *CommTrans) SendTx(ctx context.Context, tx *protos2.Transaction) error {
 	return nil
 }
 
-func (c *CommTrans) genInitSign(tx *protos2.Transaction) ([]*protos2.SignatureInfo, error) {
+func (c *CommTrans) genInitSign(tx *pb.Transaction) ([]*pb.SignatureInfo, error) {
 	fromPubkey, err := readPublicKey(c.Keys)
 	if err != nil {
 		return nil, err
@@ -464,24 +463,24 @@ func (c *CommTrans) genInitSign(tx *protos2.Transaction) ([]*protos2.SignatureIn
 		return nil, err
 	}
 
-	signInfo := &protos2.SignatureInfo{
+	signInfo := &pb.SignatureInfo{
 		PublicKey: fromPubkey,
 		Sign:      signTx,
 	}
 
-	signInfos := []*protos2.SignatureInfo{}
+	signInfos := []*pb.SignatureInfo{}
 	signInfos = append(signInfos, signInfo)
 
 	return signInfos, nil
 }
 
-func (c *CommTrans) genAuthRequireSignsFromPath(tx *protos2.Transaction, path string) ([]*protos2.SignatureInfo, error) {
+func (c *CommTrans) genAuthRequireSignsFromPath(tx *pb.Transaction, path string) ([]*pb.SignatureInfo, error) {
 	cryptoClient, err := cryptoClient.CreateCryptoClient(c.CryptoType)
 	if err != nil {
 		return nil, errors.New("Create crypto client error")
 	}
 
-	authRequireSigns := []*protos2.SignatureInfo{}
+	authRequireSigns := []*pb.SignatureInfo{}
 	if path == "" {
 		initPubkey, err := readPublicKey(c.Keys)
 		if err != nil {
@@ -496,7 +495,7 @@ func (c *CommTrans) genAuthRequireSignsFromPath(tx *protos2.Transaction, path st
 		if err != nil {
 			return nil, err
 		}
-		signInfo := &protos2.SignatureInfo{
+		signInfo := &pb.SignatureInfo{
 			PublicKey: initPubkey,
 			Sign:      signTx,
 		}
@@ -521,7 +520,7 @@ func (c *CommTrans) genAuthRequireSignsFromPath(tx *protos2.Transaction, path st
 			if err != nil {
 				return nil, err
 			}
-			signInfo := &protos2.SignatureInfo{
+			signInfo := &pb.SignatureInfo{
 				PublicKey: pk,
 				Sign:      signTx,
 			}
@@ -531,12 +530,12 @@ func (c *CommTrans) genAuthRequireSignsFromPath(tx *protos2.Transaction, path st
 	return authRequireSigns, nil
 }
 
-func (c *CommTrans) postTx(ctx context.Context, tx *protos2.Transaction) (string, error) {
-	txStatus := &protos2.TxStatus{
+func (c *CommTrans) postTx(ctx context.Context, tx *pb.Transaction) (string, error) {
+	txStatus := &pb.TxStatus{
 		Bcname: c.ChainName,
-		Status: protos2.TransactionStatus_UNCONFIRM,
+		Status: pb.TransactionStatus_UNCONFIRM,
 		Tx:     tx,
-		Header: &protos2.Header{
+		Header: &pb.Header{
 			Logid: utils.GenLogId(),
 		},
 		Txid: tx.Txid,
@@ -546,7 +545,7 @@ func (c *CommTrans) postTx(ctx context.Context, tx *protos2.Transaction) (string
 	if err != nil {
 		return "", err
 	}
-	if reply.Header.Error != protos2.XChainErrorEnum_SUCCESS {
+	if reply.Header.Error != pb.XChainErrorEnum_SUCCESS {
 		return "", fmt.Errorf("Failed to post tx:%s, logid:%s", reply.Header.Error.String(), reply.Header.Logid)
 	}
 
@@ -612,7 +611,7 @@ func (c *CommTrans) GenAuthRequire(filename string) ([]string, error) {
 }
 
 // GenTxFile generate raw tx file
-func (c *CommTrans) GenTxFile(tx *protos2.Transaction) error {
+func (c *CommTrans) GenTxFile(tx *pb.Transaction) error {
 	data, err := proto.Marshal(tx)
 	if err != nil {
 		return errors.New("Tx marshal error")
@@ -629,7 +628,7 @@ func (c *CommTrans) GenTxFile(tx *protos2.Transaction) error {
 	return nil
 }
 
-func printTx(tx *protos2.Transaction) error {
+func printTx(tx *pb.Transaction) error {
 	// print tx
 	t := FromPBTx(tx)
 	output, err := json.MarshalIndent(t, "", "  ")
@@ -642,7 +641,7 @@ func printTx(tx *protos2.Transaction) error {
 }
 
 // GenTxInputsWithMergeUTXO generate tx with merge utxo
-func (c *CommTrans) GenTxInputsWithMergeUTXO(ctx context.Context) ([]*protos2.TxInput, *protos2.TxOutput, error) {
+func (c *CommTrans) GenTxInputsWithMergeUTXO(ctx context.Context) ([]*pb.TxInput, *pb.TxOutput, error) {
 	var fromAddr string
 	var err error
 	if c.From != "" {
@@ -654,7 +653,7 @@ func (c *CommTrans) GenTxInputsWithMergeUTXO(ctx context.Context) ([]*protos2.Tx
 		}
 	}
 
-	utxoInput := &protos2.UtxoInput{
+	utxoInput := &pb.UtxoInput{
 		Bcname:   c.ChainName,
 		Address:  fromAddr,
 		NeedLock: true,
@@ -664,15 +663,15 @@ func (c *CommTrans) GenTxInputsWithMergeUTXO(ctx context.Context) ([]*protos2.Tx
 	if err != nil {
 		return nil, nil, fmt.Errorf("%v, details:%v", ErrSelectUtxo, err)
 	}
-	if utxoOutputs.Header.Error != protos2.XChainErrorEnum_SUCCESS {
+	if utxoOutputs.Header.Error != pb.XChainErrorEnum_SUCCESS {
 		return nil, nil, fmt.Errorf("%v, details:%v", ErrSelectUtxo, utxoOutputs.Header.Error)
 	}
 
 	// 组装txInputs
-	var txInputs []*protos2.TxInput
-	var txOutput *protos2.TxOutput
+	var txInputs []*pb.TxInput
+	var txOutput *pb.TxOutput
 	for _, utxo := range utxoOutputs.UtxoList {
-		txInput := &protos2.TxInput{
+		txInput := &pb.TxInput{
 			RefTxid:   utxo.RefTxid,
 			RefOffset: utxo.RefOffset,
 			FromAddr:  utxo.ToAddr,
@@ -685,7 +684,7 @@ func (c *CommTrans) GenTxInputsWithMergeUTXO(ctx context.Context) ([]*protos2.Tx
 	if !ok {
 		return nil, nil, ErrSelectUtxo
 	}
-	txOutput = &protos2.TxOutput{
+	txOutput = &pb.TxOutput{
 		ToAddr: []byte(fromAddr),
 		Amount: utxoTotal.Bytes(),
 	}
@@ -694,18 +693,18 @@ func (c *CommTrans) GenTxInputsWithMergeUTXO(ctx context.Context) ([]*protos2.Tx
 }
 
 func (c *CommTrans) GenPreExeWithSelectUtxoRes(ctx context.Context) (
-	*protos2.PreExecWithSelectUTXOResponse, error) {
-	preExeReqs := []*protos2.InvokeRequest{}
+	*pb.PreExecWithSelectUTXOResponse, error) {
+	preExeReqs := []*pb.InvokeRequest{}
 	if c.ModuleName != "" {
 		if c.ModuleName == "xkernel" {
-			preExeReqs = append(preExeReqs, &protos2.InvokeRequest{
+			preExeReqs = append(preExeReqs, &pb.InvokeRequest{
 				ModuleName:   c.ModuleName,
 				ContractName: c.ContractName,
 				MethodName:   c.MethodName,
 				Args:         c.Args,
 			})
 		} else {
-			invokeReq := &protos2.InvokeRequest{
+			invokeReq := &pb.InvokeRequest{
 				ModuleName:   c.ModuleName,
 				ContractName: c.ContractName,
 				MethodName:   c.MethodName,
@@ -727,9 +726,9 @@ func (c *CommTrans) GenPreExeWithSelectUtxoRes(ctx context.Context) (
 		}
 	}
 
-	preExeRPCReq := &protos2.InvokeRPCRequest{
+	preExeRPCReq := &pb.InvokeRPCRequest{
 		Bcname: c.ChainName,
-		Header: &protos2.Header{
+		Header: &pb.Header{
 			Logid: utils.GenLogId(),
 		},
 		Requests: preExeReqs,
@@ -761,7 +760,7 @@ func (c *CommTrans) GenPreExeWithSelectUtxoRes(ctx context.Context) (
 		extraAmount += fee
 	}
 	preExeRPCReq.AuthRequire = append(preExeRPCReq.AuthRequire, c.RootOptions.ComplianceCheck.ComplianceCheckEndorseServiceAddr)
-	preSelUTXOReq := &protos2.PreExecWithSelectUTXORequest{
+	preSelUTXOReq := &pb.PreExecWithSelectUTXORequest{
 		Bcname:      c.ChainName,
 		Address:     initiator,
 		TotalAmount: extraAmount,
@@ -793,7 +792,7 @@ func (c *CommTrans) GenPreExeWithSelectUtxoRes(ctx context.Context) (
 	return preExecWithSelectUTXOResponse, nil
 }
 
-func (c *CommTrans) GenCompleteTxAndPost(ctx context.Context, preExeResp *protos2.PreExecWithSelectUTXOResponse) error {
+func (c *CommTrans) GenCompleteTxAndPost(ctx context.Context, preExeResp *pb.PreExecWithSelectUTXOResponse) error {
 	complianceCheckTx, err := c.GenComplianceCheckTx(preExeResp.GetUtxoOutput())
 	if err != nil {
 		fmt.Printf("GenCompleteTxAndPost GenComplianceCheckTx failed, err: %v", err)
@@ -822,9 +821,9 @@ func (c *CommTrans) GenCompleteTxAndPost(ctx context.Context, preExeResp *protos
 	return nil
 }
 
-func (c *CommTrans) GenRealTx(response *protos2.PreExecWithSelectUTXOResponse,
-	complianceCheckTx *protos2.Transaction) (*protos2.Transaction, error) {
-	utxolist := []*protos2.Utxo{}
+func (c *CommTrans) GenRealTx(response *pb.PreExecWithSelectUTXOResponse,
+	complianceCheckTx *pb.Transaction) (*pb.Transaction, error) {
+	utxolist := []*pb.Utxo{}
 	totalSelected := big.NewInt(0)
 	initiator, err := c.genInitiator()
 	if err != nil {
@@ -832,7 +831,7 @@ func (c *CommTrans) GenRealTx(response *protos2.PreExecWithSelectUTXOResponse,
 	}
 	for index, txOutput := range complianceCheckTx.TxOutputs {
 		if string(txOutput.ToAddr) == initiator {
-			utxo := &protos2.Utxo{
+			utxo := &pb.Utxo{
 				Amount:    txOutput.Amount,
 				ToAddr:    txOutput.ToAddr,
 				RefTxid:   complianceCheckTx.Txid,
@@ -843,7 +842,7 @@ func (c *CommTrans) GenRealTx(response *protos2.PreExecWithSelectUTXOResponse,
 			totalSelected.Add(totalSelected, utxoAmount)
 		}
 	}
-	utxoOutput := &protos2.UtxoOutput{
+	utxoOutput := &pb.UtxoOutput{
 		UtxoList:      utxolist,
 		TotalSelected: totalSelected.String(),
 	}
@@ -875,7 +874,7 @@ func (c *CommTrans) GenRealTx(response *protos2.PreExecWithSelectUTXOResponse,
 		return nil, fmt.Errorf("GenRealTx GenerateTxInput err: %v", err)
 	}
 
-	tx := &protos2.Transaction{
+	tx := &pb.Transaction{
 		Version:   utxo.TxVersion,
 		Coinbase:  false,
 		Timestamp: time.Now().UnixNano(),
@@ -928,12 +927,12 @@ func (c *CommTrans) GenRealTx(response *protos2.PreExecWithSelectUTXOResponse,
 		return nil, err
 	}
 
-	signatureInfo := &protos2.SignatureInfo{
+	signatureInfo := &pb.SignatureInfo{
 		PublicKey: fromPubkey,
 		Sign:      signTx,
 	}
 
-	var signatureInfos []*protos2.SignatureInfo
+	var signatureInfos []*pb.SignatureInfo
 	signatureInfos = append(signatureInfos, signatureInfo)
 
 	tx.InitiatorSigns = signatureInfos
@@ -944,15 +943,15 @@ func (c *CommTrans) GenRealTx(response *protos2.PreExecWithSelectUTXOResponse,
 	return tx, nil
 }
 
-func (c *CommTrans) GenerateMultiTxOutputs(selfAmount string, gasUsed string) ([]*protos2.TxOutput, error) {
+func (c *CommTrans) GenerateMultiTxOutputs(selfAmount string, gasUsed string) ([]*pb.TxOutput, error) {
 	selfAddr, err := c.genInitiator()
 	if err != nil {
 		return nil, err
 	}
 	feeAmount := gasUsed
 
-	var txOutputs []*protos2.TxOutput
-	txOutputSelf := new(protos2.TxOutput)
+	var txOutputs []*pb.TxOutput
+	txOutputSelf := new(pb.TxOutput)
 	txOutputSelf.ToAddr = []byte(selfAddr)
 	realSelfAmount, isSuccess := new(big.Int).SetString(selfAmount, 10)
 	if isSuccess != true {
@@ -970,7 +969,7 @@ func (c *CommTrans) GenerateMultiTxOutputs(selfAmount string, gasUsed string) ([
 		if realFeeAmount.Cmp(big.NewInt(0)) < 0 {
 			return nil, ErrInvalidAmount
 		}
-		txOutputFee := new(protos2.TxOutput)
+		txOutputFee := new(pb.TxOutput)
 		txOutputFee.ToAddr = []byte("$")
 		txOutputFee.Amount = realFeeAmount.Bytes()
 		txOutputs = append(txOutputs, txOutputFee)
@@ -979,12 +978,12 @@ func (c *CommTrans) GenerateMultiTxOutputs(selfAmount string, gasUsed string) ([
 	return txOutputs, nil
 }
 
-func (c *CommTrans) GeneratePureTxInputs(utxoOutputs *protos2.UtxoOutput) (
-	[]*protos2.TxInput, error) {
+func (c *CommTrans) GeneratePureTxInputs(utxoOutputs *pb.UtxoOutput) (
+	[]*pb.TxInput, error) {
 	// gen txInputs
-	var txInputs []*protos2.TxInput
+	var txInputs []*pb.TxInput
 	for _, utxo := range utxoOutputs.UtxoList {
-		txInput := &protos2.TxInput{}
+		txInput := &pb.TxInput{}
 		txInput.RefTxid = utxo.RefTxid
 		txInput.RefOffset = utxo.RefOffset
 		txInput.FromAddr = utxo.ToAddr
@@ -995,9 +994,9 @@ func (c *CommTrans) GeneratePureTxInputs(utxoOutputs *protos2.UtxoOutput) (
 	return txInputs, nil
 }
 
-func (c *CommTrans) ComplianceCheck(tx *protos2.Transaction, fee *protos2.Transaction) (
-	*protos2.SignatureInfo, error) {
-	txStatus := &protos2.TxStatus{
+func (c *CommTrans) ComplianceCheck(tx *pb.Transaction, fee *pb.Transaction) (
+	*pb.SignatureInfo, error) {
+	txStatus := &pb.TxStatus{
 		Bcname: c.ChainName,
 		Tx:     tx,
 	}
@@ -1008,7 +1007,7 @@ func (c *CommTrans) ComplianceCheck(tx *protos2.Transaction, fee *protos2.Transa
 		return nil, err
 	}
 
-	endorserRequest := &protos2.EndorserRequest{
+	endorserRequest := &pb.EndorserRequest{
 		RequestName: "ComplianceCheck",
 		BcName:      c.ChainName,
 		Fee:         fee,
@@ -1024,7 +1023,7 @@ func (c *CommTrans) ComplianceCheck(tx *protos2.Transaction, fee *protos2.Transa
 	ctx, cancel := context.WithTimeout(context.Background(), 15000*time.Millisecond)
 	defer cancel()
 
-	client := protos2.NewXendorserClient(conn)
+	client := pb.NewXendorserClient(conn)
 	endorserResponse, err := client.EndorserCall(ctx, endorserRequest)
 	if err != nil {
 		fmt.Printf("EndorserCall failed and err is: %v", err)
@@ -1034,7 +1033,7 @@ func (c *CommTrans) ComplianceCheck(tx *protos2.Transaction, fee *protos2.Transa
 	return endorserResponse.GetEndorserSign(), nil
 }
 
-func (c *CommTrans) GenComplianceCheckTx(utxoOutput *protos2.UtxoOutput) (*protos2.Transaction, error) {
+func (c *CommTrans) GenComplianceCheckTx(utxoOutput *pb.UtxoOutput) (*pb.Transaction, error) {
 	totalNeed := new(big.Int).SetInt64(int64(c.RootOptions.ComplianceCheck.ComplianceCheckEndorseServiceFee))
 	txInputs, deltaTxOutput, err := c.GenerateTxInput(utxoOutput, totalNeed)
 	if err != nil {
@@ -1052,7 +1051,7 @@ func (c *CommTrans) GenComplianceCheckTx(utxoOutput *protos2.UtxoOutput) (*proto
 		txOutputs = append(txOutputs, deltaTxOutput)
 	}
 	// populates fields
-	tx := &protos2.Transaction{
+	tx := &pb.Transaction{
 		Desc:      []byte(""),
 		Version:   utxo.TxVersion,
 		Coinbase:  false,
@@ -1097,12 +1096,12 @@ func (c *CommTrans) GenComplianceCheckTx(utxoOutput *protos2.UtxoOutput) (*proto
 		return nil, err
 	}
 
-	signatureInfo := &protos2.SignatureInfo{
+	signatureInfo := &pb.SignatureInfo{
 		PublicKey: fromPubkey,
 		Sign:      signTx,
 	}
 
-	var signatureInfos []*protos2.SignatureInfo
+	var signatureInfos []*pb.SignatureInfo
 	signatureInfos = append(signatureInfos, signatureInfo)
 
 	tx.InitiatorSigns = signatureInfos
@@ -1113,12 +1112,12 @@ func (c *CommTrans) GenComplianceCheckTx(utxoOutput *protos2.UtxoOutput) (*proto
 	return tx, nil
 }
 
-func (c *CommTrans) GenerateTxInput(utxoOutputs *protos2.UtxoOutput, totalNeed *big.Int) (
-	[]*protos2.TxInput, *protos2.TxOutput, error) {
-	var txInputs []*protos2.TxInput
-	var txOutput *protos2.TxOutput
+func (c *CommTrans) GenerateTxInput(utxoOutputs *pb.UtxoOutput, totalNeed *big.Int) (
+	[]*pb.TxInput, *pb.TxOutput, error) {
+	var txInputs []*pb.TxInput
+	var txOutput *pb.TxOutput
 	for _, utxo := range utxoOutputs.UtxoList {
-		txInput := &protos2.TxInput{}
+		txInput := &pb.TxInput{}
 		txInput.RefTxid = utxo.RefTxid
 		txInput.RefOffset = utxo.RefOffset
 		txInput.FromAddr = utxo.ToAddr
@@ -1144,7 +1143,7 @@ func (c *CommTrans) GenerateTxInput(utxoOutputs *protos2.UtxoOutput, totalNeed *
 	// input > output, generate output-input to me
 	if utxoTotal.Cmp(totalNeed) > 0 {
 		delta := utxoTotal.Sub(utxoTotal, totalNeed)
-		txOutput = &protos2.TxOutput{
+		txOutput = &pb.TxOutput{
 			ToAddr: []byte(fromAddr),
 			Amount: delta.Bytes(),
 		}
@@ -1153,10 +1152,10 @@ func (c *CommTrans) GenerateTxInput(utxoOutputs *protos2.UtxoOutput, totalNeed *
 	return txInputs, txOutput, nil
 }
 
-func (xc *CommTrans) GenerateTxOutput(to, amount, fee string) ([]*protos2.TxOutput, error) {
-	accounts := []*protos2.TxDataAccount{}
+func (xc *CommTrans) GenerateTxOutput(to, amount, fee string) ([]*pb.TxOutput, error) {
+	accounts := []*pb.TxDataAccount{}
 	if to != "" {
-		account := &protos2.TxDataAccount{
+		account := &pb.TxDataAccount{
 			Address:      to,
 			Amount:       amount,
 			FrozenHeight: 0,
@@ -1164,7 +1163,7 @@ func (xc *CommTrans) GenerateTxOutput(to, amount, fee string) ([]*protos2.TxOutp
 		accounts = append(accounts, account)
 	}
 	if fee != "0" {
-		feeAccount := &protos2.TxDataAccount{
+		feeAccount := &pb.TxDataAccount{
 			Address: "$",
 			Amount:  fee,
 		}
@@ -1172,7 +1171,7 @@ func (xc *CommTrans) GenerateTxOutput(to, amount, fee string) ([]*protos2.TxOutp
 	}
 
 	bigZero := big.NewInt(0)
-	txOutputs := []*protos2.TxOutput{}
+	txOutputs := []*pb.TxOutput{}
 	for _, acc := range accounts {
 		amount, ok := big.NewInt(0).SetString(acc.Amount, 10)
 		if !ok {
@@ -1184,7 +1183,7 @@ func (xc *CommTrans) GenerateTxOutput(to, amount, fee string) ([]*protos2.TxOutp
 		} else if cmpRes == 0 {
 			continue
 		}
-		txOutput := &protos2.TxOutput{}
+		txOutput := &pb.TxOutput{}
 		txOutput.Amount = amount.Bytes()
 		txOutput.ToAddr = []byte(acc.Address)
 		txOutput.FrozenHeight = acc.FrozenHeight

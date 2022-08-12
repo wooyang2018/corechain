@@ -9,9 +9,8 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
-
 	"github.com/wooyang2018/corechain/common/utils"
+	"github.com/wooyang2018/corechain/example/pb"
 	"github.com/wooyang2018/corechain/example/service/common"
 	aclBase "github.com/wooyang2018/corechain/permission/base"
 	"github.com/wooyang2018/corechain/state/utxo"
@@ -58,7 +57,7 @@ func (c *MergeUtxoCommand) mergeUtxo(ctx context.Context) error {
 		c.account = initAk
 	}
 
-	tx := &protos.Transaction{
+	tx := &pb.Transaction{
 		Version:   utxo.TxVersion,
 		Coinbase:  false,
 		Nonce:     utils.GenNonce(),
@@ -85,7 +84,7 @@ func (c *MergeUtxoCommand) mergeUtxo(ctx context.Context) error {
 		return errors.New("not enough available utxo to merge")
 	}
 
-	txOutputs := []*protos.TxOutput{}
+	txOutputs := []*pb.TxOutput{}
 	txOutputs = append(txOutputs, txOutput)
 	tx.TxOutputs = txOutputs
 
@@ -95,10 +94,10 @@ func (c *MergeUtxoCommand) mergeUtxo(ctx context.Context) error {
 	}
 
 	// preExe
-	preExeRPCReq := &protos.InvokeRPCRequest{
+	preExeRPCReq := &pb.InvokeRPCRequest{
 		Bcname:   c.cli.RootOptions.Name,
-		Requests: []*protos.InvokeRequest{},
-		Header: &protos.Header{
+		Requests: []*pb.InvokeRequest{},
+		Header: &pb.Header{
 			Logid: utils.GenLogId(),
 		},
 		Initiator:   initAk,

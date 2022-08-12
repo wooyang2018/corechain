@@ -10,7 +10,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
 )
 
 // QueryVoteRecordsCommand query vote records
@@ -42,7 +42,7 @@ func (c *QueryVoteRecordsCommand) addFlags() {
 
 func (c *QueryVoteRecordsCommand) queryVoteRecords(ctx context.Context) error {
 	client := c.cli.XchainClient()
-	request := &protos.DposVoteRecordsRequest{
+	request := &pb.DposVoteRecordsRequest{
 		Bcname:  c.cli.RootOptions.Name,
 		Address: c.addr,
 	}

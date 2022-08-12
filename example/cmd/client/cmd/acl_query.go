@@ -12,7 +12,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/wooyang2018/corechain/common/utils"
-	"github.com/wooyang2018/corechain/example/protos"
+	"github.com/wooyang2018/corechain/example/pb"
 )
 
 // ACLQueryCommand query acl struct
@@ -49,8 +49,8 @@ func (t *ACLQueryCommand) addFlags() {
 
 func (t *ACLQueryCommand) queryACL(ctx context.Context) error {
 	client := t.cli.XchainClient()
-	aclStatus := &protos.AclStatus{
-		Header: &protos.Header{
+	aclStatus := &pb.AclStatus{
+		Header: &pb.Header{
 			Logid: utils.GenLogId(),
 		},
 		Bcname:       t.cli.RootOptions.Name,
@@ -66,7 +66,7 @@ func (t *ACLQueryCommand) queryACL(ctx context.Context) error {
 		return err
 	}
 
-	if reply.Header.Error != protos.XChainErrorEnum_SUCCESS {
+	if reply.Header.Error != pb.XChainErrorEnum_SUCCESS {
 		return errors.New(reply.Header.Error.String())
 	}
 
