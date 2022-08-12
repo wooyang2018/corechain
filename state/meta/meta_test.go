@@ -58,7 +58,8 @@ var GenesisConf = []byte(`
 }
     `)
 
-func TestMetaGetFunc(t *testing.T) {
+func TestMeta(t *testing.T) {
+	//-------------- 初始化 --------------
 	workspace := mock.GetTempDirPath()
 	os.RemoveAll(workspace)
 	defer os.RemoveAll(workspace)
@@ -117,7 +118,7 @@ func TestMetaGetFunc(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	sctx, err := base.NewStateCtx(econf, "corecahin", mledger, crypt)
+	sctx, err := base.NewStateCtx(econf, "corechain", mledger, crypt)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -137,6 +138,8 @@ func TestMetaGetFunc(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	//-------------- 测试Meta --------------
 	metaHadler, err := NewMeta(sctx, ldb)
 	if err != nil {
 		t.Fatal(err)
@@ -214,7 +217,7 @@ func TestMetaGetFunc(t *testing.T) {
 	upForbidRequest := &protos.InvokeRequest{
 		ModuleName:   "wasm",
 		ContractName: "forbidden",
-		MethodName:   "get1",
+		MethodName:   "get",
 		Args:         map[string][]byte{},
 	}
 	err = metaHadler.UpdateForbiddenContract(upForbidRequest, batch)

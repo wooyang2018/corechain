@@ -80,7 +80,7 @@ func mockTransferTx(chain base.Chain) (*protos.Transaction, error) {
 	tx.AuthRequireSigns = signs
 
 	// txID
-	tx.Txid, err = txhash.MakeTransactionID(tx)
+	tx.Txid, err = txhash.MakeTxID(tx)
 	if err != nil {
 		return nil, err
 	}
@@ -187,7 +187,7 @@ func mockContractTx(chain base.Chain) (*protos.Transaction, error) {
 	tx.AuthRequireSigns = signs
 
 	// txID
-	tx.Txid, err = txhash.MakeTransactionID(tx)
+	tx.Txid, err = txhash.MakeTxID(tx)
 	if err != nil {
 		return nil, err
 	}

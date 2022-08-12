@@ -11,39 +11,39 @@ import (
 )
 
 type XSnapshot struct {
-	xmod      *XModel
+	model     *XModel
 	logger    logger.Logger
 	blkHeight int64
 	blkId     []byte
 }
 
-type XListCursor struct {
+type ListCursor struct {
 	txid   []byte
 	offset int32
 }
 
 func (t *XSnapshot) Get(bucket string, key []byte) (*ledger.VersionedData, error) {
 	if !t.isInit() || bucket == "" || len(key) < 1 {
-		return nil, fmt.Errorf("xmod snapshot not init or param set error")
+		return nil, fmt.Errorf("model snapshot not init or param set error")
 	}
 
-	// 通过xmodel.Get()获取到最新版本数据
-	newestVD, err := t.xmod.Get(bucket, key)
+	// 获取key的最新版本数据
+	newestVD, err := t.model.Get(bucket, key)
 	if err != nil {
 		return nil, fmt.Errorf("get newest version data fail.err:%v", err)
 	}
 
 	// 通过txid串联查询，直到找到<=blkHeight的交易
 	var verValue *ledger.VersionedData
-	cursor := &XListCursor{newestVD.RefTxid, newestVD.RefOffset}
+	cursor := &ListCursor{newestVD.RefTxid, newestVD.RefOffset}
 	for {
-		// 最初的InputExt是空值，只设置了Bucket和Key
+		// 最初的InputExt是空值
 		if len(cursor.txid) < 1 {
 			break
 		}
 
 		// 通过txid查询交易信息
-		txInfo, _, err := t.xmod.QueryTx(cursor.txid)
+		txInfo, _, err := t.model.QueryTx(cursor.txid)
 		if err != nil {
 			return nil, fmt.Errorf("query tx fail.err:%v", err)
 		}
@@ -53,8 +53,8 @@ func (t *XSnapshot) Get(bucket string, key []byte) (*ledger.VersionedData, error
 		if err != nil {
 			return nil, fmt.Errorf("get previous output fail.err:%v", err)
 		}
+		// Blockid为空就是未确认交易
 		if txInfo.Blockid == nil {
-			// 没有Blockid就是未确认交易，未确认交易直接更新游标
 			continue
 		}
 
@@ -81,7 +81,7 @@ func (t *XSnapshot) Select(bucket string, startKey []byte, endKey []byte) (ledge
 }
 
 func (t *XSnapshot) isInit() bool {
-	if t.xmod == nil || t.logger == nil || len(t.blkId) < 1 || t.blkHeight < 0 {
+	if t.model == nil || t.logger == nil || len(t.blkId) < 1 || t.blkHeight < 0 {
 		return false
 	}
 
@@ -89,7 +89,7 @@ func (t *XSnapshot) isInit() bool {
 }
 
 func (t *XSnapshot) getBlockHeight(blockid []byte) (int64, error) {
-	blkInfo, err := t.xmod.QueryBlock(blockid)
+	blkInfo, err := t.model.QueryBlock(blockid)
 	if err != nil {
 		return 0, fmt.Errorf("query block info fail. block_id:%s err:%v",
 			hex.EncodeToString(blockid), err)
@@ -120,7 +120,7 @@ func (t *XSnapshot) genVerDataByTx(tx *protos.Transaction, offset int32) *ledger
 	return value
 }
 
-// 根据bucket和key从inputsExt中查找对应的outputsExt索引
+// getPreOutExt 从inputsExt中查找对应的outputsExt索引
 func (t *XSnapshot) getPreOutExt(inputsExt []*protos.TxInputExt,
 	bucket string, key []byte) ([]byte, int32, error) {
 	for _, inExt := range inputsExt {
@@ -130,23 +130,4 @@ func (t *XSnapshot) getPreOutExt(inputsExt []*protos.TxInputExt,
 	}
 
 	return nil, 0, fmt.Errorf("bucket and key not exist.bucket:%s key:%s", bucket, string(key))
-}
-
-type xMSnapshotReader struct {
-	xMReader ledger.XReader
-}
-
-func NewXMSnapshotReader(xMReader ledger.XReader) *xMSnapshotReader {
-	return &xMSnapshotReader{
-		xMReader: xMReader,
-	}
-}
-
-func (t *xMSnapshotReader) Get(bucket string, key []byte) ([]byte, error) {
-	verData, err := t.xMReader.Get(bucket, key)
-	if err != nil {
-		return nil, err
-	}
-
-	return verData.PureData.Value, nil
 }

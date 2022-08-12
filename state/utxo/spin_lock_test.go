@@ -63,7 +63,11 @@ func TestSpinLock(t *testing.T) {
 	go func() {
 		succLks, ok := sp.TryLock(lockKeys2)
 		t.Log("tx2 got lock", succLks, ok)
-		sp.Unlock(succLks)
+		sp.Unlock(lockKeys2)
+		if sp.IsLocked("tx3_0") {
+			t.Error("tx3_0 is expected to be unlocked")
+			return
+		}
 	}()
 	sp.TryLock(lockKeys1)
 	if !sp.IsLocked("tx1_0") {

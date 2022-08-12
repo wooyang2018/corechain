@@ -26,7 +26,7 @@ const (
 )
 
 type Meta struct {
-	log      logger.Logger
+	Log      logger.Logger
 	Ledger   *ledger.Ledger
 	UtxoMeta *protos.UtxoMeta
 	TempMeta *protos.UtxoMeta
@@ -36,7 +36,7 @@ type Meta struct {
 
 func NewMeta(sctx *base.StateCtx, stateDB storage.Database) (*Meta, error) {
 	obj := &Meta{
-		log:      sctx.XLog,
+		Log:      sctx.XLog,
 		Ledger:   sctx.Ledger,
 		UtxoMeta: &protos.UtxoMeta{},
 		TempMeta: &protos.UtxoMeta{},
@@ -129,12 +129,12 @@ func (t *Meta) UpdateNewAccountResourceAmount(newAccountResourceAmount int64, ba
 	newMeta.NewAccountResourceAmount = newAccountResourceAmount
 	newAccountResourceAmountBuf, pbErr := proto.Marshal(newMeta)
 	if pbErr != nil {
-		t.log.Warn("failed to marshal pb meta")
+		t.Log.Warn("failed to marshal pb meta")
 		return pbErr
 	}
 	err := batch.Put([]byte(def.MetaTablePrefix+ledger.NewAccountResourceAmountKey), newAccountResourceAmountBuf)
 	if err == nil {
-		t.log.Info("Update newAccountResourceAmount succeed")
+		t.Log.Info("Update newAccountResourceAmount succeed")
 	}
 	t.Mutex.Lock()
 	defer t.Mutex.Unlock()
@@ -181,12 +181,12 @@ func (t *Meta) UpdateMaxBlockSize(maxBlockSize int64, batch storage.Batch) error
 	newMeta.MaxBlockSize = maxBlockSize
 	maxBlockSizeBuf, pbErr := proto.Marshal(newMeta)
 	if pbErr != nil {
-		t.log.Warn("failed to marshal pb meta")
+		t.Log.Warn("failed to marshal pb meta")
 		return pbErr
 	}
 	err := batch.Put([]byte(def.MetaTablePrefix+ledger.MaxBlockSizeKey), maxBlockSizeBuf)
 	if err == nil {
-		t.log.Info("Update maxBlockSize succeed")
+		t.Log.Info("Update maxBlockSize succeed")
 	}
 	t.Mutex.Lock()
 	defer t.Mutex.Unlock()
@@ -222,12 +222,12 @@ func (t *Meta) UpdateReservedContracts(params []*protos.InvokeRequest, batch sto
 	newMeta.ReservedContracts = params
 	paramsBuf, pbErr := proto.Marshal(newMeta)
 	if pbErr != nil {
-		t.log.Warn("failed to marshal pb meta")
+		t.Log.Warn("failed to marshal pb meta")
 		return pbErr
 	}
 	err := batch.Put([]byte(def.MetaTablePrefix+ledger.ReservedContractsKey), paramsBuf)
 	if err == nil {
-		t.log.Info("Update reservered contract succeed")
+		t.Log.Info("Update reservered contract succeed")
 	}
 	t.Mutex.Lock()
 	defer t.Mutex.Unlock()
@@ -288,12 +288,12 @@ func (t *Meta) UpdateForbiddenContract(param *protos.InvokeRequest, batch storag
 	newMeta.ForbiddenContract = param
 	paramBuf, pbErr := proto.Marshal(newMeta)
 	if pbErr != nil {
-		t.log.Warn("failed to marshal pb meta")
+		t.Log.Warn("failed to marshal pb meta")
 		return pbErr
 	}
 	err := batch.Put([]byte(def.MetaTablePrefix+ledger.ForbiddenContractKey), paramBuf)
 	if err == nil {
-		t.log.Info("Update forbidden contract succeed")
+		t.Log.Info("Update forbidden contract succeed")
 	}
 	t.Mutex.Lock()
 	defer t.Mutex.Unlock()
@@ -348,14 +348,14 @@ func (t *Meta) UpdateIrreversibleBlockHeight(nextIrreversibleBlockHeight int64, 
 	newMeta.IrreversibleBlockHeight = nextIrreversibleBlockHeight
 	irreversibleBlockHeightBuf, pbErr := proto.Marshal(newMeta)
 	if pbErr != nil {
-		t.log.Warn("failed to marshal pb meta")
+		t.Log.Warn("failed to marshal pb meta")
 		return pbErr
 	}
 	err := batch.Put([]byte(def.MetaTablePrefix+ledger.IrreversibleBlockHeightKey), irreversibleBlockHeightBuf)
 	if err != nil {
 		return err
 	}
-	t.log.Info("Update irreversibleBlockHeight succeed")
+	t.Log.Info("Update irreversibleBlockHeight succeed")
 	t.Mutex.Lock()
 	defer t.Mutex.Unlock()
 	t.TempMeta.IrreversibleBlockHeight = nextIrreversibleBlockHeight
@@ -367,23 +367,21 @@ func (t *Meta) UpdateNextIrreversibleBlockHeight(blockHeight int64, curIrreversi
 	if curIrreversibleSlideWindow < 0 {
 		return ErrProposalParamsIsNegativeNumber
 	}
-	// slideWindow为0,不需要更新IrreversibleBlockHeight
+	// if slideWindow = 0,no need to update IrreversibleBlockHeight
 	if curIrreversibleSlideWindow == 0 {
 		return nil
 	}
-	// curIrreversibleBlockHeight小于0, 不符合预期
+
 	if curIrreversibleBlockHeight < 0 {
-		t.log.Warn("update irreversible block height error, should be here")
+		t.Log.Warn("update irreversible block height error, should be here")
 		return errors.New("curIrreversibleBlockHeight is less than 0")
 	}
 	nextIrreversibleBlockHeight := blockHeight - curIrreversibleSlideWindow
 	// 下一个不可逆高度小于当前不可逆高度，直接返回
-	// slideWindow变大或者发生区块回滚
 	if nextIrreversibleBlockHeight <= curIrreversibleBlockHeight {
 		return nil
 	}
 	// 正常升级
-	// slideWindow不变或变小
 	if nextIrreversibleBlockHeight > curIrreversibleBlockHeight {
 		err := t.UpdateIrreversibleBlockHeight(nextIrreversibleBlockHeight, batch)
 		return err
@@ -397,13 +395,13 @@ func (t *Meta) UpdateNextIrreversibleBlockHeightForPrune(blockHeight int64, curI
 	if curIrreversibleSlideWindow < 0 {
 		return ErrProposalParamsIsNegativeNumber
 	}
-	// slideWindow为开启,不需要更新IrreversibleBlockHeight
+	// if slideWindow = 0,no need to update IrreversibleBlockHeight
 	if curIrreversibleSlideWindow == 0 {
 		return nil
 	}
-	// curIrreversibleBlockHeight小于0, 不符合预期，报警
+
 	if curIrreversibleBlockHeight < 0 {
-		t.log.Warn("update irreversible block height error, should be here")
+		t.Log.Warn("update irreversible block height error, should be here")
 		return errors.New("curIrreversibleBlockHeight is less than 0")
 	}
 	nextIrreversibleBlockHeight := blockHeight - curIrreversibleSlideWindow
@@ -423,14 +421,14 @@ func (t *Meta) UpdateIrreversibleSlideWindow(nextIrreversibleSlideWindow int64, 
 	newMeta.IrreversibleSlideWindow = nextIrreversibleSlideWindow
 	irreversibleSlideWindowBuf, pbErr := proto.Marshal(newMeta)
 	if pbErr != nil {
-		t.log.Warn("failed to marshal pb meta")
+		t.Log.Warn("failed to marshal pb meta")
 		return pbErr
 	}
 	err := batch.Put([]byte(def.MetaTablePrefix+ledger.IrreversibleSlideWindowKey), irreversibleSlideWindowBuf)
 	if err != nil {
 		return err
 	}
-	t.log.Info("Update irreversibleSlideWindow succeed")
+	t.Log.Info("Update irreversibleSlideWindow succeed")
 	t.Mutex.Lock()
 	defer t.Mutex.Unlock()
 	t.TempMeta.IrreversibleSlideWindow = nextIrreversibleSlideWindow
@@ -502,14 +500,14 @@ func (t *Meta) UpdateGasPrice(nextGasPrice *protos.GasPrice, batch storage.Batch
 	newMeta.GasPrice = nextGasPrice
 	gasPriceBuf, pbErr := proto.Marshal(newMeta)
 	if pbErr != nil {
-		t.log.Warn("failed to marshal pb meta")
+		t.Log.Warn("failed to marshal pb meta")
 		return pbErr
 	}
 	err := batch.Put([]byte(def.MetaTablePrefix+ledger.GasPriceKey), gasPriceBuf)
 	if err != nil {
 		return err
 	}
-	t.log.Info("Update gas price succeed")
+	t.Log.Info("Update gas price succeed")
 	t.Mutex.Lock()
 	defer t.Mutex.Unlock()
 	t.TempMeta.GasPrice = nextGasPrice

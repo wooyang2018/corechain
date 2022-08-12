@@ -145,7 +145,7 @@ func transfer(from string, to string, t *testing.T, stateHandle *State, ledger *
 	}
 	tx.InitiatorSigns = append(tx.InitiatorSigns, signInfo)
 	tx.AuthRequireSigns = tx.InitiatorSigns
-	tx.Txid, _ = txhash.MakeTransactionID(tx)
+	tx.Txid, _ = txhash.MakeTxID(tx)
 
 	timer.Mark("GenerateTx")
 	verifyOK, vErr := stateHandle.VerifyTx(tx)

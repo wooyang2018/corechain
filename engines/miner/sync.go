@@ -399,7 +399,7 @@ func (t *Miner) downloadMissingTxs(ctx xctx.Context, blockid []byte, txidx []int
 		return nil, errors.New("get block txs no response")
 	}
 	for _, tx := range txs {
-		txid, _ := txhash.MakeTransactionID(tx)
+		txid, _ := txhash.MakeTxID(tx)
 		if !bytes.Equal(txid, tx.GetTxid()) {
 			ctx.GetLog().Warn("download bad tx id", "expect", utils.F(txid), "got", tx.GetTxid())
 			return nil, errors.New("bad tx id")

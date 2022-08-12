@@ -70,9 +70,9 @@ func (t *State) ImmediateVerifyTx(tx *protos.Transaction, isRootTx bool) (bool, 
 	// Start transaction verification workflow
 	if tx.Version > RootTxVersion {
 		// verify txid
-		txid, err := txhash.MakeTransactionID(tx)
+		txid, err := txhash.MakeTxID(tx)
 		if err != nil {
-			t.log.Warn("ImmediateVerifyTx: call MakeTransactionID failed", "error", err)
+			t.log.Warn("ImmediateVerifyTx: call MakeTxID failed", "error", err)
 			return false, err
 		}
 		if bytes.Compare(tx.Txid, txid) != 0 {
@@ -181,9 +181,9 @@ func (t *State) ImmediateVerifyAutoTx(blockHeight int64, tx *protos.Transaction,
 	// Start transaction verification workflow
 	if tx.Version > RootTxVersion {
 		// verify txid
-		txid, err := txhash.MakeTransactionID(tx)
+		txid, err := txhash.MakeTxID(tx)
 		if err != nil {
-			t.log.Warn("ImmediateVerifyTx: call MakeTransactionID failed", "error", err)
+			t.log.Warn("ImmediateVerifyTx: call MakeTxID failed", "error", err)
 			return false, err
 		}
 		if bytes.Compare(tx.Txid, txid) != 0 {

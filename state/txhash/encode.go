@@ -86,8 +86,8 @@ func (e *encoder) Encode(x interface{}) {
 	}
 }
 
-// txDigestHashV2 make tx hash using double sha256
-func txDigestHashV2(tx *protos.Transaction, includeSigns bool) []byte {
+// HashTx make tx hash using double sha256
+func HashTx(tx *protos.Transaction, includeSigns bool) []byte {
 	h := sha256.New()
 	enc := newEncoder(h)
 

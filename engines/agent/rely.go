@@ -10,7 +10,7 @@ import (
 	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/contract/proposal/govern"
 	"github.com/wooyang2018/corechain/contract/proposal/propose"
-	ptimer "github.com/wooyang2018/corechain/contract/proposal/timer"
+	timer3 "github.com/wooyang2018/corechain/contract/proposal/timer"
 	cryptoClient "github.com/wooyang2018/corechain/crypto/client"
 	cryptoBase "github.com/wooyang2018/corechain/crypto/client/base"
 	engineBase "github.com/wooyang2018/corechain/engines/base"
@@ -170,14 +170,14 @@ func (t *ChainRelyAgentImpl) CreateProposal() (propose.ProposeManager, error) {
 }
 
 // 创建定时器任务实例
-func (t *ChainRelyAgentImpl) CreateTimerTask() (ptimer.TimerManager, error) {
+func (t *ChainRelyAgentImpl) CreateTimerTask() (timer3.TimerManager, error) {
 	legAgent := NewLedgerAgent(t.ctx)
-	timerCtx, err := ptimer.NewTimerTaskCtx(t.ctx.BCName, legAgent, t.ctx.Contract)
+	timerCtx, err := timer3.NewTimerTaskCtx(t.ctx.BCName, legAgent, t.ctx.Contract)
 	if err != nil {
 		return nil, fmt.Errorf("create timer_task ctx failed.err:%v", err)
 	}
 
-	timerObj, err := ptimer.NewTimerTaskManager(timerCtx)
+	timerObj, err := timer3.NewTimerTaskManager(timerCtx)
 	if err != nil {
 		return nil, fmt.Errorf("create timer_task instance failed.err:%v", err)
 	}

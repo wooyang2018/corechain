@@ -96,9 +96,9 @@ func TestBasicFunc(t *testing.T) {
 	t1.TxOutputs = append(t1.TxOutputs, &protos.TxOutput{Amount: []byte("888"), ToAddr: []byte(BobAddress)})
 	t1.Coinbase = true
 	t1.Desc = []byte(`{"maxblocksize" : "128"}`)
-	t1.Txid, _ = txhash.MakeTransactionID(t1)
+	t1.Txid, _ = txhash.MakeTxID(t1)
 	t2.TxInputs = append(t2.TxInputs, &protos.TxInput{RefTxid: t1.Txid, RefOffset: 0, FromAddr: []byte(AliceAddress)})
-	t2.Txid, _ = txhash.MakeTransactionID(t2)
+	t2.Txid, _ = txhash.MakeTxID(t2)
 	ecdsaPk, pkErr := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 	t.Logf("pkSk: %v", ecdsaPk)
 	if pkErr != nil {
@@ -124,9 +124,9 @@ func TestBasicFunc(t *testing.T) {
 	t1 = &protos.Transaction{}
 	t2 = &protos.Transaction{}
 	t1.TxOutputs = append(t1.TxOutputs, &protos.TxOutput{Amount: []byte("666"), ToAddr: []byte(BobAddress)})
-	t1.Txid, _ = txhash.MakeTransactionID(t1)
+	t1.Txid, _ = txhash.MakeTxID(t1)
 	t2.TxInputs = append(t2.TxInputs, &protos.TxInput{RefTxid: t1.Txid, RefOffset: 0, FromAddr: []byte(AliceAddress)})
-	t2.Txid, _ = txhash.MakeTransactionID(t2)
+	t2.Txid, _ = txhash.MakeTxID(t2)
 	block2, err := ledger.FormatBlock([]*protos.Transaction{t1, t2},
 		[]byte("xchain-Miner-222222"),
 		ecdsaPk,
@@ -182,10 +182,10 @@ func TestBasicFunc(t *testing.T) {
 	t1.TxOutputs = append(t1.TxOutputs, &protos.TxOutput{Amount: []byte("666"), ToAddr: []byte(BobAddress)})
 	t1.Coinbase = true
 	t1.Desc = []byte("{}")
-	t1.Txid, _ = txhash.MakeTransactionID(t1)
+	t1.Txid, _ = txhash.MakeTxID(t1)
 	t2.TxInputs = append(t2.TxInputs, &protos.TxInput{RefTxid: t1.Txid, RefOffset: 0, FromAddr: []byte(AliceAddress)})
 	t2.Coinbase = true
-	t2.Txid, _ = txhash.MakeTransactionID(t2)
+	t2.Txid, _ = txhash.MakeTxID(t2)
 	block3, err := ledger.FormatBlock([]*protos.Transaction{t1, t2},
 		[]byte("xchain-Miner-222222"),
 		ecdsaPk,
@@ -219,9 +219,9 @@ func TestSplitFunc(t *testing.T) {
 	t1.TxOutputs = append(t1.TxOutputs, &protos.TxOutput{Amount: []byte("666"), ToAddr: []byte(BobAddress)})
 	t1.Coinbase = true
 	t1.Desc = []byte("{}")
-	t1.Txid, _ = txhash.MakeTransactionID(t1)
+	t1.Txid, _ = txhash.MakeTxID(t1)
 	t2.TxInputs = append(t2.TxInputs, &protos.TxInput{RefTxid: t1.Txid, RefOffset: 0, FromAddr: []byte(AliceAddress)})
-	t2.Txid, _ = txhash.MakeTransactionID(t2)
+	t2.Txid, _ = txhash.MakeTxID(t2)
 	ecdsaPk, pkErr := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 	t.Logf("pkSk: %v", ecdsaPk)
 	if pkErr != nil {
@@ -246,9 +246,9 @@ func TestSplitFunc(t *testing.T) {
 	t1 = &protos.Transaction{}
 	t2 = &protos.Transaction{}
 	t1.TxOutputs = append(t1.TxOutputs, &protos.TxOutput{Amount: []byte("999"), ToAddr: []byte(BobAddress)})
-	t1.Txid, _ = txhash.MakeTransactionID(t1)
+	t1.Txid, _ = txhash.MakeTxID(t1)
 	t2.TxInputs = append(t2.TxInputs, &protos.TxInput{RefTxid: t1.Txid, RefOffset: 0, FromAddr: []byte(AliceAddress)})
-	t2.Txid, _ = txhash.MakeTransactionID(t2)
+	t2.Txid, _ = txhash.MakeTxID(t2)
 	block2, err := ledger.FormatBlock([]*protos.Transaction{t1, t2},
 		[]byte("xchain-Miner-222222"),
 		ecdsaPk,
@@ -400,9 +400,9 @@ func TestTruncate(t *testing.T) {
 	t1.TxOutputs = append(t1.TxOutputs, &protos.TxOutput{Amount: []byte("888"), ToAddr: []byte(BobAddress)})
 	t1.Coinbase = true
 	t1.Desc = []byte(`{"maxblocksize" : "128"}`)
-	t1.Txid, _ = txhash.MakeTransactionID(t1)
+	t1.Txid, _ = txhash.MakeTxID(t1)
 	t2.TxInputs = append(t2.TxInputs, &protos.TxInput{RefTxid: t1.Txid, RefOffset: 0, FromAddr: []byte(AliceAddress)})
-	t2.Txid, _ = txhash.MakeTransactionID(t2)
+	t2.Txid, _ = txhash.MakeTxID(t2)
 	ecdsaPk, pkErr := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 	t.Logf("pkSk: %v", ecdsaPk)
 	if pkErr != nil {
@@ -421,9 +421,9 @@ func TestTruncate(t *testing.T) {
 	t1 = &protos.Transaction{}
 	t2 = &protos.Transaction{}
 	t1.TxOutputs = append(t1.TxOutputs, &protos.TxOutput{Amount: []byte("666"), ToAddr: []byte(BobAddress)})
-	t1.Txid, _ = txhash.MakeTransactionID(t1)
+	t1.Txid, _ = txhash.MakeTxID(t1)
 	t2.TxInputs = append(t2.TxInputs, &protos.TxInput{RefTxid: t1.Txid, RefOffset: 0, FromAddr: []byte(AliceAddress)})
-	t2.Txid, _ = txhash.MakeTransactionID(t2)
+	t2.Txid, _ = txhash.MakeTxID(t2)
 	//block2
 	block2, err := ledger.FormatBlock([]*protos.Transaction{t1, t2},
 		[]byte("xchain-Miner-222222"),

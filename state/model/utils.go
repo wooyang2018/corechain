@@ -2,6 +2,7 @@ package model
 
 import (
 	"bytes"
+	"fmt"
 	"sort"
 
 	"github.com/wooyang2018/corechain/ledger"
@@ -10,9 +11,6 @@ import (
 	"github.com/wooyang2018/corechain/storage"
 	"google.golang.org/protobuf/proto"
 )
-
-// KVEngineType KV storage type
-const KVEngineType = "default"
 
 // BucketSeperator separator between bucket and raw key
 const BucketSeperator = "/"
@@ -82,8 +80,7 @@ func (pds pdSlice) Less(i, j int) bool {
 	rawKeyI := makeRawKey(pds[i].GetBucket(), pds[i].GetKey())
 	rawKeyJ := makeRawKey(pds[j].GetBucket(), pds[j].GetKey())
 	ret := bytes.Compare(rawKeyI, rawKeyJ)
-	if ret == 0 {
-		// 注: 正常应该无法走到这个逻辑，因为写集合中的key一定是唯一的
+	if ret == 0 { // 正常应该无法进入该逻辑，因为写集合中的key是唯一的
 		return bytes.Compare(pds[i].GetValue(), pds[j].GetValue()) < 0
 	}
 	return ret < 0
@@ -115,4 +112,35 @@ func Equal(pd, vpd []*ledger.PureData) bool {
 		return false
 	}
 	return true
+}
+
+// ParseContractUtxoInputs parse contract utxo inputs from tx write sets
+func ParseContractUtxoInputs(tx *protos.Transaction) ([]*protos.TxInput, error) {
+	var (
+		utxoInputs []*protos.TxInput
+		extInput   []byte
+	)
+	for _, out := range tx.GetTxOutputsExt() {
+		if out.GetBucket() != TransientBucket {
+			continue
+		}
+		if bytes.Equal(out.GetKey(), contractUtxoInputKey) {
+			extInput = out.GetValue()
+		}
+	}
+	if extInput != nil {
+		err := UnmsarshalMessages(extInput, &utxoInputs)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return utxoInputs, nil
+}
+
+// GenWriteKeyWithPrefix gen write key with perfix
+func GenWriteKeyWithPrefix(txOutputExt *protos.TxOutputExt) string {
+	bucket := txOutputExt.GetBucket()
+	key := txOutputExt.GetKey()
+	baseWriteSetKey := bucket + fmt.Sprintf("%s", key)
+	return def.ExtUtxoTablePrefix + baseWriteSetKey
 }

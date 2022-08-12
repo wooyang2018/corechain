@@ -7,8 +7,6 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/wooyang2018/corechain/storage/leveldb"
-
 	"github.com/wooyang2018/corechain/crypto/client"
 	"github.com/wooyang2018/corechain/ledger"
 	lctx "github.com/wooyang2018/corechain/ledger/context"
@@ -18,6 +16,8 @@ import (
 	"github.com/wooyang2018/corechain/protos"
 	"github.com/wooyang2018/corechain/state/base"
 	"github.com/wooyang2018/corechain/state/txhash"
+	"github.com/wooyang2018/corechain/storage/leveldb"
+
 	_ "github.com/wooyang2018/corechain/storage/leveldb"
 )
 
@@ -26,6 +26,7 @@ const (
 )
 
 func TestSnapshotGet(t *testing.T) {
+	//--------- 初始化工作 ----------
 	workspace := mock.GetTempDirPath()
 	os.RemoveAll(workspace)
 	defer os.RemoveAll(workspace)
@@ -50,7 +51,7 @@ func TestSnapshotGet(t *testing.T) {
 	t1.TxOutputs = append(t1.TxOutputs, &protos.TxOutput{Amount: []byte("888"), ToAddr: []byte(BobAddress)})
 	t1.Coinbase = true
 	t1.Desc = []byte(`{"maxblocksize" : "128"}`)
-	t1.Txid, _ = txhash.MakeTransactionID(t1)
+	t1.Txid, _ = txhash.MakeTxID(t1)
 	block, err := mledger.FormatRootBlock([]*protos.Transaction{t1})
 	if err != nil {
 		t.Fatal(err)
@@ -92,6 +93,7 @@ func TestSnapshotGet(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	//------------- 测试Snapshot  ------------
 	blkId, err := mledger.QueryBlockByHeight(0)
 	if err != nil {
 		t.Fatal(err)

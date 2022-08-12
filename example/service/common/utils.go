@@ -16,7 +16,7 @@ func MakeTxId(tx *pb.Transaction) ([]byte, error) {
 		return nil, fmt.Errorf("tx convert fail")
 	}
 	// 计算txid
-	txId, err := txhash.MakeTransactionID(xldgTx)
+	txId, err := txhash.MakeTxID(xldgTx)
 	if err != nil {
 		return nil, err
 	}

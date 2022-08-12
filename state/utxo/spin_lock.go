@@ -22,7 +22,7 @@ type refCounter struct {
 //SpinLock is a collections of small locks on special keys
 type SpinLock struct {
 	m          *sync.Map
-	refCounter *refCounter
+	refCounter *refCounter //用于共享锁的计数
 }
 
 // LockKey is a lock item with lock type and key
@@ -116,15 +116,15 @@ func (sp *SpinLock) TryLock(lockKeys []*LockKey) ([]*LockKey, bool) {
 			if lkType == sharedLock && k.lockType == sharedLock { //读读共享
 				sp.refCounter.Add(k.key)
 				succLocked = append(succLocked, k)
-				continue
 			} else {
 				return succLocked, false //读写冲突
 			}
+		} else { //第一个抢到锁
+			if k.lockType == sharedLock {
+				sp.refCounter.Add(k.key)
+			}
+			succLocked = append(succLocked, k)
 		}
-		if k.lockType == sharedLock {
-			sp.refCounter.Add(k.key)
-		}
-		succLocked = append(succLocked, k) //第一个抢到
 	}
 	return succLocked, true
 }
@@ -139,7 +139,7 @@ func (sp *SpinLock) Unlock(lockKeys []*LockKey) {
 			sp.m.Delete(k)
 		} else if lkType == sharedLock { //共享锁要考虑引用计数
 			if sp.refCounter.Release(k) == 0 {
-				sp.m.Delete(lockKeys[i].key)
+				sp.m.Delete(k)
 			}
 		}
 	}

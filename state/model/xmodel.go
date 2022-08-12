@@ -1,7 +1,6 @@
 package model
 
 import (
-	"bytes"
 	"encoding/hex"
 	"fmt"
 	"sync"
@@ -64,12 +63,31 @@ func (s *XModel) CreateSnapshot(blkId []byte) (ledger.XReader, error) {
 	}
 
 	xms := &XSnapshot{
-		xmod:      s,
+		model:     s,
 		logger:    s.logger,
 		blkHeight: blkInfo.Height,
 		blkId:     blkId,
 	}
 	return xms, nil
+}
+
+type xMSnapshotReader struct {
+	xMReader ledger.XReader
+}
+
+func NewXMSnapshotReader(xMReader ledger.XReader) *xMSnapshotReader {
+	return &xMSnapshotReader{
+		xMReader: xMReader,
+	}
+}
+
+func (t *xMSnapshotReader) Get(bucket string, key []byte) ([]byte, error) {
+	verData, err := t.xMReader.Get(bucket, key)
+	if err != nil {
+		return nil, err
+	}
+
+	return verData.PureData.Value, nil
 }
 
 func (s *XModel) CreateXMSnapshotReader(blkId []byte) (ledger.SnapshotReader, error) {
@@ -358,33 +376,56 @@ func (s *XModel) BucketCacheDelete(bucket, version string) {
 	cache.Del(version)
 }
 
-// GenWriteKeyWithPrefix gen write key with perfix
-func GenWriteKeyWithPrefix(txOutputExt *protos.TxOutputExt) string {
-	bucket := txOutputExt.GetBucket()
-	key := txOutputExt.GetKey()
-	baseWriteSetKey := bucket + fmt.Sprintf("%s", key)
-	return def.ExtUtxoTablePrefix + baseWriteSetKey
+func (s *XModel) verifyInputs(tx *protos.Transaction) error {
+	//确保tx.TxInputs里面声明的版本和本地model是match的
+	var (
+		verData = new(ledger.VersionedData)
+		err     error
+	)
+	for _, txIn := range tx.TxInputsExt {
+		if len(tx.Blockid) > 0 {
+			// 此时说明是执行一个区块，需要从 batch cache 查询。
+			verData, err = s.GetUncommited(txIn.Bucket, txIn.Key) //because previous txs in the same block write into batch cache
+			if err != nil {
+				return err
+			}
+		} else {
+			// 此时执行Post tx，从状态机查询。
+			verData, err = s.Get(txIn.Bucket, txIn.Key)
+			if err != nil {
+				return err
+			}
+		}
+
+		localVer := GetVersion(verData)
+		remoteVer := GetVersionOfTxInput(txIn)
+		if localVer != remoteVer {
+			return fmt.Errorf("verifyInputs failed, version missmatch: %s / %s, local: %s, remote:%s",
+				txIn.Bucket, txIn.Key,
+				localVer, remoteVer)
+		}
+	}
+	return nil
 }
 
-// ParseContractUtxoInputs parse contract utxo inputs from tx write sets
-func ParseContractUtxoInputs(tx *protos.Transaction) ([]*protos.TxInput, error) {
-	var (
-		utxoInputs []*protos.TxInput
-		extInput   []byte
-	)
-	for _, out := range tx.GetTxOutputsExt() {
-		if out.GetBucket() != TransientBucket {
+func (s *XModel) verifyOutputs(tx *protos.Transaction) error {
+	//outputs中不能出现inputs没有的key
+	inputKeys := map[string]bool{}
+	for _, txIn := range tx.TxInputsExt {
+		rawKey := string(makeRawKey(txIn.Bucket, txIn.Key))
+		inputKeys[rawKey] = true
+	}
+	for _, txOut := range tx.TxOutputsExt {
+		if txOut.Bucket == TransientBucket {
 			continue
 		}
-		if bytes.Equal(out.GetKey(), contractUtxoInputKey) {
-			extInput = out.GetValue()
+		rawKey := string(makeRawKey(txOut.Bucket, txOut.Key))
+		if !inputKeys[rawKey] {
+			return fmt.Errorf("verifyOutputs failed, not such key in txInputsExt: %s", rawKey)
+		}
+		if txOut.Value == nil {
+			return fmt.Errorf("verifyOutputs failed, value can't be null")
 		}
 	}
-	if extInput != nil {
-		err := UnmsarshalMessages(extInput, &utxoInputs)
-		if err != nil {
-			return nil, err
-		}
-	}
-	return utxoInputs, nil
+	return nil
 }

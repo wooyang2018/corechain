@@ -35,7 +35,7 @@ func BenchmarkTxHashV2(b *testing.B) {
 	tx := readTxFile(b, "tx.pb")
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		txDigestHashV2(tx, true)
+		HashTx(tx, true)
 	}
 }
 
@@ -43,7 +43,10 @@ func BenchmarkTxHashV1(b *testing.B) {
 	tx := readTxFile(b, "tx.pb")
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		MakeTransactionID(tx)
+		_, err := MakeTxID(tx)
+		if err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 
@@ -56,7 +59,7 @@ func TestTxHashVersion(t *testing.T) {
 	}
 	for version, expect := range txids {
 		tx.Version = int32(version)
-		txid, err := MakeTransactionID(tx)
+		txid, err := MakeTxID(tx)
 		if err != nil {
 			t.Fatal(err)
 		}

@@ -6,8 +6,6 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/wooyang2018/corechain/storage/leveldb"
-
 	cryptoClient "github.com/wooyang2018/corechain/crypto/client"
 	"github.com/wooyang2018/corechain/ledger"
 	lctx "github.com/wooyang2018/corechain/ledger/context"
@@ -16,6 +14,8 @@ import (
 	mock "github.com/wooyang2018/corechain/mock/config"
 	"github.com/wooyang2018/corechain/protos"
 	"github.com/wooyang2018/corechain/state/base"
+	"github.com/wooyang2018/corechain/storage/leveldb"
+
 	_ "github.com/wooyang2018/corechain/storage/leveldb"
 )
 

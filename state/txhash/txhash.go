@@ -9,10 +9,10 @@ import (
 	"github.com/wooyang2018/corechain/protos"
 )
 
-// MakeTransactionID 事务id生成
-func MakeTransactionID(tx *protos.Transaction) ([]byte, error) {
+// MakeTxID 事务id生成
+func MakeTxID(tx *protos.Transaction) ([]byte, error) {
 	if tx.Version >= 3 {
-		return txDigestHashV2(tx, true), nil
+		return HashTx(tx, true), nil
 	}
 	coreData, err := encodeTxData(tx, true)
 	if err != nil {
@@ -21,10 +21,10 @@ func MakeTransactionID(tx *protos.Transaction) ([]byte, error) {
 	return hash.DoubleSha256(coreData), nil
 }
 
-// MakeTxDigestHash 生成交易关键信息的hash, 不含汇款人公钥、签名等字段
+// MakeTxDigestHash 生成交易关键信息的hash, 其中includeSigns=false
 func MakeTxDigestHash(tx *protos.Transaction) ([]byte, error) {
 	if tx.Version >= 3 {
-		return txDigestHashV2(tx, false), nil
+		return HashTx(tx, false), nil
 	}
 
 	coreData, err := encodeTxData(tx, false)
@@ -36,7 +36,6 @@ func MakeTxDigestHash(tx *protos.Transaction) ([]byte, error) {
 
 // encodeTxData encode core transaction data into bytes
 // output data will NOT include public key and signs if includeSigns is FALSE
-// TODO: 可以考虑使用语言无关的序列化协议，这个地方先用golang的json序列化
 func encodeTxData(tx *protos.Transaction, includeSigns bool) ([]byte, error) {
 	var buf bytes.Buffer
 	encoder := json.NewEncoder(&buf)

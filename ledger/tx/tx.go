@@ -86,7 +86,7 @@ func GenerateAwardTx(address, awardAmount string, desc []byte) (*protos.Transact
 	utxoTx.Desc = desc
 	utxoTx.Coinbase = true
 	utxoTx.Timestamp = time.Now().UnixNano()
-	utxoTx.Txid, _ = txhash.MakeTransactionID(utxoTx)
+	utxoTx.Txid, _ = txhash.MakeTxID(utxoTx)
 	return utxoTx, nil
 }
 
@@ -95,7 +95,7 @@ func GenerateEmptyTx(desc []byte) (*protos.Transaction, error) {
 	utxoTx := &protos.Transaction{Version: TxVersion}
 	utxoTx.Desc = desc
 	utxoTx.Timestamp = time.Now().UnixNano()
-	txid, err := txhash.MakeTransactionID(utxoTx)
+	txid, err := txhash.MakeTxID(utxoTx)
 	utxoTx.Txid = txid
 	utxoTx.Autogen = true
 	return utxoTx, err
@@ -112,7 +112,7 @@ func GenerateAutoTxWithRWSets(inputs []*protos.TxInputExt, outputs []*protos.TxO
 		TxInputsExt:  inputs,
 		TxOutputsExt: outputs,
 	}
-	txid, err := txhash.MakeTransactionID(tx)
+	txid, err := txhash.MakeTxID(tx)
 	tx.Txid = txid
 
 	return tx, err
@@ -139,7 +139,7 @@ func GenerateRootTx(js []byte) (*protos.Transaction, error) {
 	}
 	utxoTx.Desc = js
 	utxoTx.Coinbase = true
-	utxoTx.Txid, _ = txhash.MakeTransactionID(utxoTx)
+	utxoTx.Txid, _ = txhash.MakeTxID(utxoTx)
 	return utxoTx, nil
 }
 
