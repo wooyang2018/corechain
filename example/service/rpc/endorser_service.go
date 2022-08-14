@@ -17,8 +17,7 @@ import (
 	engineBase "github.com/wooyang2018/corechain/engine/base"
 	sctx "github.com/wooyang2018/corechain/example/base"
 	"github.com/wooyang2018/corechain/example/pb"
-	scom "github.com/wooyang2018/corechain/example/service/common"
-	sconf "github.com/wooyang2018/corechain/example/service/config"
+	scom "github.com/wooyang2018/corechain/example/utils"
 	"github.com/wooyang2018/corechain/state/txhash"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/peer"
@@ -37,10 +36,10 @@ type ProxyXEndorser struct {
 	engine      engineBase.Engine
 	clientCache sync.Map
 	mutex       sync.Mutex
-	conf        *sconf.ServConf
+	conf        *sctx.ServConf
 }
 
-func newEndorserService(cfg *sconf.ServConf, engine engineBase.Engine, svr XEndorserServer) (XEndorser, error) {
+func newEndorserService(cfg *sctx.ServConf, engine engineBase.Engine, svr XEndorserServer) (XEndorser, error) {
 	switch cfg.EndorserModule {
 	case EndorserModuleDefault:
 		dxe := NewDefaultXEndorser(svr, engine)

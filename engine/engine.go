@@ -9,7 +9,6 @@ import (
 	xconf "github.com/wooyang2018/corechain/common/config"
 	"github.com/wooyang2018/corechain/common/timer"
 	"github.com/wooyang2018/corechain/engine/base"
-	engconf "github.com/wooyang2018/corechain/engine/config"
 	"github.com/wooyang2018/corechain/engine/net"
 	"github.com/wooyang2018/corechain/engine/parachain"
 	"github.com/wooyang2018/corechain/engine/worker"
@@ -284,7 +283,7 @@ func (t *Engine) createEngCtx(envCfg *xconf.EnvConf) (*base.EngineCtx, error) {
 	}
 
 	// 加载引擎配置
-	engCfg, err := engconf.LoadEngineConf(envCfg.GenConfFilePath(envCfg.EngineConf))
+	engCfg, err := base.LoadEngineConf(envCfg.GenConfFilePath(envCfg.EngineConf))
 	if err != nil {
 		return nil, fmt.Errorf("load engine config failed.err:%v", err)
 	}

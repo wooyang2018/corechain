@@ -8,7 +8,7 @@ import (
 	cryptoHash "github.com/wooyang2018/corechain/crypto/core/hash"
 	engineBase "github.com/wooyang2018/corechain/engine/base"
 	"github.com/wooyang2018/corechain/engine/reader"
-	sctx "github.com/wooyang2018/corechain/example/service/context"
+	exampleBase "github.com/wooyang2018/corechain/example/base"
 	"github.com/wooyang2018/corechain/logger"
 	aclBase "github.com/wooyang2018/corechain/permission/base"
 	"github.com/wooyang2018/corechain/protos"
@@ -16,12 +16,12 @@ import (
 
 type ChainHandle struct {
 	bcName string
-	reqCtx sctx.ReqCtx
+	reqCtx exampleBase.ReqCtx
 	log    logger.Logger
 	chain  engineBase.Chain
 }
 
-func NewChainHandle(bcName string, reqCtx sctx.ReqCtx) (*ChainHandle, error) {
+func NewChainHandle(bcName string, reqCtx exampleBase.ReqCtx) (*ChainHandle, error) {
 	if bcName == "" || reqCtx == nil || reqCtx.GetEngine() == nil {
 		return nil, engineBase.ErrParameter
 	}

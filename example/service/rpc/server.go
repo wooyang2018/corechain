@@ -16,24 +16,23 @@ import (
 
 	"github.com/wooyang2018/corechain/common/utils"
 	"github.com/wooyang2018/corechain/engine/base"
-	scom "github.com/wooyang2018/corechain/example/service/common"
 	"github.com/wooyang2018/corechain/logger"
 )
 
-type RPCServ struct {
+type RpcServer struct {
 	engine base.Engine
 	log    logger.Logger
 }
 
-func NewRpcServ(engine base.Engine, log logger.Logger) *RPCServ {
-	return &RPCServ{
+func NewRpcServ(engine base.Engine, log logger.Logger) *RpcServer {
+	return &RpcServer{
 		engine: engine,
 		log:    log,
 	}
 }
 
 // UnaryInterceptor provides a hook to intercept the execution of a unary RPC on the server.
-func (t *RPCServ) UnaryInterceptor() grpc.UnaryServerInterceptor {
+func (t *RpcServer) UnaryInterceptor() grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo,
 		handler grpc.UnaryHandler) (respRes interface{}, err error) {
 		// set request header
@@ -101,7 +100,7 @@ func (t *RPCServ) UnaryInterceptor() grpc.UnaryServerInterceptor {
 	}
 }
 
-func (t *RPCServ) defReqHeader() *pb.Header {
+func (t *RpcServer) defReqHeader() *pb.Header {
 	return &pb.Header{
 		Logid:    utils.GenLogId(),
 		FromNode: "",
@@ -109,7 +108,7 @@ func (t *RPCServ) defReqHeader() *pb.Header {
 	}
 }
 
-func (t *RPCServ) createReqCtx(gctx context.Context, reqHeader *pb.Header) (sctx.ReqCtx, error) {
+func (t *RpcServer) createReqCtx(gctx context.Context, reqHeader *pb.Header) (sctx.ReqCtx, error) {
 	// 获取客户端ip
 	clientIp, err := t.getClietIP(gctx)
 	if err != nil {
@@ -127,7 +126,7 @@ func (t *RPCServ) createReqCtx(gctx context.Context, reqHeader *pb.Header) (sctx
 	return rctx, nil
 }
 
-func (t *RPCServ) getClietIP(gctx context.Context) (string, error) {
+func (t *RpcServer) getClietIP(gctx context.Context) (string, error) {
 	pr, ok := peer.FromContext(gctx)
 	if !ok {
 		return "", fmt.Errorf("create peer form context failed")
@@ -142,17 +141,17 @@ func (t *RPCServ) getClietIP(gctx context.Context) (string, error) {
 }
 
 // 生成包含机器host和请求时间的AES加密字符串，方便问题定位
-func (t *RPCServ) genTraceId() string {
+func (t *RpcServer) genTraceId() string {
 	return utils.GetHostName()
 }
 
 // 转化错误类型为原接口错误
-func (t *RPCServ) convertErr(stdErr *base.Error) pb.XChainErrorEnum {
+func (t *RpcServer) convertErr(stdErr *base.Error) pb.XChainErrorEnum {
 	if stdErr == nil {
 		return pb.XChainErrorEnum_UNKNOW_ERROR
 	}
 
-	if errCode, ok := scom.StdErrToXchainErrMap[stdErr.Code]; ok {
+	if errCode, ok := sctx.StdErrToXchainErrMap[stdErr.Code]; ok {
 		return errCode
 	}
 

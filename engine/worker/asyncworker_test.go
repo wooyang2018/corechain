@@ -2,15 +2,16 @@ package worker
 
 import (
 	"encoding/json"
-	"github.com/wooyang2018/corechain/storage/leveldb"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
 
+	lconf "github.com/wooyang2018/corechain/ledger/base"
+	"github.com/wooyang2018/corechain/storage/leveldb"
+
 	"github.com/wooyang2018/corechain/engine/base"
 	"github.com/wooyang2018/corechain/ledger"
-	lconf "github.com/wooyang2018/corechain/ledger/config"
 	"github.com/wooyang2018/corechain/logger"
 	mock "github.com/wooyang2018/corechain/mock/config"
 	"github.com/wooyang2018/corechain/protos"

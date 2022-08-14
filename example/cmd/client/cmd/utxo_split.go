@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/wooyang2018/corechain/common/utils"
 	"github.com/wooyang2018/corechain/example/pb"
-	"github.com/wooyang2018/corechain/example/service/common"
+	exampleUtils "github.com/wooyang2018/corechain/example/utils"
 	aclBase "github.com/wooyang2018/corechain/permission/base"
 	"github.com/wooyang2018/corechain/state/utxo"
 )
@@ -163,7 +163,7 @@ func (c *SplitUtxoCommand) splitUtxo(ctx context.Context) error {
 	}
 
 	// calculate txid
-	tx.Txid, err = common.MakeTxId(tx)
+	tx.Txid, err = exampleUtils.MakeTxId(tx)
 	if err != nil {
 		return err
 	}

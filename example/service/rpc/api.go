@@ -9,7 +9,7 @@ import (
 	sctx "github.com/wooyang2018/corechain/example/base"
 	"github.com/wooyang2018/corechain/example/models"
 	"github.com/wooyang2018/corechain/example/pb"
-	scom "github.com/wooyang2018/corechain/example/service/common"
+	scom "github.com/wooyang2018/corechain/example/utils"
 	"github.com/wooyang2018/corechain/network"
 	"github.com/wooyang2018/corechain/protos"
 )
@@ -21,7 +21,7 @@ import (
 // 4.rpc接口可以调用log库提供的SetInfoField方法附加输出到ending log
 
 // PostTx post transaction to blockchain network
-func (t *RPCServ) PostTx(gctx context.Context, req *pb.TxStatus) (*pb.CommonReply, error) {
+func (t *RpcServer) PostTx(gctx context.Context, req *pb.TxStatus) (*pb.CommonReply, error) {
 	// 默认响应
 	resp := &pb.CommonReply{}
 	// 获取请求上下文，对内传递rctx
@@ -59,7 +59,7 @@ func (t *RPCServ) PostTx(gctx context.Context, req *pb.TxStatus) (*pb.CommonRepl
 }
 
 // PreExec smart contract preExec process
-func (t *RPCServ) PreExec(gctx context.Context, req *pb.InvokeRPCRequest) (*pb.InvokeRPCResponse, error) {
+func (t *RpcServer) PreExec(gctx context.Context, req *pb.InvokeRPCRequest) (*pb.InvokeRPCResponse, error) {
 	// 默认响应
 	resp := &pb.InvokeRPCResponse{}
 	// 获取请求上下文，对内传递rctx
@@ -95,7 +95,7 @@ func (t *RPCServ) PreExec(gctx context.Context, req *pb.InvokeRPCRequest) (*pb.I
 }
 
 // PreExecWithSelectUTXO preExec + selectUtxo
-func (t *RPCServ) PreExecWithSelectUTXO(gctx context.Context,
+func (t *RpcServer) PreExecWithSelectUTXO(gctx context.Context,
 	req *pb.PreExecWithSelectUTXORequest) (*pb.PreExecWithSelectUTXOResponse, error) {
 
 	// 默认响应
@@ -144,7 +144,7 @@ func (t *RPCServ) PreExecWithSelectUTXO(gctx context.Context,
 }
 
 // SelectUTXO select utxo inputs depending on amount
-func (t *RPCServ) SelectUTXO(gctx context.Context, req *pb.UtxoInput) (*pb.UtxoOutput, error) {
+func (t *RpcServer) SelectUTXO(gctx context.Context, req *pb.UtxoInput) (*pb.UtxoOutput, error) {
 	// 默认响应
 	resp := &pb.UtxoOutput{}
 	// 获取请求上下文，对内传递rctx
@@ -185,7 +185,7 @@ func (t *RPCServ) SelectUTXO(gctx context.Context, req *pb.UtxoInput) (*pb.UtxoO
 }
 
 // SelectUTXOBySize select utxo inputs depending on size
-func (t *RPCServ) SelectUTXOBySize(gctx context.Context, req *pb.UtxoInput) (*pb.UtxoOutput, error) {
+func (t *RpcServer) SelectUTXOBySize(gctx context.Context, req *pb.UtxoInput) (*pb.UtxoOutput, error) {
 	// 默认响应
 	resp := &pb.UtxoOutput{}
 	// 获取请求上下文，对内传递rctx
@@ -221,7 +221,7 @@ func (t *RPCServ) SelectUTXOBySize(gctx context.Context, req *pb.UtxoInput) (*pb
 }
 
 // QueryContractStatData query statistic info about contract
-func (t *RPCServ) QueryContractStatData(gctx context.Context,
+func (t *RpcServer) QueryContractStatData(gctx context.Context,
 	req *pb.ContractStatDataRequest) (*pb.ContractStatDataResponse, error) {
 	// 默认响应
 	resp := &pb.ContractStatDataResponse{}
@@ -254,7 +254,7 @@ func (t *RPCServ) QueryContractStatData(gctx context.Context,
 }
 
 // QueryUtxoRecord query utxo records
-func (t *RPCServ) QueryUtxoRecord(gctx context.Context,
+func (t *RpcServer) QueryUtxoRecord(gctx context.Context,
 	req *pb.UtxoRecordDetail) (*pb.UtxoRecordDetail, error) {
 
 	// 默认响应
@@ -289,7 +289,7 @@ func (t *RPCServ) QueryUtxoRecord(gctx context.Context,
 }
 
 // QueryACL query some account info
-func (t *RPCServ) QueryACL(gctx context.Context, req *pb.AclStatus) (*pb.AclStatus, error) {
+func (t *RpcServer) QueryACL(gctx context.Context, req *pb.AclStatus) (*pb.AclStatus, error) {
 	// 默认响应
 	resp := &pb.AclStatus{}
 	// 获取请求上下文，对内传递rctx
@@ -342,7 +342,7 @@ func (t *RPCServ) QueryACL(gctx context.Context, req *pb.AclStatus) (*pb.AclStat
 }
 
 // GetAccountContracts get account request
-func (t *RPCServ) GetAccountContracts(gctx context.Context, req *pb.GetAccountContractsRequest) (*pb.GetAccountContractsResponse, error) {
+func (t *RpcServer) GetAccountContracts(gctx context.Context, req *pb.GetAccountContractsRequest) (*pb.GetAccountContractsResponse, error) {
 	// 默认响应
 	resp := &pb.GetAccountContractsResponse{}
 	// 获取请求上下文，对内传递rctx
@@ -379,7 +379,7 @@ func (t *RPCServ) GetAccountContracts(gctx context.Context, req *pb.GetAccountCo
 }
 
 // QueryTx Get transaction details
-func (t *RPCServ) QueryTx(gctx context.Context, req *pb.TxStatus) (*pb.TxStatus, error) {
+func (t *RpcServer) QueryTx(gctx context.Context, req *pb.TxStatus) (*pb.TxStatus, error) {
 	// 默认响应
 	resp := &pb.TxStatus{}
 	// 获取请求上下文，对内传递rctx
@@ -419,7 +419,7 @@ func (t *RPCServ) QueryTx(gctx context.Context, req *pb.TxStatus) (*pb.TxStatus,
 }
 
 // GetBalance get balance for account or addr
-func (t *RPCServ) GetBalance(gctx context.Context, req *pb.AddressStatus) (*pb.AddressStatus, error) {
+func (t *RpcServer) GetBalance(gctx context.Context, req *pb.AddressStatus) (*pb.AddressStatus, error) {
 	// 默认响应
 	resp := &pb.AddressStatus{
 		Bcs: make([]*pb.TokenDetail, 0),
@@ -458,7 +458,7 @@ func (t *RPCServ) GetBalance(gctx context.Context, req *pb.AddressStatus) (*pb.A
 }
 
 // GetFrozenBalance get balance frozened for account or addr
-func (t *RPCServ) GetFrozenBalance(gctx context.Context, req *pb.AddressStatus) (*pb.AddressStatus, error) {
+func (t *RpcServer) GetFrozenBalance(gctx context.Context, req *pb.AddressStatus) (*pb.AddressStatus, error) {
 	// 默认响应
 	resp := &pb.AddressStatus{
 		Bcs: make([]*pb.TokenDetail, 0),
@@ -499,7 +499,7 @@ func (t *RPCServ) GetFrozenBalance(gctx context.Context, req *pb.AddressStatus) 
 }
 
 // GetBalanceDetail get balance frozened for account or addr
-func (t *RPCServ) GetBalanceDetail(gctx context.Context, req *pb.AddressBalanceStatus) (*pb.AddressBalanceStatus, error) {
+func (t *RpcServer) GetBalanceDetail(gctx context.Context, req *pb.AddressBalanceStatus) (*pb.AddressBalanceStatus, error) {
 	// 默认响应
 	resp := &pb.AddressBalanceStatus{
 		Tfds: make([]*pb.TokenFrozenDetails, 0),
@@ -545,7 +545,7 @@ func (t *RPCServ) GetBalanceDetail(gctx context.Context, req *pb.AddressBalanceS
 }
 
 // GetBlock get block info according to blockID
-func (t *RPCServ) GetBlock(gctx context.Context, req *pb.BlockID) (*pb.Block, error) {
+func (t *RpcServer) GetBlock(gctx context.Context, req *pb.BlockID) (*pb.Block, error) {
 	// 默认响应
 	resp := &pb.Block{}
 	// 获取请求上下文，对内传递rctx
@@ -585,7 +585,7 @@ func (t *RPCServ) GetBlock(gctx context.Context, req *pb.BlockID) (*pb.Block, er
 }
 
 // GetBlockChainStatus get systemstatus
-func (t *RPCServ) GetBlockChainStatus(gctx context.Context, req *pb.BCStatus) (*pb.BCStatus, error) {
+func (t *RpcServer) GetBlockChainStatus(gctx context.Context, req *pb.BCStatus) (*pb.BCStatus, error) {
 	// 默认响应
 	resp := &pb.BCStatus{}
 	// 获取请求上下文，对内传递rctx
@@ -635,7 +635,7 @@ func (t *RPCServ) GetBlockChainStatus(gctx context.Context, req *pb.BCStatus) (*
 }
 
 // ConfirmBlockChainStatus confirm is_trunk
-func (t *RPCServ) ConfirmBlockChainStatus(gctx context.Context, req *pb.BCStatus) (*pb.BCTipStatus, error) {
+func (t *RpcServer) ConfirmBlockChainStatus(gctx context.Context, req *pb.BCStatus) (*pb.BCTipStatus, error) {
 	// 默认响应
 	resp := &pb.BCTipStatus{}
 	// 获取请求上下文，对内传递rctx
@@ -666,7 +666,7 @@ func (t *RPCServ) ConfirmBlockChainStatus(gctx context.Context, req *pb.BCStatus
 }
 
 // GetBlockChains get BlockChains
-func (t *RPCServ) GetBlockChains(gctx context.Context, req *pb.CommonIn) (*pb.BlockChains, error) {
+func (t *RpcServer) GetBlockChains(gctx context.Context, req *pb.CommonIn) (*pb.BlockChains, error) {
 	// 默认响应
 	resp := &pb.BlockChains{}
 	// 获取请求上下文，对内传递rctx
@@ -681,7 +681,7 @@ func (t *RPCServ) GetBlockChains(gctx context.Context, req *pb.CommonIn) (*pb.Bl
 }
 
 // GetSystemStatus get systemstatus
-func (t *RPCServ) GetSystemStatus(gctx context.Context, req *pb.CommonIn) (*pb.SystemsStatusReply, error) {
+func (t *RpcServer) GetSystemStatus(gctx context.Context, req *pb.CommonIn) (*pb.SystemsStatusReply, error) {
 	// 默认响应
 	resp := &pb.SystemsStatusReply{}
 	// 获取请求上下文，对内传递rctx
@@ -720,7 +720,7 @@ func (t *RPCServ) GetSystemStatus(gctx context.Context, req *pb.CommonIn) (*pb.S
 }
 
 // GetNetURL get net url in p2p_base
-func (t *RPCServ) GetNetURL(gctx context.Context, req *pb.CommonIn) (*pb.RawUrl, error) {
+func (t *RpcServer) GetNetURL(gctx context.Context, req *pb.CommonIn) (*pb.RawUrl, error) {
 	// 默认响应
 	resp := &pb.RawUrl{}
 	// 获取请求上下文，对内传递rctx
@@ -738,7 +738,7 @@ func (t *RPCServ) GetNetURL(gctx context.Context, req *pb.CommonIn) (*pb.RawUrl,
 }
 
 // GetBlockByHeight  get trunk block by height
-func (t *RPCServ) GetBlockByHeight(gctx context.Context, req *pb.BlockHeight) (*pb.Block, error) {
+func (t *RpcServer) GetBlockByHeight(gctx context.Context, req *pb.BlockHeight) (*pb.Block, error) {
 	// 默认响应
 	resp := &pb.Block{}
 	// 获取请求上下文，对内传递rctx
@@ -776,7 +776,7 @@ func (t *RPCServ) GetBlockByHeight(gctx context.Context, req *pb.BlockHeight) (*
 }
 
 // GetAccountByAK get account list with contain ak
-func (t *RPCServ) GetAccountByAK(gctx context.Context, req *pb.AK2AccountRequest) (*pb.AK2AccountResponse, error) {
+func (t *RpcServer) GetAccountByAK(gctx context.Context, req *pb.AK2AccountRequest) (*pb.AK2AccountResponse, error) {
 	// 默认响应
 	resp := &pb.AK2AccountResponse{}
 	// 获取请求上下文，对内传递rctx
@@ -807,7 +807,7 @@ func (t *RPCServ) GetAccountByAK(gctx context.Context, req *pb.AK2AccountRequest
 }
 
 // GetAddressContracts get contracts of accounts contain a specific address
-func (t *RPCServ) GetAddressContracts(gctx context.Context, req *pb.AddressContractsRequest) (*pb.AddressContractsResponse, error) {
+func (t *RpcServer) GetAddressContracts(gctx context.Context, req *pb.AddressContractsRequest) (*pb.AddressContractsResponse, error) {
 	// 默认响应
 	resp := &pb.AddressContractsResponse{}
 	// 获取请求上下文，对内传递rctx
@@ -855,7 +855,7 @@ func (t *RPCServ) GetAddressContracts(gctx context.Context, req *pb.AddressContr
 	return resp, nil
 }
 
-func (t *RPCServ) GetConsensusStatus(gctx context.Context, req *pb.ConsensusStatRequest) (*pb.ConsensusStatus, error) {
+func (t *RpcServer) GetConsensusStatus(gctx context.Context, req *pb.ConsensusStatRequest) (*pb.ConsensusStatus, error) {
 	// 默认响应
 	resp := &pb.ConsensusStatus{}
 	// 获取请求上下文，对内传递rctx
@@ -884,7 +884,7 @@ func (t *RPCServ) GetConsensusStatus(gctx context.Context, req *pb.ConsensusStat
 }
 
 // DposCandidates get all candidates of the xpos consensus
-func (t *RPCServ) DposCandidates(gctx context.Context, req *pb.DposCandidatesRequest) (*pb.DposCandidatesResponse, error) {
+func (t *RpcServer) DposCandidates(gctx context.Context, req *pb.DposCandidatesRequest) (*pb.DposCandidatesResponse, error) {
 	// 默认响应
 	resp := &pb.DposCandidatesResponse{}
 	// 获取请求上下文，对内传递rctx
@@ -899,7 +899,7 @@ func (t *RPCServ) DposCandidates(gctx context.Context, req *pb.DposCandidatesReq
 }
 
 // DposNominateRecords get all records nominated by an user
-func (t *RPCServ) DposNominateRecords(gctx context.Context, req *pb.DposNominateRecordsRequest) (*pb.DposNominateRecordsResponse, error) {
+func (t *RpcServer) DposNominateRecords(gctx context.Context, req *pb.DposNominateRecordsRequest) (*pb.DposNominateRecordsResponse, error) {
 	// 默认响应
 	resp := &pb.DposNominateRecordsResponse{}
 	// 获取请求上下文，对内传递rctx
@@ -914,7 +914,7 @@ func (t *RPCServ) DposNominateRecords(gctx context.Context, req *pb.DposNominate
 }
 
 // DposNomineeRecords get nominated record of a candidate
-func (t *RPCServ) DposNomineeRecords(gctx context.Context, req *pb.DposNomineeRecordsRequest) (*pb.DposNomineeRecordsResponse, error) {
+func (t *RpcServer) DposNomineeRecords(gctx context.Context, req *pb.DposNomineeRecordsRequest) (*pb.DposNomineeRecordsResponse, error) {
 	// 默认响应
 	resp := &pb.DposNomineeRecordsResponse{}
 	// 获取请求上下文，对内传递rctx
@@ -929,7 +929,7 @@ func (t *RPCServ) DposNomineeRecords(gctx context.Context, req *pb.DposNomineeRe
 }
 
 // DposVoteRecords get all vote records voted by an user
-func (t *RPCServ) DposVoteRecords(gctx context.Context, req *pb.DposVoteRecordsRequest) (*pb.DposVoteRecordsResponse, error) {
+func (t *RpcServer) DposVoteRecords(gctx context.Context, req *pb.DposVoteRecordsRequest) (*pb.DposVoteRecordsResponse, error) {
 	// 默认响应
 	resp := &pb.DposVoteRecordsResponse{}
 	// 获取请求上下文，对内传递rctx
@@ -944,7 +944,7 @@ func (t *RPCServ) DposVoteRecords(gctx context.Context, req *pb.DposVoteRecordsR
 }
 
 // DposVotedRecords get all vote records of a candidate
-func (t *RPCServ) DposVotedRecords(gctx context.Context, req *pb.DposVotedRecordsRequest) (*pb.DposVotedRecordsResponse, error) {
+func (t *RpcServer) DposVotedRecords(gctx context.Context, req *pb.DposVotedRecordsRequest) (*pb.DposVotedRecordsResponse, error) {
 	// 默认响应
 	resp := &pb.DposVotedRecordsResponse{}
 	// 获取请求上下文，对内传递rctx
@@ -959,7 +959,7 @@ func (t *RPCServ) DposVotedRecords(gctx context.Context, req *pb.DposVotedRecord
 }
 
 // DposCheckResults get check results of a specific term
-func (t *RPCServ) DposCheckResults(gctx context.Context, req *pb.DposCheckResultsRequest) (*pb.DposCheckResultsResponse, error) {
+func (t *RpcServer) DposCheckResults(gctx context.Context, req *pb.DposCheckResultsRequest) (*pb.DposCheckResultsResponse, error) {
 	// 默认响应
 	resp := &pb.DposCheckResultsResponse{}
 	// 获取请求上下文，对内传递rctx
@@ -974,7 +974,7 @@ func (t *RPCServ) DposCheckResults(gctx context.Context, req *pb.DposCheckResult
 }
 
 // DposStatus get dpos status
-func (t *RPCServ) DposStatus(gctx context.Context, req *pb.DposStatusRequest) (*pb.DposStatusResponse, error) {
+func (t *RpcServer) DposStatus(gctx context.Context, req *pb.DposStatusRequest) (*pb.DposStatusResponse, error) {
 	// 默认响应
 	resp := &pb.DposStatusResponse{}
 	// 获取请求上下文，对内传递rctx

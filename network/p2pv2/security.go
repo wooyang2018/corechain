@@ -17,7 +17,6 @@ import (
 	"github.com/libp2p/go-libp2p-core/sec"
 	"github.com/multiformats/go-multiaddr"
 	"github.com/wooyang2018/corechain/network/base"
-	"github.com/wooyang2018/corechain/network/config"
 )
 
 // ID is the protocol ID (used when negotiating with multistream)
@@ -193,7 +192,7 @@ func GetPeerIDByAddress(peerAddr string) (peer.ID, error) {
 // GetPemKeyPairFromPath get xuper pem private key from file path
 func GetPemKeyPairFromPath(path string) (crypto.PrivKey, error) {
 	if len(path) == 0 {
-		path = config.DefaultNetKeyPath
+		path = base.DefaultNetKeyPath
 	}
 
 	keyFile, err := ioutil.ReadFile(filepath.Join(path, "private.key"))
@@ -227,7 +226,7 @@ func GeneratePemKeyFromNetKey(path string) error {
 // GetKeyPairFromPath get xuper net key from file path
 func GetKeyPairFromPath(path string) (crypto.PrivKey, error) {
 	if len(path) == 0 {
-		path = config.DefaultNetKeyPath
+		path = base.DefaultNetKeyPath
 	}
 
 	data, err := ioutil.ReadFile(filepath.Join(path, "net_private.key"))

@@ -5,14 +5,14 @@ import (
 	"net"
 	"sync"
 
+	sconf "github.com/wooyang2018/corechain/example/base"
 	"github.com/wooyang2018/corechain/example/pb"
+	scom "github.com/wooyang2018/corechain/example/utils"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/peer"
 
 	engineBase "github.com/wooyang2018/corechain/engine/base"
 	"github.com/wooyang2018/corechain/engine/event"
-	scom "github.com/wooyang2018/corechain/example/service/common"
-	sconf "github.com/wooyang2018/corechain/example/service/config"
 )
 
 // eventService implements the interface of pb.EventService

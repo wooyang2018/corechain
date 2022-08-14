@@ -38,5 +38,5 @@ mock/config/data/logger
 mock/config/data/temp
 example/data/chains
 example/data/logger
-example/mock/test
+example/mock/testdata
 example/output

@@ -9,8 +9,8 @@ import (
 	"github.com/spf13/cobra"
 	xconf "github.com/wooyang2018/corechain/common/config"
 	"github.com/wooyang2018/corechain/engine/base"
+	sconf "github.com/wooyang2018/corechain/example/base"
 	"github.com/wooyang2018/corechain/example/service"
-	sconf "github.com/wooyang2018/corechain/example/service/config"
 	"github.com/wooyang2018/corechain/logger"
 
 	_ "github.com/wooyang2018/corechain/consensus/pow"
@@ -136,7 +136,7 @@ func runEngine(engine base.BCEngine) <-chan bool {
 	return exitCh
 }
 
-func runServ(servMG *service.ServMG) <-chan error {
+func runServ(servMG *service.Manager) <-chan error {
 	exitCh := make(chan error)
 
 	// 启动服务，监听退出信号

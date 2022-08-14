@@ -6,7 +6,6 @@ import (
 	xconf "github.com/wooyang2018/corechain/common/config"
 	xctx "github.com/wooyang2018/corechain/common/context"
 	"github.com/wooyang2018/corechain/common/timer"
-	lconf "github.com/wooyang2018/corechain/ledger/config"
 	"github.com/wooyang2018/corechain/logger"
 )
 
@@ -17,7 +16,7 @@ type LedgerCtx struct {
 	// 运行环境配置
 	EnvCfg *xconf.EnvConf
 	// 账本配置
-	LedgerCfg *lconf.XLedgerConf
+	LedgerCfg *XLedgerConf
 	// 链名
 	BCName string
 }
@@ -28,7 +27,7 @@ func NewLedgerCtx(envCfg *xconf.EnvConf, bcName string) (*LedgerCtx, error) {
 	}
 
 	// 加载配置
-	lcfg, err := lconf.LoadLedgerConf(envCfg.GenConfFilePath(envCfg.LedgerConf))
+	lcfg, err := LoadLedgerConf(envCfg.GenConfFilePath(envCfg.LedgerConf))
 	if err != nil {
 		return nil, fmt.Errorf("create ledger context failed because load config error.err:%v", err)
 	}

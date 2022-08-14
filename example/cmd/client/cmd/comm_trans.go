@@ -21,7 +21,7 @@ import (
 	"github.com/wooyang2018/corechain/contract/base"
 	cryptoClient "github.com/wooyang2018/corechain/crypto/client"
 	"github.com/wooyang2018/corechain/example/pb"
-	"github.com/wooyang2018/corechain/example/service/common"
+	exampleUtils "github.com/wooyang2018/corechain/example/utils"
 	"github.com/wooyang2018/corechain/state/utxo"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/proto"
@@ -430,7 +430,7 @@ func (c *CommTrans) SendTx(ctx context.Context, tx *pb.Transaction) error {
 	tx.InitiatorSigns = signInfos
 	tx.AuthRequireSigns = signInfos
 
-	tx.Txid, err = common.MakeTxId(tx)
+	tx.Txid, err = exampleUtils.MakeTxId(tx)
 	if err != nil {
 		return errors.New("MakeTxDigesthash txid error")
 	}
@@ -458,7 +458,7 @@ func (c *CommTrans) genInitSign(tx *pb.Transaction) ([]*pb.SignatureInfo, error)
 	if err != nil {
 		return nil, err
 	}
-	signTx, err := common.ComputeTxSign(cryptoClient, tx, []byte(fromScrkey))
+	signTx, err := exampleUtils.ComputeTxSign(cryptoClient, tx, []byte(fromScrkey))
 	if err != nil {
 		return nil, err
 	}
@@ -491,7 +491,7 @@ func (c *CommTrans) genAuthRequireSignsFromPath(tx *pb.Transaction, path string)
 		if err != nil {
 			return nil, err
 		}
-		signTx, err := common.ComputeTxSign(cryptoClient, tx, []byte(initScrkey))
+		signTx, err := exampleUtils.ComputeTxSign(cryptoClient, tx, []byte(initScrkey))
 		if err != nil {
 			return nil, err
 		}
@@ -516,7 +516,7 @@ func (c *CommTrans) genAuthRequireSignsFromPath(tx *pb.Transaction, path string)
 			if err != nil {
 				return nil, err
 			}
-			signTx, err := common.ComputeTxSign(cryptoClient, tx, []byte(sk))
+			signTx, err := exampleUtils.ComputeTxSign(cryptoClient, tx, []byte(sk))
 			if err != nil {
 				return nil, err
 			}
@@ -810,7 +810,7 @@ func (c *CommTrans) GenCompleteTxAndPost(ctx context.Context, preExeResp *pb.Pre
 		return err
 	}
 	tx.AuthRequireSigns = append(tx.AuthRequireSigns, endorserSign)
-	tx.Txid, _ = common.MakeTxId(tx)
+	tx.Txid, _ = exampleUtils.MakeTxId(tx)
 
 	txid, err := c.postTx(ctx, tx)
 	if err != nil {
@@ -922,7 +922,7 @@ func (c *CommTrans) GenRealTx(response *pb.PreExecWithSelectUTXOResponse,
 	if err != nil {
 		return nil, err
 	}
-	signTx, err := common.ComputeTxSign(cryptoClient, tx, []byte(fromScrkey))
+	signTx, err := exampleUtils.ComputeTxSign(cryptoClient, tx, []byte(fromScrkey))
 	if err != nil {
 		return nil, err
 	}
@@ -939,7 +939,7 @@ func (c *CommTrans) GenRealTx(response *pb.PreExecWithSelectUTXOResponse,
 	tx.AuthRequireSigns = signatureInfos
 
 	// make txid
-	tx.Txid, _ = common.MakeTxId(tx)
+	tx.Txid, _ = exampleUtils.MakeTxId(tx)
 	return tx, nil
 }
 
@@ -1091,7 +1091,7 @@ func (c *CommTrans) GenComplianceCheckTx(utxoOutput *pb.UtxoOutput) (*pb.Transac
 	}
 	tx.AuthRequire = append(tx.AuthRequire, authRequire)
 
-	signTx, err := common.ComputeTxSign(cryptoClient, tx, []byte(fromScrkey))
+	signTx, err := exampleUtils.ComputeTxSign(cryptoClient, tx, []byte(fromScrkey))
 	if err != nil {
 		return nil, err
 	}
@@ -1108,7 +1108,7 @@ func (c *CommTrans) GenComplianceCheckTx(utxoOutput *pb.UtxoOutput) (*pb.Transac
 	tx.AuthRequireSigns = signatureInfos
 
 	// make txid
-	tx.Txid, _ = common.MakeTxId(tx)
+	tx.Txid, _ = exampleUtils.MakeTxId(tx)
 	return tx, nil
 }
 

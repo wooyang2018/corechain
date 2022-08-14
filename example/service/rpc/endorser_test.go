@@ -13,8 +13,9 @@ import (
 	"github.com/wooyang2018/corechain/engine"
 	engineBase "github.com/wooyang2018/corechain/engine/base"
 	"github.com/wooyang2018/corechain/engine/utils"
+	"github.com/wooyang2018/corechain/example/base"
 	"github.com/wooyang2018/corechain/example/pb"
-	scom "github.com/wooyang2018/corechain/example/service/common"
+	scom "github.com/wooyang2018/corechain/example/utils"
 	ltx "github.com/wooyang2018/corechain/ledger/tx"
 	"github.com/wooyang2018/corechain/logger"
 	mock "github.com/wooyang2018/corechain/mock/config"
@@ -51,7 +52,7 @@ func TestEndorserCall(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	log, _ := logger.NewLogger("", scom.SubModName)
+	log, _ := logger.NewLogger("", base.SubModName)
 	rpcServ := NewRpcServ(engine, log)
 
 	endor := NewDefaultXEndorser(rpcServ, engine)

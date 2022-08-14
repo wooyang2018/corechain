@@ -18,7 +18,6 @@ import (
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/network"
 	netBase "github.com/wooyang2018/corechain/network/base"
-	"github.com/wooyang2018/corechain/network/config"
 	"github.com/wooyang2018/corechain/protos"
 	"google.golang.org/protobuf/proto"
 )
@@ -33,7 +32,7 @@ var (
 // Stream is the IO wrapper for underly P2P connection
 type StreamImpl struct {
 	ctx        *netBase.NetCtx
-	config     *config.NetConf
+	config     *netBase.NetConf
 	log        logger.Logger
 	dispatcher netBase.Dispatcher
 	stream     libnet.Stream

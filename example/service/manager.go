@@ -4,36 +4,35 @@ import (
 	"fmt"
 
 	"github.com/wooyang2018/corechain/engine/base"
-	scom "github.com/wooyang2018/corechain/example/service/common"
-	sconf "github.com/wooyang2018/corechain/example/service/config"
+	sconf "github.com/wooyang2018/corechain/example/base"
 	"github.com/wooyang2018/corechain/example/service/gateway"
 	"github.com/wooyang2018/corechain/example/service/rpc"
 	"github.com/wooyang2018/corechain/logger"
 )
 
 // 由于需要同时启动多个服务组件，采用注册机制管理
-type ServCom interface {
+type Components interface {
 	Run() error
 	Exit()
 }
 
 // 各server组件运行控制
-type ServMG struct {
+type Manager struct {
 	scfg    *sconf.ServConf
 	log     logger.Logger
-	servers []ServCom
+	servers []Components
 }
 
-func NewServMG(scfg *sconf.ServConf, engine base.BCEngine) (*ServMG, error) {
+func NewServMG(scfg *sconf.ServConf, engine base.BCEngine) (*Manager, error) {
 	if scfg == nil || engine == nil {
 		return nil, fmt.Errorf("param error")
 	}
 
-	log, _ := logger.NewLogger("", scom.SubModName)
-	obj := &ServMG{
+	log, _ := logger.NewLogger("", sconf.SubModName)
+	obj := &Manager{
 		scfg:    scfg,
 		log:     log,
-		servers: make([]ServCom, 0),
+		servers: make([]Components, 0),
 	}
 
 	// 实例化rpc服务
@@ -52,13 +51,13 @@ func NewServMG(scfg *sconf.ServConf, engine base.BCEngine) (*ServMG, error) {
 }
 
 // 启动rpc服务
-func (t *ServMG) Run() error {
+func (t *Manager) Run() error {
 	ch := make(chan error, 0)
 	defer close(ch)
 
 	for _, serv := range t.servers {
 		// 启动各个service
-		go func(s ServCom) {
+		go func(s Components) {
 			ch <- s.Run()
 		}(serv)
 	}
@@ -81,10 +80,10 @@ func (t *ServMG) Run() error {
 }
 
 // 退出rpc服务，释放相关资源，需要幂等
-func (t *ServMG) Exit() {
+func (t *Manager) Exit() {
 	for _, serv := range t.servers {
 		// 触发各service退出
-		go func(s ServCom) {
+		go func(s Components) {
 			s.Exit()
 		}(serv)
 	}

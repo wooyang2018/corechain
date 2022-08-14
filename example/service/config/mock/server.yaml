@@ -1,4 +1,0 @@
-# rpc server listen port
-rpcPort: 37101
-# tls switch
-enableTls: false

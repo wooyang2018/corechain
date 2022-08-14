@@ -7,7 +7,6 @@ import (
 	xctx "github.com/wooyang2018/corechain/common/context"
 	"github.com/wooyang2018/corechain/common/timer"
 	"github.com/wooyang2018/corechain/logger"
-	"github.com/wooyang2018/corechain/network/config"
 )
 
 // 网络组件运行上下文环境
@@ -17,7 +16,7 @@ type NetCtx struct {
 	// 运行环境配置
 	EnvCfg *xconf.EnvConf
 	// 网络组件配置
-	P2PConf *config.NetConf
+	P2PConf *NetConf
 }
 
 func NewNetCtx(envCfg *xconf.EnvConf) (*NetCtx, error) {
@@ -26,7 +25,7 @@ func NewNetCtx(envCfg *xconf.EnvConf) (*NetCtx, error) {
 	}
 
 	// 加载配置
-	cfg, err := config.LoadP2PConf(envCfg.GenConfFilePath(envCfg.NetConf))
+	cfg, err := LoadP2PConf(envCfg.GenConfFilePath(envCfg.NetConf))
 	if err != nil {
 		return nil, fmt.Errorf("create net context failed because envconfig load fail.err:%v", err)
 	}

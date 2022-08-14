@@ -21,6 +21,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/wooyang2018/corechain/example/pb"
+	exampleUtils "github.com/wooyang2018/corechain/example/utils"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
@@ -28,7 +29,6 @@ import (
 	cryptoClient "github.com/wooyang2018/corechain/crypto/client"
 	cryptoBase "github.com/wooyang2018/corechain/crypto/client/base"
 	cryptoHash "github.com/wooyang2018/corechain/crypto/core/hash"
-	"github.com/wooyang2018/corechain/example/service/common"
 )
 
 // CommandFunc 代表了一个子命令，用于往Cli注册子命令
@@ -287,7 +287,7 @@ func (c *Cli) tansferSupportAccount(ctx context.Context, client pb.MXchainClient
 	}
 
 	// 签名和生成txid
-	signTx, err := common.ComputeTxSign(cryptoClient, txStatus.Tx, []byte(initScrkey))
+	signTx, err := exampleUtils.ComputeTxSign(cryptoClient, txStatus.Tx, []byte(initScrkey))
 	if err != nil {
 		return "", err
 	}
@@ -300,7 +300,7 @@ func (c *Cli) tansferSupportAccount(ctx context.Context, client pb.MXchainClient
 	if err != nil {
 		return "", fmt.Errorf("Failed to genAuthRequireSigns %s", err)
 	}
-	txStatus.Tx.Txid, err = common.MakeTxId(txStatus.Tx)
+	txStatus.Tx.Txid, err = exampleUtils.MakeTxId(txStatus.Tx)
 	if err != nil {
 		return "", fmt.Errorf("Failed to gen txid %s", err)
 	}
@@ -432,7 +432,7 @@ func genAuthRequire(from, path string) ([]string, error) {
 func genAuthRequireSigns(opt *TransferOptions, cryptoClient cryptoBase.CryptoClient, tx *pb.Transaction, initScrkey, initPubkey string) ([]*pb.SignatureInfo, error) {
 	authRequireSigns := []*pb.SignatureInfo{}
 	if opt.AccountPath == "" {
-		signTx, err := common.ComputeTxSign(cryptoClient, tx, []byte(initScrkey))
+		signTx, err := exampleUtils.ComputeTxSign(cryptoClient, tx, []byte(initScrkey))
 		if err != nil {
 			return nil, err
 		}
@@ -458,7 +458,7 @@ func genAuthRequireSigns(opt *TransferOptions, cryptoClient cryptoBase.CryptoCli
 			if err != nil {
 				return nil, err
 			}
-			signTx, err := common.ComputeTxSign(cryptoClient, tx, []byte(sk))
+			signTx, err := exampleUtils.ComputeTxSign(cryptoClient, tx, []byte(sk))
 			if err != nil {
 				return nil, err
 			}

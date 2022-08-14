@@ -17,7 +17,7 @@ import (
 	"github.com/wooyang2018/corechain/common/utils"
 	cryptoClient "github.com/wooyang2018/corechain/crypto/client"
 	"github.com/wooyang2018/corechain/example/pb"
-	"github.com/wooyang2018/corechain/example/service/common"
+	exampleUtils "github.com/wooyang2018/corechain/example/utils"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -91,7 +91,7 @@ func (c *MultisigSendCommand) send(ctx context.Context, initPath string, authPat
 	}
 	tx.AuthRequireSigns = signAuths
 
-	tx.Txid, err = common.MakeTxId(tx)
+	tx.Txid, err = exampleUtils.MakeTxId(tx)
 	if err != nil {
 		return errors.New("MakeTxDigesthash txid error")
 	}
@@ -165,7 +165,7 @@ func (c *MultisigSendCommand) sendXuper(ctx context.Context, signs string) error
 		Signature:  finalsign,
 	}
 
-	tx.Txid, err = common.MakeTxId(tx)
+	tx.Txid, err = exampleUtils.MakeTxId(tx)
 	if err != nil {
 		return errors.New("MakeTxDigesthash txid error")
 	}

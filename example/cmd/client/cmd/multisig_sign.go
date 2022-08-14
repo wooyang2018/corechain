@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 	cryptoClient "github.com/wooyang2018/corechain/crypto/client"
 	"github.com/wooyang2018/corechain/example/pb"
-	"github.com/wooyang2018/corechain/example/service/common"
+	"github.com/wooyang2018/corechain/example/utils"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -89,7 +89,7 @@ func (c *MultisigSignCommand) sign() error {
 		if err != nil {
 			return err
 		}
-		digestHash, err := common.MakeTxDigestHash(tx)
+		digestHash, err := utils.MakeTxDigestHash(tx)
 		if err != nil {
 			return err
 		}
@@ -140,7 +140,7 @@ func (c *MultisigSignCommand) genSignTx(tx *pb.Transaction) ([]byte, error) {
 		return nil, err
 	}
 
-	signTx, err := common.ComputeTxSign(cryptoClient, tx, []byte(fromScrkey))
+	signTx, err := utils.ComputeTxSign(cryptoClient, tx, []byte(fromScrkey))
 	if err != nil {
 		return nil, err
 	}

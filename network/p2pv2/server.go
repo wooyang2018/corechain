@@ -25,7 +25,6 @@ import (
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/network"
 	netBase "github.com/wooyang2018/corechain/network/base"
-	"github.com/wooyang2018/corechain/network/config"
 	"github.com/wooyang2018/corechain/protos"
 	"google.golang.org/protobuf/proto"
 )
@@ -57,7 +56,7 @@ var (
 type P2PServerV2 struct {
 	ctx    *netBase.NetCtx
 	log    logger.Logger
-	config *config.NetConf
+	config *netBase.NetConf
 
 	id         peer.ID
 	host       host.Host

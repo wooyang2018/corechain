@@ -17,7 +17,6 @@ import (
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/network"
 	netBase "github.com/wooyang2018/corechain/network/base"
-	"github.com/wooyang2018/corechain/network/config"
 	"github.com/wooyang2018/corechain/protos"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -42,7 +41,7 @@ func init() {
 type P2PServerV1 struct {
 	ctx    *netBase.NetCtx
 	log    logger.Logger
-	config *config.NetConf
+	config *netBase.NetConf
 
 	address    multiaddr.Multiaddr
 	pool       *ConnPool

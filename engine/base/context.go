@@ -11,7 +11,6 @@ import (
 	"github.com/wooyang2018/corechain/contract/proposal/propose"
 	ptimer "github.com/wooyang2018/corechain/contract/proposal/timer"
 	cryptoBase "github.com/wooyang2018/corechain/crypto/client/base"
-	econf "github.com/wooyang2018/corechain/engine/config"
 	"github.com/wooyang2018/corechain/ledger"
 	netBase "github.com/wooyang2018/corechain/network/base"
 	aclBase "github.com/wooyang2018/corechain/permission/base"
@@ -25,7 +24,7 @@ type EngineCtx struct {
 	// 运行环境配置
 	EnvCfg *xconf.EnvConf
 	// 引擎配置
-	EngCfg *econf.EngineConf
+	EngCfg *EngineConf
 	// 网络组件句柄
 	Net netBase.Network
 	// 链管理上下文

@@ -13,7 +13,6 @@ import (
 	cryptoBase "github.com/wooyang2018/corechain/crypto/client/base"
 	"github.com/wooyang2018/corechain/ledger"
 	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
-	lconf "github.com/wooyang2018/corechain/ledger/config"
 	"github.com/wooyang2018/corechain/logger"
 	aclBase "github.com/wooyang2018/corechain/permission/base"
 )
@@ -25,7 +24,7 @@ type StateCtx struct {
 	// 运行环境配置
 	EnvCfg *xconf.EnvConf
 	// 账本配置
-	LedgerCfg *lconf.XLedgerConf
+	LedgerCfg *ledgerBase.XLedgerConf
 	// 链名
 	BCName string
 	// ledger handle
@@ -54,7 +53,7 @@ func NewStateCtx(envCfg *xconf.EnvConf, bcName string,
 	}
 
 	// 加载配置
-	lcfg, err := lconf.LoadLedgerConf(envCfg.GenConfFilePath(envCfg.LedgerConf))
+	lcfg, err := ledgerBase.LoadLedgerConf(envCfg.GenConfFilePath(envCfg.LedgerConf))
 	if err != nil {
 		return nil, fmt.Errorf("create state context failed because load config error.err:%v", err)
 	}

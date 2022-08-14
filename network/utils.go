@@ -12,7 +12,7 @@ import (
 
 	"github.com/libp2p/go-libp2p-core/crypto"
 	"github.com/libp2p/go-libp2p-core/peer"
-	"github.com/wooyang2018/corechain/network/config"
+	"github.com/wooyang2018/corechain/network/base"
 	"google.golang.org/grpc/credentials"
 )
 
@@ -47,7 +47,7 @@ func NewTLS(path, serviceName string) (credentials.TransportCredentials, error) 
 // GetKeyPairFromPath get xuper net key from file path
 func GetKeyPairFromPath(path string) (crypto.PrivKey, error) {
 	if len(path) == 0 {
-		path = config.DefaultNetKeyPath
+		path = base.DefaultNetKeyPath
 	}
 
 	data, err := ioutil.ReadFile(filepath.Join(path, "net_private.key"))
@@ -89,7 +89,7 @@ func GenerateKeyPairWithPath(path string) error {
 	}
 
 	if len(path) == 0 {
-		path = config.DefaultNetKeyPath
+		path = base.DefaultNetKeyPath
 	}
 
 	privData, err := crypto.MarshalPrivateKey(priv)

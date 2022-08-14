@@ -9,27 +9,26 @@ import (
 	"sync"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/wooyang2018/corechain/example/base"
 	"github.com/wooyang2018/corechain/example/pb"
-	scom "github.com/wooyang2018/corechain/example/service/common"
-	sconf "github.com/wooyang2018/corechain/example/service/config"
 	"github.com/wooyang2018/corechain/logger"
 	"google.golang.org/grpc"
 )
 
 type Gateway struct {
-	scfg     *sconf.ServConf
+	scfg     *base.ServConf
 	log      logger.Logger
 	server   *http.Server
 	isInit   bool
 	exitOnce *sync.Once
 }
 
-func NewGateway(scfg *sconf.ServConf) (*Gateway, error) {
+func NewGateway(scfg *base.ServConf) (*Gateway, error) {
 	if scfg == nil {
 		return nil, fmt.Errorf("param error")
 	}
 
-	log, _ := logger.NewLogger("", scom.SubModName)
+	log, _ := logger.NewLogger("", base.SubModName)
 	obj := &Gateway{
 		scfg:     scfg,
 		log:      log,

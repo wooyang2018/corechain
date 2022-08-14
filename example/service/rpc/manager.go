@@ -14,9 +14,8 @@ import (
 	prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/wooyang2018/corechain/engine"
 	engineBase "github.com/wooyang2018/corechain/engine/base"
+	sconf "github.com/wooyang2018/corechain/example/base"
 	"github.com/wooyang2018/corechain/example/pb"
-	scom "github.com/wooyang2018/corechain/example/service/common"
-	sconf "github.com/wooyang2018/corechain/example/service/config"
 	"github.com/wooyang2018/corechain/logger"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -24,17 +23,17 @@ import (
 )
 
 // rpc server启停控制管理
-type RpcServMG struct {
+type RpcManager struct {
 	scfg     *sconf.ServConf
 	engine   engineBase.Engine
 	log      logger.Logger
-	rpcServ  *RPCServ
+	rpcServ  *RpcServer
 	servHD   *grpc.Server
 	isInit   bool
 	exitOnce *sync.Once
 }
 
-func NewRpcServMG(scfg *sconf.ServConf, en engineBase.BCEngine) (*RpcServMG, error) {
+func NewRpcServMG(scfg *sconf.ServConf, en engineBase.BCEngine) (*RpcManager, error) {
 	if scfg == nil || en == nil {
 		return nil, fmt.Errorf("param error")
 	}
@@ -43,8 +42,8 @@ func NewRpcServMG(scfg *sconf.ServConf, en engineBase.BCEngine) (*RpcServMG, err
 		return nil, fmt.Errorf("not engines engine")
 	}
 
-	log, _ := logger.NewLogger("", scom.SubModName)
-	obj := &RpcServMG{
+	log, _ := logger.NewLogger("", sconf.SubModName)
+	obj := &RpcManager{
 		scfg:     scfg,
 		engine:   xosEngine,
 		log:      log,
@@ -57,9 +56,9 @@ func NewRpcServMG(scfg *sconf.ServConf, en engineBase.BCEngine) (*RpcServMG, err
 }
 
 // 启动rpc服务，阻塞运行
-func (t *RpcServMG) Run() error {
+func (t *RpcManager) Run() error {
 	if !t.isInit {
-		return errors.New("RpcServMG not init")
+		return errors.New("RpcManager not init")
 	}
 
 	t.log.Debug("run grpc server", "isTls", t.scfg.EnableTls)
@@ -76,7 +75,7 @@ func (t *RpcServMG) Run() error {
 }
 
 // 退出rpc服务，释放相关资源，需要幂等
-func (t *RpcServMG) Exit() {
+func (t *RpcManager) Exit() {
 	if !t.isInit {
 		return
 	}
@@ -87,7 +86,7 @@ func (t *RpcServMG) Exit() {
 }
 
 // 启动rpc服务，阻塞直到退出
-func (t *RpcServMG) runRpcServ() error {
+func (t *RpcManager) runRpcServ() error {
 	unaryInterceptors := []grpc.UnaryServerInterceptor{
 		t.rpcServ.UnaryInterceptor(),
 		prometheus.UnaryServerInterceptor,
@@ -142,7 +141,7 @@ func (t *RpcServMG) runRpcServ() error {
 	return nil
 }
 
-func (t *RpcServMG) newTls() (credentials.TransportCredentials, error) {
+func (t *RpcManager) newTls() (credentials.TransportCredentials, error) {
 	envConf := t.engine.Context().EnvCfg
 	tlsPath := envConf.GenDataAbsPath(envConf.TlsDir)
 	bs, err := ioutil.ReadFile(filepath.Join(tlsPath, "cert.crt"))
@@ -172,7 +171,7 @@ func (t *RpcServMG) newTls() (credentials.TransportCredentials, error) {
 }
 
 // 需要幂等
-func (t *RpcServMG) stopRpcServ() {
+func (t *RpcManager) stopRpcServ() {
 	if t.servHD != nil {
 		// 优雅关闭grpc server
 		t.servHD.GracefulStop()
