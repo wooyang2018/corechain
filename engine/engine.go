@@ -16,6 +16,7 @@ import (
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/network"
 	nctx "github.com/wooyang2018/corechain/network/context"
+	"github.com/wooyang2018/corechain/storage"
 )
 
 // xuperos执行引擎，为公链场景订制区块链引擎
@@ -243,6 +244,9 @@ func (t *Engine) loadChains() error {
 		group, err := parachain.GetParaChainGroup(rootChainReader, fInfo.Name())
 		if err != nil {
 			t.log.Error("get para chain group failed", "chain", fInfo.Name(), "err", err.Error())
+			if !storage.ErrNotFound(err) {
+				continue
+			}
 			return err
 		}
 
@@ -256,7 +260,8 @@ func (t *Engine) loadChains() error {
 		chain, err := LoadChain(t.engCtx, fInfo.Name())
 		if err != nil {
 			t.log.Error("load chain from data dir failed", "error", err, "dir", chainDir)
-			return err
+			// 平行链加载失败时可以忽略直接跳过运行
+			continue
 		}
 		t.log.Debug("load chain from data dir succ", "chain", fInfo.Name())
 
@@ -267,7 +272,7 @@ func (t *Engine) loadChains() error {
 		chainCnt++
 	}
 
-	t.log.Debug("load chain form data dir succeeded", "chainCnt", chainCnt)
+	t.log.Debug("load chain from data dir succeeded", "chainCnt", chainCnt)
 	return nil
 }
 
