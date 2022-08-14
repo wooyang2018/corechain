@@ -18,9 +18,10 @@ const (
 	contractNamePrefixs    = "1111"
 	contractAccountPrefixs = "1112"
 
-	xchainAddrType      = "xchain"
-	contractNameType    = "contract-name"
-	contractAccountType = "contract-account"
+	xchainAddrType        = "xchain"
+	contractNameType      = "contract-name"
+	contractAccountType   = "contract-account"
+	contractAccountSuffix = "@corechain"
 )
 
 // transfer xchain address to evm address
@@ -88,7 +89,7 @@ func ContractAccountToEVMAddress(contractAccount string) (crypto.Address, error)
 func EVMAddressToContractAccount(evmAddr crypto.Address) (string, error) {
 	contractNameWithPrefix := evmAddr.Bytes()
 	contractNameStrWithPrefix := string(contractNameWithPrefix)
-	return base.GetAccountPrefix() + contractNameStrWithPrefix[4:] + "@xuper", nil
+	return base.GetAccountPrefix() + contractNameStrWithPrefix[4:] + contractAccountSuffix, nil
 }
 
 // determine whether it is a contract account
@@ -96,7 +97,7 @@ func DetermineContractAccount(account string) bool {
 	if base.IsAccount(account) != 1 {
 		return false
 	}
-	return strings.Index(account, "@xuper") != -1
+	return strings.Index(account, contractAccountSuffix) != -1
 }
 
 // determine whether it is a contract name

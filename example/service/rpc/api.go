@@ -5,7 +5,7 @@ import (
 	"math/big"
 
 	"github.com/wooyang2018/corechain/common/utils"
-	engineBase "github.com/wooyang2018/corechain/engines/base"
+	engineBase "github.com/wooyang2018/corechain/engine/base"
 	sctx "github.com/wooyang2018/corechain/example/base"
 	"github.com/wooyang2018/corechain/example/models"
 	"github.com/wooyang2018/corechain/example/pb"

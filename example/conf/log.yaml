@@ -1,7 +1,7 @@
 # 模块名
-module: corechain
+module: chain
 # 日志文件名
-filename: corechain
+filename: chain
 # 日志输出格式（logfmt | json）
 fmt: logfmt
 # 日志输出级别：debug、trace、info、warn、error

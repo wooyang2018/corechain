@@ -29,7 +29,7 @@ cleantest:
 cleancache:
 	rm -rf $(COMPILECACHEDIR)
 # deploy test network
-testnet:
+testnet: cleantest
 	bash $(HOMEDIR)/auto/testnet.sh
 # avoid filename conflict and speed up build
 .PHONY: all compile test clean

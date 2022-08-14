@@ -15,7 +15,7 @@ import (
 	"google.golang.org/grpc/peer"
 
 	"github.com/wooyang2018/corechain/common/utils"
-	"github.com/wooyang2018/corechain/engines/base"
+	"github.com/wooyang2018/corechain/engine/base"
 	scom "github.com/wooyang2018/corechain/example/service/common"
 	"github.com/wooyang2018/corechain/logger"
 )

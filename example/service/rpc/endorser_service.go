@@ -14,7 +14,7 @@ import (
 
 	cryptoClient "github.com/wooyang2018/corechain/crypto/client"
 	"github.com/wooyang2018/corechain/crypto/core/hash"
-	engineBase "github.com/wooyang2018/corechain/engines/base"
+	engineBase "github.com/wooyang2018/corechain/engine/base"
 	sctx "github.com/wooyang2018/corechain/example/base"
 	"github.com/wooyang2018/corechain/example/pb"
 	scom "github.com/wooyang2018/corechain/example/service/common"

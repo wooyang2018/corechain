@@ -1,7 +1,7 @@
 package common
 
 import (
-	"github.com/wooyang2018/corechain/engines/base"
+	"github.com/wooyang2018/corechain/engine/base"
 	"github.com/wooyang2018/corechain/example/pb"
 )
 

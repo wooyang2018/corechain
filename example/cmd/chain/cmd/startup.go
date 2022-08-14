@@ -8,7 +8,7 @@ import (
 
 	"github.com/spf13/cobra"
 	xconf "github.com/wooyang2018/corechain/common/config"
-	"github.com/wooyang2018/corechain/engines/base"
+	"github.com/wooyang2018/corechain/engine/base"
 	"github.com/wooyang2018/corechain/example/service"
 	sconf "github.com/wooyang2018/corechain/example/service/config"
 	"github.com/wooyang2018/corechain/logger"

@@ -12,16 +12,15 @@ import (
 
 	middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
+	"github.com/wooyang2018/corechain/engine"
+	engineBase "github.com/wooyang2018/corechain/engine/base"
 	"github.com/wooyang2018/corechain/example/pb"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/reflection"
-
-	"github.com/wooyang2018/corechain/engines"
-	engineBase "github.com/wooyang2018/corechain/engines/base"
 	scom "github.com/wooyang2018/corechain/example/service/common"
 	sconf "github.com/wooyang2018/corechain/example/service/config"
 	"github.com/wooyang2018/corechain/logger"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/reflection"
 )
 
 // rpc server启停控制管理
@@ -35,11 +34,11 @@ type RpcServMG struct {
 	exitOnce *sync.Once
 }
 
-func NewRpcServMG(scfg *sconf.ServConf, engine engineBase.BCEngine) (*RpcServMG, error) {
-	if scfg == nil || engine == nil {
+func NewRpcServMG(scfg *sconf.ServConf, en engineBase.BCEngine) (*RpcServMG, error) {
+	if scfg == nil || en == nil {
 		return nil, fmt.Errorf("param error")
 	}
-	xosEngine, err := engines.EngineConvert(engine)
+	xosEngine, err := engine.EngineConvert(en)
 	if err != nil {
 		return nil, fmt.Errorf("not engines engine")
 	}
@@ -49,7 +48,7 @@ func NewRpcServMG(scfg *sconf.ServConf, engine engineBase.BCEngine) (*RpcServMG,
 		scfg:     scfg,
 		engine:   xosEngine,
 		log:      log,
-		rpcServ:  NewRpcServ(engine.(engineBase.Engine), log),
+		rpcServ:  NewRpcServ(en.(engineBase.Engine), log),
 		isInit:   true,
 		exitOnce: &sync.Once{},
 	}

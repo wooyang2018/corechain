@@ -13,7 +13,7 @@ evm:
 
 # 管理native合约的配置
 native:
-  enable: false
+  enable: true
 
   # docker相关配置
   docker:

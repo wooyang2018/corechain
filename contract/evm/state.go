@@ -1,6 +1,7 @@
 package evm
 
 import (
+	"math"
 	"math/big"
 	"time"
 
@@ -37,10 +38,9 @@ func (s *stateManager) GetAccount(address crypto.Address) (*acm.Account, error) 
 		evmCode = v
 	}
 
-	var balance *big.Int
 	return &acm.Account{
 		Address:     address,
-		Balance:     balance.Uint64(),
+		Balance:     math.MaxUint64,
 		EVMCode:     evmCode,
 		Permissions: permission.AllAccountPermissions,
 	}, nil

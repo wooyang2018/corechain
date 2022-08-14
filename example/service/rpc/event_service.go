@@ -9,8 +9,8 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/peer"
 
-	engineBase "github.com/wooyang2018/corechain/engines/base"
-	"github.com/wooyang2018/corechain/engines/event"
+	engineBase "github.com/wooyang2018/corechain/engine/base"
+	"github.com/wooyang2018/corechain/engine/event"
 	scom "github.com/wooyang2018/corechain/example/service/common"
 	sconf "github.com/wooyang2018/corechain/example/service/config"
 )

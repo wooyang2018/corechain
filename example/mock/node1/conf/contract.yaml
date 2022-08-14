@@ -2,6 +2,7 @@ enableUpgrade: true
 
 wasm:
   driver: "xvm"
+  enable: false
   xvm:
     optLevel: 0
 

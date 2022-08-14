@@ -3,7 +3,7 @@ package service
 import (
 	"fmt"
 
-	"github.com/wooyang2018/corechain/engines/base"
+	"github.com/wooyang2018/corechain/engine/base"
 	scom "github.com/wooyang2018/corechain/example/service/common"
 	sconf "github.com/wooyang2018/corechain/example/service/config"
 	"github.com/wooyang2018/corechain/example/service/gateway"

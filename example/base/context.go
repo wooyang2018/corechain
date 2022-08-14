@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/wooyang2018/corechain/common/timer"
-	"github.com/wooyang2018/corechain/engines/base"
+	"github.com/wooyang2018/corechain/engine/base"
 	"github.com/wooyang2018/corechain/logger"
 )
 

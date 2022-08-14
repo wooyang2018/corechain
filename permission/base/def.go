@@ -1,7 +1,7 @@
 package base
 
 const (
-	SubModName = "permission"
+	SubModName = "$acl"
 	StatusOK   = 200
 )
 

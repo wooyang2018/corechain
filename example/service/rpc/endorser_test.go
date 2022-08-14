@@ -10,8 +10,8 @@ import (
 	"testing"
 
 	xconf "github.com/wooyang2018/corechain/common/config"
-	"github.com/wooyang2018/corechain/engines"
-	engineBase "github.com/wooyang2018/corechain/engines/base"
+	"github.com/wooyang2018/corechain/engine"
+	engineBase "github.com/wooyang2018/corechain/engine/base"
 	"github.com/wooyang2018/corechain/example/pb"
 	scom "github.com/wooyang2018/corechain/example/service/common"
 	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
@@ -148,12 +148,12 @@ func MockEngine() (engineBase.Engine, error) {
 		return nil, err
 	}
 
-	engine := engines.NewEngine()
+	engine := engine.NewEngine()
 	if err := engine.Init(conf); err != nil {
 		return nil, fmt.Errorf("init engine error: %v", err)
 	}
 
-	eng, err := engines.EngineConvert(engine)
+	eng, err := engine.EngineConvert(engine)
 	if err != nil {
 		return nil, fmt.Errorf("engine convert error: %v", err)
 	}
