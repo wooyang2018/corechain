@@ -1,9 +1,9 @@
 # 日志配置文件
 
 # 模块名
-module: chain
+module: corecahin
 # 日志文件名
-filename: chain
+filename: corecahin
 # 日志输出格式（logfmt | json）
 fmt: logfmt
 # 日志输出级别：debug、trace、info、warn、error

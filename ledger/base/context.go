@@ -1,4 +1,4 @@
-package context
+package base
 
 import (
 	"fmt"
@@ -7,7 +7,6 @@ import (
 	xctx "github.com/wooyang2018/corechain/common/context"
 	"github.com/wooyang2018/corechain/common/timer"
 	lconf "github.com/wooyang2018/corechain/ledger/config"
-	"github.com/wooyang2018/corechain/ledger/def"
 	"github.com/wooyang2018/corechain/logger"
 )
 
@@ -34,7 +33,7 @@ func NewLedgerCtx(envCfg *xconf.EnvConf, bcName string) (*LedgerCtx, error) {
 		return nil, fmt.Errorf("create ledger context failed because load config error.err:%v", err)
 	}
 
-	log, err := logger.NewLogger("", def.LedgerSubModName)
+	log, err := logger.NewLogger("", LedgerSubModName)
 	if err != nil {
 		return nil, fmt.Errorf("create ledger context failed because new logger error. err:%v", err)
 	}

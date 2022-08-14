@@ -1,4 +1,4 @@
-package def
+package base
 
 const (
 	LedgerSubModName = "ledger"

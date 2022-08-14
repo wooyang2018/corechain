@@ -3,19 +3,19 @@ package p2pv1
 import (
 	"sync"
 
-	nctx "github.com/wooyang2018/corechain/network/context"
+	netBase "github.com/wooyang2018/corechain/network/base"
 	"google.golang.org/grpc/connectivity"
 )
 
 // ConnPool manage all the connection
 type ConnPool struct {
-	ctx  *nctx.NetCtx
+	ctx  *netBase.NetCtx
 	pool sync.Map // map[peerID]*conn
 
 	staticModeOn bool
 }
 
-func NewConnPool(ctx *nctx.NetCtx) (*ConnPool, error) {
+func NewConnPool(ctx *netBase.NetCtx) (*ConnPool, error) {
 	cp := ConnPool{
 		ctx: ctx,
 	}

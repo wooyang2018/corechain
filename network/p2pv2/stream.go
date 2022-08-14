@@ -17,8 +17,8 @@ import (
 	"github.com/wooyang2018/corechain/common/metrics"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/network"
+	netBase "github.com/wooyang2018/corechain/network/base"
 	"github.com/wooyang2018/corechain/network/config"
-	nctx "github.com/wooyang2018/corechain/network/context"
 	"github.com/wooyang2018/corechain/protos"
 	"google.golang.org/protobuf/proto"
 )
@@ -32,10 +32,10 @@ var (
 
 // Stream is the IO wrapper for underly P2P connection
 type StreamImpl struct {
-	ctx        *nctx.NetCtx
+	ctx        *netBase.NetCtx
 	config     *config.NetConf
 	log        logger.Logger
-	dispatcher network.Dispatcher
+	dispatcher netBase.Dispatcher
 	stream     libnet.Stream
 	streamMu   *sync.Mutex
 	id         peer.ID
@@ -49,7 +49,7 @@ type StreamImpl struct {
 }
 
 // NewStream create Stream instance
-func NewStream(ctx *nctx.NetCtx, netStream libnet.Stream, dispatcher network.Dispatcher, host host.Host) (*StreamImpl, error) {
+func NewStream(ctx *netBase.NetCtx, netStream libnet.Stream, dispatcher netBase.Dispatcher, host host.Host) (*StreamImpl, error) {
 	w := bufio.NewWriter(netStream)
 	wc := NewDelimitedWriter(w)
 	maxMsgSize := int(ctx.P2PConf.MaxMessageSize) << 20

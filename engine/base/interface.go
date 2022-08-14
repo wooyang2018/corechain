@@ -10,7 +10,7 @@ import (
 	ptimer "github.com/wooyang2018/corechain/contract/proposal/timer"
 	cryptoBase "github.com/wooyang2018/corechain/crypto/client/base"
 	"github.com/wooyang2018/corechain/ledger"
-	"github.com/wooyang2018/corechain/network"
+	netBase "github.com/wooyang2018/corechain/network/base"
 	aclBase "github.com/wooyang2018/corechain/permission/base"
 	"github.com/wooyang2018/corechain/protos"
 	"github.com/wooyang2018/corechain/state"
@@ -39,7 +39,7 @@ type Engine interface {
 	BCEngine
 	ChainManager
 	Context() *EngineCtx
-	CreateNetwork(*xconf.EnvConf) (network.Network, error)
+	CreateNetwork(*xconf.EnvConf) (netBase.Network, error)
 }
 
 // 定义链对各组件依赖接口约束

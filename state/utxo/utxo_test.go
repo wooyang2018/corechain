@@ -8,7 +8,7 @@ import (
 
 	cryptoClient "github.com/wooyang2018/corechain/crypto/client"
 	"github.com/wooyang2018/corechain/ledger"
-	lctx "github.com/wooyang2018/corechain/ledger/context"
+	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
 	ltx "github.com/wooyang2018/corechain/ledger/tx"
 	"github.com/wooyang2018/corechain/logger"
 	mock "github.com/wooyang2018/corechain/mock/config"
@@ -70,7 +70,7 @@ func TestBasicFunc(t *testing.T) {
 	}
 	logger.InitMLog(econf.GenConfFilePath(econf.LogConf), econf.GenDirAbsPath(econf.LogDir))
 
-	ctx, err := lctx.NewLedgerCtx(econf, "corechain")
+	ctx, err := ledgerBase.NewLedgerCtx(econf, "corechain")
 	if err != nil {
 		t.Fatal(err)
 	}

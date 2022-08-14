@@ -9,7 +9,7 @@ import (
 	mock "github.com/wooyang2018/corechain/mock/config"
 	mockNet "github.com/wooyang2018/corechain/mock/testnet"
 	"github.com/wooyang2018/corechain/network"
-	nctx "github.com/wooyang2018/corechain/network/context"
+	netBase "github.com/wooyang2018/corechain/network/base"
 	"github.com/wooyang2018/corechain/protos"
 )
 
@@ -35,7 +35,7 @@ func startNode1(t *testing.T) {
 
 	t.Logf("root=%s, net=%s", ecfg.RootPath, ecfg.NetConf)
 
-	ctx, err := nctx.NewNetCtx(ecfg)
+	ctx, err := netBase.NewNetCtx(ecfg)
 	if err != nil {
 		t.Errorf("net ctx error: %v", err)
 		return
@@ -68,7 +68,7 @@ func startNode1(t *testing.T) {
 func startNode2(t *testing.T) {
 	ecfg, _ := mockNet.GetMockEnvConf("node2/conf/env.yaml")
 	ecfg.NetConf = NetConf
-	ctx, _ := nctx.NewNetCtx(ecfg)
+	ctx, _ := netBase.NewNetCtx(ecfg)
 	node := NewP2PServerV2()
 	if err := node.Init(ctx); err != nil {
 		t.Errorf("server init error: %v", err)
@@ -88,7 +88,7 @@ func startNode2(t *testing.T) {
 func startNode3(t *testing.T) {
 	ecfg, _ := mockNet.GetMockEnvConf("node3/conf/env.yaml")
 	ecfg.NetConf = NetConf
-	ctx, _ := nctx.NewNetCtx(ecfg)
+	ctx, _ := netBase.NewNetCtx(ecfg)
 	node := NewP2PServerV2()
 	if err := node.Init(ctx); err != nil {
 		t.Errorf("server init error: %v", err)

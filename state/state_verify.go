@@ -27,7 +27,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-// ImmediateVerifyTx verify ltx Immediately
+// ImmediateVerifyTx verify tx Immediately
 // Transaction verification workflow:
 //   1. verify transaction ID is the same with data hash
 //   2. verify all signatures of initiator and auth requires
@@ -47,14 +47,14 @@ func (t *State) ImmediateVerifyTx(tx *protos.Transaction, isRootTx bool) (bool, 
 		metrics.CallMethodHistogram.WithLabelValues(t.sctx.BCName, "ImmediateVerifyTx").Observe(time.Since(beginTime).Seconds())
 	}()
 
-	// Pre processing of ltx data
+	// Pre processing of tx data
 	if !isRootTx && tx.Version == RootTxVersion {
 		return false, ErrVersionInvalid
 	}
 	if tx.Version > BetaTxVersion || tx.Version < RootTxVersion {
 		return false, ErrVersionInvalid
 	}
-	// autogen ltx should not run ImmediateVerifyTx, this could be a fake ltx
+	// autogen tx should not run ImmediateVerifyTx, this could be a fake tx
 	if tx.Autogen {
 		return false, ErrInvalidAutogenTx
 	}
@@ -63,7 +63,7 @@ func (t *State) ImmediateVerifyTx(tx *protos.Transaction, isRootTx bool) (bool, 
 		return false, MaxTxSizePerBlockErr
 	}
 	if proto.Size(tx) > MaxTxSizePerBlock {
-		t.log.Warn("ltx too large, should not be greater than half of max blocksize", "size", proto.Size(tx))
+		t.log.Warn("tx too large, should not be greater than half of max blocksize", "size", proto.Size(tx))
 		return false, ErrTxTooLarge
 	}
 
@@ -76,7 +76,7 @@ func (t *State) ImmediateVerifyTx(tx *protos.Transaction, isRootTx bool) (bool, 
 			return false, err
 		}
 		if bytes.Compare(tx.Txid, txid) != 0 {
-			t.log.Warn("ImmediateVerifyTx: txid not match", "ltx.Txid", tx.Txid, "txid", txid)
+			t.log.Warn("ImmediateVerifyTx: txid not match", "tx.Txid", tx.Txid, "txid", txid)
 			return false, fmt.Errorf("Txid verify failed")
 		}
 
@@ -97,7 +97,7 @@ func (t *State) ImmediateVerifyTx(tx *protos.Transaction, isRootTx bool) (bool, 
 		// get all authenticated users
 		authUsers := t.removeDuplicateUser(tx.GetInitiator(), tx.GetAuthRequire())
 
-		// veify ltx UTXO input permission (Account ACL)
+		// veify tx UTXO input permission (Account ACL)
 		ok, err = t.verifyUTXOPermission(tx, verifiedID)
 		if !ok {
 			t.log.Warn("ImmediateVerifyTx: verifyUTXOPermission failed", "error", err)
@@ -146,7 +146,7 @@ func (t *State) ImmediateVerifyTx(tx *protos.Transaction, isRootTx bool) (bool, 
 	return true, nil
 }
 
-// ImmediateVerifyTx verify auto ltx Immediately
+// ImmediateVerifyAutoTx verify auto tx Immediately
 // Transaction verification workflow:
 //   1. verify transaction ID is the same with data hash
 //   2. run contract requests and verify if the RWSet result is the same with preExed RWSet (heavy
@@ -158,11 +158,8 @@ func (t *State) ImmediateVerifyAutoTx(blockHeight int64, tx *protos.Transaction,
 		t.log.Warn("get timer tasks failed", "err", genErr)
 		return false, genErr
 	}
-	//if len(autoTx.TxOutputsExt) == 0 {
-	//	return false, fmt.Errorf("get timer tasks failed, no ltx outputs ext")
-	//}
 
-	// Pre processing of ltx data
+	// Pre processing of tx data
 	if !isRootTx && tx.Version == RootTxVersion {
 		return false, ErrVersionInvalid
 	}
@@ -174,7 +171,7 @@ func (t *State) ImmediateVerifyAutoTx(blockHeight int64, tx *protos.Transaction,
 		return false, MaxTxSizePerBlockErr
 	}
 	if proto.Size(tx) > MaxTxSizePerBlock {
-		t.log.Warn("ltx too large, should not be greater than half of max blocksize", "size", proto.Size(tx))
+		t.log.Warn("tx too large, should not be greater than half of max blocksize", "size", proto.Size(tx))
 		return false, ErrTxTooLarge
 	}
 
@@ -187,7 +184,7 @@ func (t *State) ImmediateVerifyAutoTx(blockHeight int64, tx *protos.Transaction,
 			return false, err
 		}
 		if bytes.Compare(tx.Txid, txid) != 0 {
-			t.log.Warn("ImmediateVerifyTx: txid not match", "ltx.Txid", tx.Txid, "txid", txid)
+			t.log.Warn("ImmediateVerifyTx: txid not match", "tx.Txid", tx.Txid, "txid", txid)
 			return false, fmt.Errorf("Txid verify failed")
 		}
 
@@ -211,7 +208,7 @@ func (t *State) ImmediateVerifyAutoTx(blockHeight int64, tx *protos.Transaction,
 	return true, nil
 }
 
-// Note that if ltx.XuperSign is not nil, the signature verification use XuperSign process
+// Note that if tx.XuperSign is not nil, the signature verification use XuperSign process
 func (t *State) verifySignatures(tx *protos.Transaction, digestHash []byte) (bool, map[string]bool, error) {
 	// XuperSign is not empty, use XuperSign verify
 	if tx.GetXuperSign() != nil {
@@ -303,27 +300,27 @@ func (t *State) verifyXuperSign(tx *protos.Transaction, digestHash []byte) (bool
 
 	// check addresses and public keys
 	if len(addrList) != len(tx.GetXuperSign().GetPublicKeys()) {
-		return false, nil, errors.New("XuperSign: number of address and public key not match")
+		return false, nil, errors.New("CoreSign: number of address and public key not match")
 	}
 	pubkeys := make([]*ecdsa.PublicKey, 0)
 	for _, pubJSON := range tx.GetXuperSign().GetPublicKeys() {
 		pubkey, err := t.sctx.Crypt.GetEcdsaPublicKeyFromJsonStr(string(pubJSON))
 		if err != nil {
-			return false, nil, errors.New("XuperSign: found invalid public key")
+			return false, nil, errors.New("CoreSign: found invalid public key")
 		}
 		pubkeys = append(pubkeys, pubkey)
 	}
 	for idx, addr := range addrList {
 		ok, _ := t.sctx.Crypt.VerifyAddressUsingPublicKey(addr, pubkeys[idx])
 		if !ok {
-			t.log.Warn("XuperSign: address and public key not match", "addr", addr, "pubkey", pubkeys[idx])
-			return false, nil, errors.New("XuperSign: address and public key not match")
+			t.log.Warn("CoreSign: address and public key not match", "addr", addr, "pubkey", pubkeys[idx])
+			return false, nil, errors.New("CoreSign: address and public key not match")
 		}
 	}
 	ok, err := t.sctx.Crypt.VerifyXuperSignature(pubkeys, tx.GetXuperSign().GetSignature(), digestHash)
 	if err != nil || !ok {
-		t.log.Warn("XuperSign: signature verify failed", "error", err)
-		return false, nil, errors.New("XuperSign: address and public key not match")
+		t.log.Warn("CoreSign: signature verify failed", "error", err)
+		return false, nil, errors.New("CoreSign: address and public key not match")
 	}
 	return true, uniqueAddrs, nil
 }
@@ -333,7 +330,7 @@ func (t *State) verifyXuperSign(tx *protos.Transaction, digestHash []byte) (bool
 //	2). Account ACL for transferring from account
 //	3). Contract logic transferring from contract
 func (t *State) verifyUTXOPermission(tx *protos.Transaction, verifiedID map[string]bool) (bool, error) {
-	// verify ltx input
+	// verify tx input
 	conUtxoInputs, err := model.ParseContractUtxoInputs(tx)
 	if err != nil {
 		t.log.Warn("verifyUTXOPermission error, parseContractUtxo ")
@@ -430,7 +427,7 @@ func (t *State) verifyRWSetPermission(tx *protos.Transaction, verifiedID map[str
 		key := ele.GetKey()
 		switch bucket {
 		case base.GetAccountBucket():
-			// modified account data, need to check if the ltx has the permission of account
+			// modified account data, need to check if the tx has the permission of account
 			accountName := string(key)
 			if verifiedID[accountName] {
 				continue
@@ -443,7 +440,7 @@ func (t *State) verifyRWSetPermission(tx *protos.Transaction, verifiedID map[str
 			}
 			verifiedID[accountName] = true
 		case base.GetContractBucket():
-			// modified contact data, need to check if the ltx has the permission of contract owner
+			// modified contact data, need to check if the tx has the permission of contract owner
 			separator := base.GetACLSeparator()
 			idx := bytes.Index(key, []byte(separator))
 			if idx < 0 {
@@ -458,7 +455,7 @@ func (t *State) verifyRWSetPermission(tx *protos.Transaction, verifiedID map[str
 			}
 		case base.GetContract2AccountBucket():
 			// modified contract/account mapping
-			// need to check if the ltx has the permission of target account
+			// need to check if the tx has the permission of target account
 			accountValue := ele.GetValue()
 			if accountValue == nil {
 				return false, errors.New("account name is empty")
@@ -537,7 +534,7 @@ func (t *State) verifyContractTxAmount(tx *protos.Transaction) (bool, error) {
 	return true, nil
 }
 
-// verifyTxRWSets verify ltx read sets and write sets
+// verifyTxRWSets verify tx read sets and write sets
 func (t *State) verifyTxRWSets(tx *protos.Transaction) (bool, error) {
 	if t.VerifyReservedWhitelist(tx) {
 		t.log.Info("verifyReservedWhitelist true", "txid", fmt.Sprintf("%x", tx.GetTxid()))
@@ -604,7 +601,7 @@ func (t *State) verifyTxRWSets(tx *protos.Transaction) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	t.log.Debug("get gas limit from ltx", "gasLimit", gasLimit, "txid", hex.EncodeToString(tx.Txid))
+	t.log.Debug("get gas limit from tx", "gasLimit", gasLimit, "txid", hex.EncodeToString(tx.Txid))
 
 	// get gas rate to utxo
 	gasPrice := t.meta.UtxoMeta.GetGasPrice()
@@ -672,7 +669,7 @@ func (t *State) verifyTxRWSets(tx *protos.Transaction) (bool, error) {
 	return true, nil
 }
 
-// verifyAutoTxRWSets verify auto ltx read sets and write sets
+// verifyAutoTxRWSets verify auto tx read sets and write sets
 func (t *State) verifyAutoTxRWSets(tx, autoTx *protos.Transaction) (bool, error) {
 	txRsets := tx.GetTxInputsExt()
 	autoRsets := autoTx.GetTxInputsExt()
@@ -680,8 +677,8 @@ func (t *State) verifyAutoTxRWSets(tx, autoTx *protos.Transaction) (bool, error)
 	txWsets := tx.GetTxOutputsExt()
 	autoWsets := autoTx.GetTxOutputsExt()
 
-	t.log.Debug("verifyAutoTxRWSets", "ltx", txRsets, "auto", autoRsets)
-	t.log.Debug("verifyAutoTxRWSets", "ltx", txWsets, "auto", autoWsets)
+	t.log.Debug("verifyAutoTxRWSets", "tx", txRsets, "auto", autoRsets)
+	t.log.Debug("verifyAutoTxRWSets", "tx", txWsets, "auto", autoWsets)
 	// 判断读写集是否相同相等
 	txRsetsBytes, err := json.Marshal(txRsets)
 	if err != nil {
@@ -905,12 +902,12 @@ func (t *State) verifyBlockTxs(block *protos.InternalBlock, isRootTx bool, uncon
 func (t *State) verifyDAGTxs(blockHeight int64, txs []*protos.Transaction, isRootTx bool, unconfirmToConfirm map[string]bool) error {
 	for _, tx := range txs {
 		if tx == nil {
-			return errors.New("verifyTx error, ltx is nil")
+			return errors.New("verifyTx error, tx is nil")
 		}
 		txid := string(tx.GetTxid())
 		if unconfirmToConfirm[txid] == false {
 			if t.verifyAutogenTxValid(tx) {
-				// 校验auto ltx
+				// 校验auto tx
 				if ok, err := t.ImmediateVerifyAutoTx(blockHeight, tx, isRootTx); !ok {
 					t.log.Warn("dotx failed to ImmediateVerifyAutoTx", "txid", fmt.Sprintf("%x", tx.Txid), "err", err)
 					return errors.New("dotx failed to ImmediateVerifyAutoTx error")
@@ -923,9 +920,9 @@ func (t *State) verifyDAGTxs(blockHeight int64, txs []*protos.Transaction, isRoo
 					ok, isRelyOnMarkedTx, err := t.verifyMarked(tx)
 					if isRelyOnMarkedTx {
 						if !ok || err != nil {
-							t.log.Warn("ltx verification failed because it is blocked ltx", "err", err)
+							t.log.Warn("tx verification failed because it is blocked tx", "err", err)
 						} else {
-							t.log.Debug("blocked ltx verification succeed")
+							t.log.Debug("blocked tx verification succeed")
 						}
 						return err
 					}
@@ -938,14 +935,14 @@ func (t *State) verifyDAGTxs(blockHeight int64, txs []*protos.Transaction, isRoo
 	return nil
 }
 
-// verifyAutogenTxValid verify if a autogen ltx is valid, return true if ltx is valid.
+// verifyAutogenTxValid verify if a autogen tx is valid, return true if tx is valid.
 func (t *State) verifyAutogenTxValid(tx *protos.Transaction) bool {
 	if !tx.Autogen {
 		return false
 	}
 
 	if len(tx.TxInputsExt) == 0 && len(tx.TxOutputsExt) == 0 {
-		// autogen ltx must have  ltx inputs/outputs extend
+		// autogen tx must have  tx inputs/outputs extend
 		return false
 	}
 
@@ -955,7 +952,7 @@ func (t *State) verifyAutogenTxValid(tx *protos.Transaction) bool {
 func (t *State) GenRWSetFromTx(tx *protos.Transaction) ([]*ledger.VersionedData, []*ledger.PureData, error) {
 	inputs := []*ledger.VersionedData{}
 	outputs := []*ledger.PureData{}
-	t.log.Debug("GenRWSetFromTx", "ltx.TxInputsExt", tx.TxInputsExt, "ltx.TxOutputsExt", tx.TxOutputsExt)
+	t.log.Debug("GenRWSetFromTx", "tx.TxInputsExt", tx.TxInputsExt, "tx.TxOutputsExt", tx.TxOutputsExt)
 	for _, txIn := range tx.TxInputsExt {
 		var verData *ledger.VersionedData
 		var err error

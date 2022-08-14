@@ -6,7 +6,7 @@ import (
 
 	"github.com/libp2p/go-libp2p-core/peer"
 	"github.com/wooyang2018/corechain/logger"
-	nctx "github.com/wooyang2018/corechain/network/context"
+	netBase "github.com/wooyang2018/corechain/network/base"
 )
 
 // StreamLimit limit the peerID amount of same ip
@@ -26,7 +26,7 @@ type StreamLimit struct {
 }
 
 // Init initialize the StreamLimit
-func (sl *StreamLimit) Init(ctx *nctx.NetCtx) {
+func (sl *StreamLimit) Init(ctx *netBase.NetCtx) {
 	limit := ctx.P2PConf.StreamIPLimitSize
 
 	sl.streams = &sync.Map{}

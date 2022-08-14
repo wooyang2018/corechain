@@ -17,6 +17,7 @@ import (
 	"github.com/wooyang2018/corechain/engine/base"
 	"github.com/wooyang2018/corechain/ledger"
 	"github.com/wooyang2018/corechain/network"
+	netBase "github.com/wooyang2018/corechain/network/base"
 	"github.com/wooyang2018/corechain/protos"
 	"github.com/wooyang2018/corechain/state"
 	"github.com/wooyang2018/corechain/state/txhash"
@@ -86,7 +87,7 @@ func (t *Miner) getMaxBlockHeight(ctx xctx.Context) (string, int64, []byte, erro
 	}
 	msg := network.NewMessage(protos.CoreMessage_GET_BLOCKCHAINSTATUS, nil, opt...)
 	ctx.GetLog().Debug("getMaxBlockHeight", "validators", validators)
-	responses, err := t.ctx.EngCtx.Net.SendMessageWithResponse(t.ctx, msg, network.WithAccounts(validators))
+	responses, err := t.ctx.EngCtx.Net.SendMessageWithResponse(t.ctx, msg, netBase.WithAccounts(validators))
 	if err != nil {
 		ctx.GetLog().Warn("get block chain status error", "err", err)
 		return "", 0, nil, err
@@ -264,21 +265,21 @@ func (t *Miner) getBlocksByHeight(ctx xctx.Context, height int64, size int) ([]*
 	}
 
 	trace := traceSync()
-	opts := []network.OptionFunc{
+	opts := []netBase.OptionFunc{
 		// network.WithPercent(0.1),
 	}
 	if ctx.Value(peersKey) != nil {
 		ctx.GetLog().Debug("sync with peer address", "address", ctx.Value(peersKey))
-		opts = append(opts, network.WithPeerIDs(ctx.Value(peersKey).([]string)))
+		opts = append(opts, netBase.WithPeerIDs(ctx.Value(peersKey).([]string)))
 	} else {
 		switch t.ctx.EngCtx.EngCfg.SyncBlockFilterMode {
 		case base.SyncWithNearestBucket:
-			opts = append(opts, network.WithFilter([]network.FilterStrategy{network.NearestBucketStrategy}))
+			opts = append(opts, netBase.WithFilter([]netBase.FilterStrategy{netBase.NearestBucketStrategy}))
 		case base.SyncWithFactorBucket:
-			opts = append(opts, network.WithFilter([]network.FilterStrategy{network.BucketsWithFactorStrategy}),
-				network.WithFactor(t.ctx.EngCtx.EngCfg.SyncFactorForFactorBucketMode))
+			opts = append(opts, netBase.WithFilter([]netBase.FilterStrategy{netBase.BucketsWithFactorStrategy}),
+				netBase.WithFactor(t.ctx.EngCtx.EngCfg.SyncFactorForFactorBucketMode))
 		default:
-			opts = append(opts, network.WithFilter([]network.FilterStrategy{network.NearestBucketStrategy}))
+			opts = append(opts, netBase.WithFilter([]netBase.FilterStrategy{netBase.NearestBucketStrategy}))
 		}
 	}
 	msg := network.NewMessage(protos.CoreMessage_GET_BLOCK_HEADERS, input, network.WithBCName(t.ctx.BCName))
@@ -360,14 +361,14 @@ func (t *Miner) downloadMissingTxs(ctx xctx.Context, blockid []byte, txidx []int
 		Txs:     txidx,
 	}
 
-	opts := []network.OptionFunc{
+	opts := []netBase.OptionFunc{
 		// network.WithPercent(0.1),
 	}
 	if ctx.Value(peersKey) != nil {
 		ctx.GetLog().Info("sync with peer address", "address", ctx.Value(peersKey))
-		opts = append(opts, network.WithPeerIDs(ctx.Value(peersKey).([]string)))
+		opts = append(opts, netBase.WithPeerIDs(ctx.Value(peersKey).([]string)))
 	} else {
-		opts = append(opts, network.WithFilter([]network.FilterStrategy{network.NearestBucketStrategy}))
+		opts = append(opts, netBase.WithFilter([]netBase.FilterStrategy{netBase.NearestBucketStrategy}))
 	}
 
 	msg := network.NewMessage(protos.CoreMessage_GET_BLOCK_TXS, input, network.WithBCName(t.ctx.BCName))
@@ -565,14 +566,14 @@ func (t *Miner) findForkPoint(ctx xctx.Context) (*protos.InternalBlock, error) {
 	currentHeight := t.ctx.Ledger.GetMeta().TrunkHeight
 	ledger := t.ctx.Ledger
 
-	opts := []network.OptionFunc{
+	opts := []netBase.OptionFunc{
 		// network.WithPercent(0.1),
 	}
 	if ctx.Value(peersKey) != nil {
 		ctx.GetLog().Info("sync with peer address", "address", ctx.Value(peersKey))
-		opts = append(opts, network.WithPeerIDs(ctx.Value(peersKey).([]string)))
+		opts = append(opts, netBase.WithPeerIDs(ctx.Value(peersKey).([]string)))
 	} else {
-		opts = append(opts, network.WithFilter([]network.FilterStrategy{network.NearestBucketStrategy}))
+		opts = append(opts, netBase.WithFilter([]netBase.FilterStrategy{netBase.NearestBucketStrategy}))
 	}
 
 	height := currentHeight

@@ -9,8 +9,7 @@ import (
 
 	"github.com/wooyang2018/corechain/crypto/client"
 	"github.com/wooyang2018/corechain/ledger"
-	lctx "github.com/wooyang2018/corechain/ledger/context"
-	"github.com/wooyang2018/corechain/ledger/def"
+	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
 	"github.com/wooyang2018/corechain/logger"
 	mock "github.com/wooyang2018/corechain/mock/config"
 	"github.com/wooyang2018/corechain/protos"
@@ -36,7 +35,7 @@ func TestSnapshotGet(t *testing.T) {
 	}
 	logger.InitMLog(econf.GenConfFilePath(econf.LogConf), econf.GenDirAbsPath(econf.LogDir))
 
-	lctx, err := lctx.NewLedgerCtx(econf, "corechain")
+	lctx, err := ledgerBase.NewLedgerCtx(econf, "corechain")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -75,7 +74,7 @@ func TestSnapshotGet(t *testing.T) {
 
 	storePath := sctx.EnvCfg.GenDataAbsPath(sctx.EnvCfg.ChainDir)
 	storePath = filepath.Join(storePath, sctx.BCName)
-	stateDBPath := filepath.Join(storePath, def.StateStrgDirName)
+	stateDBPath := filepath.Join(storePath, ledgerBase.StateStrgDirName)
 	kvParam := &leveldb.KVParameter{
 		DBPath:                stateDBPath,
 		KVEngineType:          sctx.LedgerCfg.KVEngineType,

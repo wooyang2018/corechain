@@ -13,7 +13,7 @@ import (
 	cryptoBase "github.com/wooyang2018/corechain/crypto/client/base"
 	econf "github.com/wooyang2018/corechain/engine/config"
 	"github.com/wooyang2018/corechain/ledger"
-	"github.com/wooyang2018/corechain/network"
+	netBase "github.com/wooyang2018/corechain/network/base"
 	aclBase "github.com/wooyang2018/corechain/permission/base"
 	"github.com/wooyang2018/corechain/state"
 )
@@ -27,7 +27,7 @@ type EngineCtx struct {
 	// 引擎配置
 	EngCfg *econf.EngineConf
 	// 网络组件句柄
-	Net network.Network
+	Net netBase.Network
 	// 链管理上下文
 	ChainM ChainManager
 }

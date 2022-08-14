@@ -21,7 +21,7 @@ import (
 	"github.com/wooyang2018/corechain/common/utils"
 	cryptoBase "github.com/wooyang2018/corechain/crypto/client/base"
 	"github.com/wooyang2018/corechain/ledger"
-	"github.com/wooyang2018/corechain/ledger/def"
+	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/permission/base"
 	"github.com/wooyang2018/corechain/protos"
@@ -106,7 +106,7 @@ func GenUtxoKey(addr []byte, txid []byte, offset int32) string {
 // GenUtxoKeyWithPrefix generate UTXO key with given prefix
 func GenUtxoKeyWithPrefix(addr []byte, txid []byte, offset int32) string {
 	baseUtxoKey := GenUtxoKey(addr, txid, offset)
-	return def.UTXOTablePrefix + baseUtxoKey
+	return ledgerBase.UTXOTablePrefix + baseUtxoKey
 }
 
 // CleanBatchCache clean batch cache when new batch.
@@ -157,7 +157,7 @@ func (uv *UtxoVM) CheckInputEqualOutput(tx *protos.Transaction, batch storage.Ba
 		var frozenHeight int64
 		uv.UtxoCache.Lock()
 		if l2Cache, exist := uv.UtxoCache.All[string(addr)]; exist {
-			uItem := l2Cache[def.UTXOTablePrefix+utxoKey]
+			uItem := l2Cache[ledgerBase.UTXOTablePrefix+utxoKey]
 			if uItem != nil {
 				amountBytes = uItem.Amount.Bytes()
 				frozenHeight = uItem.FrozenHeight
@@ -180,7 +180,7 @@ func (uv *UtxoVM) CheckInputEqualOutput(tx *protos.Transaction, batch storage.Ba
 		if amountBytes == nil {
 			uBinary, findErr := uv.utxoTable.Get([]byte(utxoKey))
 			if findErr != nil {
-				if def.NormalizeKVError(findErr) == def.ErrKVNotFound {
+				if ledgerBase.NormalizeKVError(findErr) == ledgerBase.ErrKVNotFound {
 					uv.log.Error("not found utxo key:", "utxoKey", utxoKey)
 					return ErrUTXONotFound
 				}
@@ -301,7 +301,7 @@ func MakeUtxo(sctx *stateBase.StateCtx, metaHandle *meta.Meta, cachesize, tmploc
 		lockExpireTime:    tmplockSeconds,
 		log:               sctx.XLog,
 		ledger:            sctx.Ledger,
-		utxoTable:         storage.NewTable(stateDB, def.UTXOTablePrefix),
+		utxoTable:         storage.NewTable(stateDB, ledgerBase.UTXOTablePrefix),
 		UtxoCache:         NewUtxoCache(cachesize),
 		OfflineTxChan:     make(chan []*protos.Transaction, OfflineTxChanBuffer),
 		PrevFoundKeyCache: cache.NewLRUCache(cachesize),
@@ -319,7 +319,7 @@ func MakeUtxo(sctx *stateBase.StateCtx, metaHandle *meta.Meta, cachesize, tmploc
 		total.SetBytes(utxoTotalBytes)
 		utxoVM.utxoTotal = total
 	} else {
-		if def.NormalizeKVError(findTotalErr) != def.ErrKVNotFound {
+		if ledgerBase.NormalizeKVError(findTotalErr) != ledgerBase.ErrKVNotFound {
 			return nil, findTotalErr
 		}
 		utxoVM.utxoTotal = big.NewInt(0)
@@ -333,7 +333,7 @@ func (uv *UtxoVM) UpdateUtxoTotal(delta *big.Int, batch storage.Batch, inc bool)
 	} else {
 		uv.utxoTotal = uv.utxoTotal.Sub(uv.utxoTotal, delta)
 	}
-	batch.Put(append([]byte(def.MetaTablePrefix), []byte(UTXOTotalKey)...), uv.utxoTotal.Bytes())
+	batch.Put(append([]byte(ledgerBase.MetaTablePrefix), []byte(UTXOTotalKey)...), uv.utxoTotal.Bytes())
 }
 
 // parseUtxoKeys extract (txid, offset) from key of utxo item
@@ -422,7 +422,7 @@ func (uv *UtxoVM) SelectUtxos(fromAddr string, totalNeed *big.Int, needLock, exc
 	uv.UtxoCache.Unlock()
 	if !foundEnough {
 		// 底层key: table_prefix from_addr "_" txid "_" offset
-		addrPrefix := def.UTXOTablePrefix + fromAddr + "_"
+		addrPrefix := ledgerBase.UTXOTablePrefix + fromAddr + "_"
 		var middleKey []byte
 		preFoundUtxoKey, mdOK := uv.PrevFoundKeyCache.Get(fromAddr)
 		if mdOK {
@@ -530,7 +530,7 @@ func (uv *UtxoVM) GetBalance(addr string) (*big.Int, error) {
 		uv.mutexBalance.Unlock()
 		return balanceCopy, nil
 	}
-	addrPrefix := fmt.Sprintf("%s%s_", def.UTXOTablePrefix, addr)
+	addrPrefix := fmt.Sprintf("%s%s_", ledgerBase.UTXOTablePrefix, addr)
 	utxoTotal := big.NewInt(0)
 	uv.mutexBalance.Lock()
 	myBalanceView := uv.BalanceViewDirty[addr]
@@ -605,7 +605,7 @@ func (uv *UtxoVM) GetAccountContracts(account string) ([]string, error) {
 		uv.log.Warn("GetAccountContracts valid account name error", "error", "account name is not valid")
 		return nil, errors.New("account name is not valid")
 	}
-	prefKey := def.ExtUtxoTablePrefix + string(model.MakeRawKey(base.GetAccount2ContractBucket(), []byte(account+base.GetACLSeparator())))
+	prefKey := ledgerBase.ExtUtxoTablePrefix + string(model.MakeRawKey(base.GetAccount2ContractBucket(), []byte(account+base.GetACLSeparator())))
 	it := uv.ldb.NewIteratorWithPrefix([]byte(prefKey))
 	defer it.Release()
 	for it.Next() {
@@ -626,7 +626,7 @@ func (uv *UtxoVM) GetAccountContracts(account string) ([]string, error) {
 func (uv *UtxoVM) QueryUtxoRecord(accountName string, displayCount int64) (*protos.UtxoRecordDetail, error) {
 	utxoRecordDetail := &protos.UtxoRecordDetail{}
 
-	addrPrefix := fmt.Sprintf("%s%s_", def.UTXOTablePrefix, accountName)
+	addrPrefix := fmt.Sprintf("%s%s_", ledgerBase.UTXOTablePrefix, accountName)
 	it := uv.ldb.NewIteratorWithPrefix([]byte(addrPrefix))
 	defer it.Release()
 
@@ -701,7 +701,7 @@ func (uv *UtxoVM) QueryAccountContainAK(address string) ([]string, error) {
 	if base.IsAccount(address) != 0 {
 		return accounts, errors.New("address is not valid")
 	}
-	prefixKey := def.ExtUtxoTablePrefix + base.GetAK2AccountBucket() + "/" + address
+	prefixKey := ledgerBase.ExtUtxoTablePrefix + base.GetAK2AccountBucket() + "/" + address
 	it := uv.ldb.NewIteratorWithPrefix([]byte(prefixKey))
 	defer it.Release()
 	for it.Next() {
@@ -743,7 +743,7 @@ func (uv *UtxoVM) SelectUtxosBySize(fromAddr string, needLock, excludeUnconfirme
 	// same as the logic of SelectUTXO
 	uv.clearExpiredLocks()
 
-	addrPrefix := fmt.Sprintf("%s%s_", def.UTXOTablePrefix, fromAddr)
+	addrPrefix := fmt.Sprintf("%s%s_", ledgerBase.UTXOTablePrefix, fromAddr)
 	it := uv.ldb.NewIteratorWithPrefix([]byte(addrPrefix))
 	defer it.Release()
 
@@ -775,7 +775,7 @@ func (uv *UtxoVM) SelectUtxosBySize(fromAddr string, needLock, excludeUnconfirme
 			continue
 		}
 
-		realKey := bytes.Split(key[len(def.UTXOTablePrefix):], []byte("_"))
+		realKey := bytes.Split(key[len(ledgerBase.UTXOTablePrefix):], []byte("_"))
 		refTxid, _ := hex.DecodeString(string(realKey[1]))
 
 		if excludeUnconfirmed { //必须依赖已经上链的tx的UTXO
@@ -824,7 +824,7 @@ func (uv *UtxoVM) SelectUtxosBySize(fromAddr string, needLock, excludeUnconfirme
 // queryContractStatData query stat data about contract, such as total contract and total account
 func (uv *UtxoVM) queryContractStatData(bucket string) (int64, error) {
 	dataCount := int64(0)
-	prefixKey := def.ExtUtxoTablePrefix + bucket + "/"
+	prefixKey := ledgerBase.ExtUtxoTablePrefix + bucket + "/"
 	it := uv.ldb.NewIteratorWithPrefix([]byte(prefixKey))
 	defer it.Release()
 

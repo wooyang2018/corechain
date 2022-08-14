@@ -15,12 +15,12 @@ import (
 	cryptoBase "github.com/wooyang2018/corechain/crypto/client/base"
 	engineBase "github.com/wooyang2018/corechain/engine/base"
 	"github.com/wooyang2018/corechain/ledger"
-	lctx "github.com/wooyang2018/corechain/ledger/context"
+	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/permission"
 	"github.com/wooyang2018/corechain/permission/base"
 	"github.com/wooyang2018/corechain/state"
-	sctx "github.com/wooyang2018/corechain/state/base"
+	stateBase "github.com/wooyang2018/corechain/state/base"
 )
 
 // 区块链依赖代理
@@ -34,7 +34,7 @@ func NewChainRelyAgent(chainCtx *engineBase.ChainCtx) *ChainRelyAgentImpl {
 
 // 创建账本
 func (t *ChainRelyAgentImpl) CreateLedger() (*ledger.Ledger, error) {
-	legCtx, err := lctx.NewLedgerCtx(t.ctx.EngCtx.EnvCfg, t.ctx.BCName)
+	legCtx, err := ledgerBase.NewLedgerCtx(t.ctx.EngCtx.EnvCfg, t.ctx.BCName)
 	if err != nil {
 		return nil, fmt.Errorf("new ledger ctx failed.err:%v", err)
 	}
@@ -51,7 +51,7 @@ func (t *ChainRelyAgentImpl) CreateLedger() (*ledger.Ledger, error) {
 func (t *ChainRelyAgentImpl) CreateState(leg *ledger.Ledger,
 	crypt cryptoBase.CryptoClient) (*state.State, error) {
 	// 创建状态机上下文
-	stateCtx, err := sctx.NewStateCtx(t.ctx.EngCtx.EnvCfg, t.ctx.BCName, leg, crypt)
+	stateCtx, err := stateBase.NewStateCtx(t.ctx.EngCtx.EnvCfg, t.ctx.BCName, leg, crypt)
 	if err != nil {
 		return nil, fmt.Errorf("new state ctx failed.err:%v", err)
 	}

@@ -18,14 +18,14 @@ import (
 	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/crypto/client"
 	"github.com/wooyang2018/corechain/ledger"
-	lctx "github.com/wooyang2018/corechain/ledger/context"
+	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
 	ltx "github.com/wooyang2018/corechain/ledger/tx"
 	"github.com/wooyang2018/corechain/logger"
 	mock "github.com/wooyang2018/corechain/mock/config"
 	"github.com/wooyang2018/corechain/permission"
 	"github.com/wooyang2018/corechain/permission/base"
 	"github.com/wooyang2018/corechain/protos"
-	sctx "github.com/wooyang2018/corechain/state/base"
+	stateBase "github.com/wooyang2018/corechain/state/base"
 	"github.com/wooyang2018/corechain/state/txhash"
 	"github.com/wooyang2018/corechain/state/utxo"
 
@@ -214,7 +214,7 @@ func TestStateWorkWithLedger(t *testing.T) {
 	}
 	logger.InitMLog(econf.GenConfFilePath(econf.LogConf), econf.GenDirAbsPath(econf.LogDir))
 
-	ctx, err := lctx.NewLedgerCtx(econf, "corechain")
+	ctx, err := ledgerBase.NewLedgerCtx(econf, "corechain")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -263,7 +263,7 @@ func TestStateWorkWithLedger(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	stateCtx, err := sctx.NewStateCtx(econf, "corechain", mledger, crypt)
+	stateCtx, err := stateBase.NewStateCtx(econf, "corechain", mledger, crypt)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -455,7 +455,7 @@ func TestFrozenHeight(t *testing.T) {
 	}
 	logger.InitMLog(econf.GenConfFilePath(econf.LogConf), econf.GenDirAbsPath(econf.LogDir))
 
-	ctx, err := lctx.NewLedgerCtx(econf, "corechain")
+	ctx, err := ledgerBase.NewLedgerCtx(econf, "corechain")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -502,7 +502,7 @@ func TestFrozenHeight(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	sctx, err := sctx.NewStateCtx(econf, "corechain", ledger, crypt)
+	sctx, err := stateBase.NewStateCtx(econf, "corechain", ledger, crypt)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -571,7 +571,7 @@ func TestGetSnapShotWithBlock(t *testing.T) {
 	}
 	logger.InitMLog(econf.GenConfFilePath(econf.LogConf), econf.GenDirAbsPath(econf.LogDir))
 
-	ctx, err := lctx.NewLedgerCtx(econf, "corechain")
+	ctx, err := ledgerBase.NewLedgerCtx(econf, "corechain")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -617,7 +617,7 @@ func TestGetSnapShotWithBlock(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	sctx, err := sctx.NewStateCtx(econf, "corechain", ledger, crypt)
+	sctx, err := stateBase.NewStateCtx(econf, "corechain", ledger, crypt)
 	if err != nil {
 		t.Fatal(err)
 	}

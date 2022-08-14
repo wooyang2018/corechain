@@ -24,8 +24,8 @@ import (
 	"github.com/wooyang2018/corechain/common/timer"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/network"
+	netBase "github.com/wooyang2018/corechain/network/base"
 	"github.com/wooyang2018/corechain/network/config"
-	nctx "github.com/wooyang2018/corechain/network/context"
 	"github.com/wooyang2018/corechain/protos"
 	"google.golang.org/protobuf/proto"
 )
@@ -55,7 +55,7 @@ var (
 
 // P2PServerV2 is the node in the libnet
 type P2PServerV2 struct {
-	ctx    *nctx.NetCtx
+	ctx    *netBase.NetCtx
 	log    logger.Logger
 	config *config.NetConf
 
@@ -63,7 +63,7 @@ type P2PServerV2 struct {
 	host       host.Host
 	kdht       *dht.IpfsDHT
 	streamPool *StreamPool
-	dispatcher network.Dispatcher
+	dispatcher netBase.Dispatcher
 
 	cancel      context.CancelFunc
 	staticNodes map[string][]peer.ID
@@ -74,15 +74,15 @@ type P2PServerV2 struct {
 	accounts *cache.Cache
 }
 
-var _ network.Network = &P2PServerV2{}
+var _ netBase.Network = &P2PServerV2{}
 
 // NewP2PServerV2 create P2PServerV2 instance
-func NewP2PServerV2() network.Network {
+func NewP2PServerV2() netBase.Network {
 	return &P2PServerV2{}
 }
 
 // Init initialize p2p server using given config
-func (p *P2PServerV2) Init(ctx *nctx.NetCtx) error {
+func (p *P2PServerV2) Init(ctx *netBase.NetCtx) error {
 	p.ctx = ctx
 	p.log = ctx.GetLog()
 	p.config = ctx.P2PConf
@@ -104,14 +104,14 @@ func (p *P2PServerV2) Init(ctx *nctx.NetCtx) error {
 	p.id = ho.ID()
 	p.host = ho
 	p.log.Debug("Host", "address", p.getMultiAddr(p.host.ID(), p.host.Addrs()), "config", *cfg)
-	prefix := fmt.Sprintf("/%s", network.Namespace)
+	prefix := fmt.Sprintf("/%s", netBase.Namespace)
 	// dht
 	dhtOpts := []dht.Option{
 		dht.Mode(dht.ModeServer),
 		dht.RoutingTableRefreshPeriod(10 * time.Second),
 		dht.ProtocolPrefix(protocol.ID(prefix)),
-		dht.NamespacedValidator(network.Namespace, &record.NamespacedValidator{
-			network.Namespace: blankValidator{},
+		dht.NamespacedValidator(netBase.Namespace, &record.NamespacedValidator{
+			netBase.Namespace: blankValidator{},
 		}),
 	}
 	if p.kdht, err = dht.New(ctx, ho, dhtOpts...); err != nil {
@@ -143,7 +143,7 @@ func (p *P2PServerV2) Init(ctx *nctx.NetCtx) error {
 	setStaticNodes(ctx, p)
 
 	// set broadcast peers limitation
-	network.MaxBroadCast = cfg.MaxBroadcastPeers
+	netBase.MaxBroadCast = cfg.MaxBroadcastPeers
 
 	if err := p.connect(); err != nil {
 		p.log.Error("connect all boot and static peer error")
@@ -153,7 +153,7 @@ func (p *P2PServerV2) Init(ctx *nctx.NetCtx) error {
 	return nil
 }
 
-func genHostOption(ctx *nctx.NetCtx) ([]libp2p.Option, error) {
+func genHostOption(ctx *netBase.NetCtx) ([]libp2p.Option, error) {
 	cfg := ctx.P2PConf
 	muAddr, err := multiaddr.NewMultiaddr(cfg.Address)
 	if err != nil {
@@ -188,7 +188,7 @@ func genHostOption(ctx *nctx.NetCtx) ([]libp2p.Option, error) {
 	return opts, nil
 }
 
-func setStaticNodes(ctx *nctx.NetCtx, p *P2PServerV2) {
+func setStaticNodes(ctx *netBase.NetCtx, p *P2PServerV2) {
 	cfg := ctx.P2PConf
 	staticNodes := map[string][]peer.ID{}
 	for bcname, peers := range cfg.StaticNodes {
@@ -226,7 +226,7 @@ func (p *P2PServerV2) setKdhtValue() {
 // Start start the node
 func (p *P2PServerV2) Start() {
 	p.log.Debug("StartP2PServer", "address", p.host.Addrs())
-	p.host.SetStreamHandler(network.ProtocolVersion, p.streamHandler)
+	p.host.SetStreamHandler(netBase.ProtocolVersion, p.streamHandler)
 
 	p.setKdhtValue()
 
@@ -285,21 +285,21 @@ func (p *P2PServerV2) PeerID() string {
 	return p.id.Pretty()
 }
 
-func (p *P2PServerV2) NewSubscriber(typ protos.CoreMessage_MessageType, v interface{}, opts ...network.SubscriberOption) network.Subscriber {
+func (p *P2PServerV2) NewSubscriber(typ protos.CoreMessage_MessageType, v interface{}, opts ...netBase.SubscriberOption) netBase.Subscriber {
 	return network.NewSubscriber(p.ctx, typ, v, opts...)
 }
 
 // Register register message subscriber to handle messages
-func (p *P2PServerV2) Register(sub network.Subscriber) error {
+func (p *P2PServerV2) Register(sub netBase.Subscriber) error {
 	return p.dispatcher.Register(sub)
 }
 
 // UnRegister remove message subscriber
-func (p *P2PServerV2) UnRegister(sub network.Subscriber) error {
+func (p *P2PServerV2) UnRegister(sub netBase.Subscriber) error {
 	return p.dispatcher.UnRegister(sub)
 }
 
-func (p *P2PServerV2) HandleMessage(stream network.Stream, msg *protos.CoreMessage) error {
+func (p *P2PServerV2) HandleMessage(stream netBase.Stream, msg *protos.CoreMessage) error {
 	if p.dispatcher == nil {
 		p.log.Warn("dispatcher not ready, omit", "msg", msg)
 		return nil
@@ -327,7 +327,7 @@ func (p *P2PServerV2) HandleMessage(stream network.Stream, msg *protos.CoreMessa
 	return nil
 }
 
-func (p *P2PServerV2) Context() *nctx.NetCtx {
+func (p *P2PServerV2) Context() *netBase.NetCtx {
 	return p.ctx
 }
 
@@ -409,7 +409,7 @@ func (p *P2PServerV2) connectPeer(addrInfos []peer.AddrInfo) int {
 		return 0
 	}
 
-	retry := network.Retry
+	retry := netBase.Retry
 	success := 0
 	for retry > 0 {
 		for _, addrInfo := range addrInfos {
@@ -435,7 +435,7 @@ func (p *P2PServerV2) connectPeer(addrInfos []peer.AddrInfo) int {
 
 // SendMessage send message to peers using given filter strategy
 func (p *P2PServerV2) SendMessage(ctx xctx.Context, msg *protos.CoreMessage,
-	optFunc ...network.OptionFunc) error {
+	optFunc ...netBase.OptionFunc) error {
 	ctx = &xctx.BaseCtx{XLog: ctx.GetLog(), Timer: timer.NewXTimer()}
 	tm := time.Now()
 	defer func() {
@@ -454,7 +454,7 @@ func (p *P2PServerV2) SendMessage(ctx xctx.Context, msg *protos.CoreMessage,
 			"checksum", msg.GetHeader().GetDataCheckSum(), "timer", ctx.GetTimer().Print())
 	}()
 
-	opt := network.Apply(optFunc)
+	opt := netBase.Apply(optFunc)
 	filter := p.getFilter(msg, opt)
 	peers, _ := filter.Filter()
 	ctx.GetTimer().Mark("filter")
@@ -518,7 +518,7 @@ func (p *P2PServerV2) sendMessage(ctx xctx.Context, msg *protos.CoreMessage, pee
 // SendMessageWithResponse send message to peers using given filter strategy, expect response from peers
 // 客户端再使用该方法请求带返回的消息时，最好带上log_id, 否则会导致收消息时收到不匹配的消息而影响后续的处理
 func (p *P2PServerV2) SendMessageWithResponse(ctx xctx.Context, msg *protos.CoreMessage,
-	optFunc ...network.OptionFunc) ([]*protos.CoreMessage, error) {
+	optFunc ...netBase.OptionFunc) ([]*protos.CoreMessage, error) {
 	ctx = &xctx.BaseCtx{XLog: ctx.GetLog(), Timer: timer.NewXTimer()}
 	tm := time.Now()
 	defer func() {
@@ -536,7 +536,7 @@ func (p *P2PServerV2) SendMessageWithResponse(ctx xctx.Context, msg *protos.Core
 			"checksum", msg.GetHeader().GetDataCheckSum(), "timer", ctx.GetTimer().Print())
 	}()
 
-	opt := network.Apply(optFunc)
+	opt := netBase.Apply(optFunc)
 	filter := p.getFilter(msg, opt)
 	peers, _ := filter.Filter()
 
@@ -565,7 +565,7 @@ func (p *P2PServerV2) SendMessageWithResponse(ctx xctx.Context, msg *protos.Core
 }
 
 func (p *P2PServerV2) sendMessageWithResponse(ctx xctx.Context, msg *protos.CoreMessage,
-	peerIDs []peer.ID, opt *network.Option) ([]*protos.CoreMessage, error) {
+	peerIDs []peer.ID, opt *netBase.Option) ([]*protos.CoreMessage, error) {
 
 	respCh := make(chan *protos.CoreMessage, len(peerIDs))
 	var wg sync.WaitGroup
@@ -627,10 +627,10 @@ func (p *P2PServerV2) sendMessageWithResponse(ctx xctx.Context, msg *protos.Core
 	return response, nil
 }
 
-func (p *P2PServerV2) getFilter(msg *protos.CoreMessage, opt *network.Option) PeerFilter {
+func (p *P2PServerV2) getFilter(msg *protos.CoreMessage, opt *netBase.Option) PeerFilter {
 	if len(opt.Filters) <= 0 && len(opt.Addresses) <= 0 &&
 		len(opt.PeerIDs) <= 0 && len(opt.Accounts) <= 0 {
-		opt.Filters = []network.FilterStrategy{network.DefaultStrategy}
+		opt.Filters = []netBase.FilterStrategy{netBase.DefaultStrategy}
 	}
 
 	bcname := msg.GetHeader().GetBcname()
@@ -642,9 +642,9 @@ func (p *P2PServerV2) getFilter(msg *protos.CoreMessage, opt *network.Option) Pe
 	for _, strategy := range opt.Filters {
 		var filter PeerFilter
 		switch strategy {
-		case network.NearestBucketStrategy:
+		case netBase.NearestBucketStrategy:
 			filter = &NearestBucketFilter{srv: p}
-		case network.BucketsWithFactorStrategy:
+		case netBase.BucketsWithFactorStrategy:
 			filter = &BucketsFilterWithFactor{srv: p, factor: opt.Factor}
 		default:
 			filter = &BucketsFilter{srv: p}

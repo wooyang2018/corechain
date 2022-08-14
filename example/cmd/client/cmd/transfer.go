@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2021, Baidu.com, Inc. All Rights Reserved.
- */
-
 package cmd
 
 import (

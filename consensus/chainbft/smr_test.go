@@ -14,7 +14,7 @@ import (
 	"github.com/wooyang2018/corechain/logger"
 	mockConf "github.com/wooyang2018/corechain/mock/config"
 	mockNet "github.com/wooyang2018/corechain/mock/testnet"
-	"github.com/wooyang2018/corechain/network"
+	netBase "github.com/wooyang2018/corechain/network/base"
 	_ "github.com/wooyang2018/corechain/network/p2pv1"
 	_ "github.com/wooyang2018/corechain/network/p2pv2"
 	"github.com/wooyang2018/corechain/protos"
@@ -82,7 +82,7 @@ func NewFakeCryptoClient(node string, t *testing.T) (address.Address, base.Crypt
 	return a, cc
 }
 
-func NewFakeSMR(node string, log logger.Logger, p2p network.Network, t *testing.T) *SMR {
+func NewFakeSMR(node string, log logger.Logger, p2p netBase.Network, t *testing.T) *SMR {
 	a, cc := NewFakeCryptoClient(node, t)
 	cryptoClient := NewCBFTCrypto(&a, cc)
 	pacemaker := &DefaultPaceMaker{}

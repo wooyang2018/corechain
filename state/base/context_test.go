@@ -6,7 +6,7 @@ import (
 
 	cryptoClient "github.com/wooyang2018/corechain/crypto/client"
 	"github.com/wooyang2018/corechain/ledger"
-	lctx "github.com/wooyang2018/corechain/ledger/context"
+	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
 	"github.com/wooyang2018/corechain/logger"
 	mock "github.com/wooyang2018/corechain/mock/config"
 	_ "github.com/wooyang2018/corechain/storage/leveldb"
@@ -23,7 +23,7 @@ func TestNewNetCtx(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	lctx, err := lctx.NewLedgerCtx(ecfg, "corechain")
+	lctx, err := ledgerBase.NewLedgerCtx(ecfg, "corechain")
 	if err != nil {
 		t.Fatal(err)
 	}

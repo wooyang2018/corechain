@@ -7,7 +7,7 @@ import (
 
 	"github.com/wooyang2018/corechain/common/cache"
 	"github.com/wooyang2018/corechain/ledger"
-	"github.com/wooyang2018/corechain/ledger/def"
+	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/protos"
 	"github.com/wooyang2018/corechain/state/base"
@@ -46,9 +46,9 @@ func NewXModel(sctx *base.StateCtx, stateDB storage.Database) (*XModel, error) {
 	return &XModel{
 		ledger:          sctx.Ledger,
 		stateDB:         stateDB,
-		unconfirmTable:  storage.NewTable(stateDB, def.UnconfirmedTablePrefix),
-		extUtxoTable:    storage.NewTable(stateDB, def.ExtUtxoTablePrefix),
-		extUtxoDelTable: storage.NewTable(stateDB, def.ExtUtxoDelTablePrefix),
+		unconfirmTable:  storage.NewTable(stateDB, ledgerBase.UnconfirmedTablePrefix),
+		extUtxoTable:    storage.NewTable(stateDB, ledgerBase.ExtUtxoTablePrefix),
+		extUtxoDelTable: storage.NewTable(stateDB, ledgerBase.ExtUtxoDelTablePrefix),
 		logger:          sctx.XLog,
 		batchCache:      &sync.Map{},
 	}, nil
@@ -107,14 +107,14 @@ func (s *XModel) updateExtUtxo(tx *protos.Transaction, batch storage.Batch) erro
 		bucketAndKey := makeRawKey(txOut.Bucket, txOut.Key)
 		valueVersion := MakeVersion(tx.Txid, int32(offset))
 		if isDelFlag(txOut.Value) {
-			putKey := append([]byte(def.ExtUtxoDelTablePrefix), bucketAndKey...)
-			delKey := append([]byte(def.ExtUtxoTablePrefix), bucketAndKey...)
+			putKey := append([]byte(ledgerBase.ExtUtxoDelTablePrefix), bucketAndKey...)
+			delKey := append([]byte(ledgerBase.ExtUtxoTablePrefix), bucketAndKey...)
 			batch.Delete(delKey)
 			batch.Put(putKey, []byte(valueVersion))
 			s.logger.Debug("xmodel put gc", "putkey", string(putKey), "version", valueVersion)
 			s.logger.Debug("xmodel del", "delkey", string(delKey), "version", valueVersion)
 		} else {
-			putKey := append([]byte(def.ExtUtxoTablePrefix), bucketAndKey...)
+			putKey := append([]byte(ledgerBase.ExtUtxoTablePrefix), bucketAndKey...)
 			batch.Put(putKey, []byte(valueVersion))
 			s.logger.Debug("xmodel put", "putkey", string(putKey), "version", valueVersion)
 		}
@@ -170,7 +170,7 @@ func (s *XModel) UndoTx(tx *protos.Transaction, batch storage.Batch) error {
 		bucketAndKey := makeRawKey(txOut.Bucket, txOut.Key)
 		previousVersion := inputVersionMap[string(bucketAndKey)]
 		if previousVersion == "" {
-			delKey := append([]byte(def.ExtUtxoTablePrefix), bucketAndKey...)
+			delKey := append([]byte(ledgerBase.ExtUtxoTablePrefix), bucketAndKey...)
 			batch.Delete(delKey)
 			s.logger.Debug("    undo xmodel del", "delkey", string(delKey))
 			s.batchCache.Store(string(bucketAndKey), "")
@@ -180,18 +180,18 @@ func (s *XModel) UndoTx(tx *protos.Transaction, batch storage.Batch) error {
 				return err
 			}
 			if isDelFlag(verData.PureData.Value) { //previous version is del
-				putKey := append([]byte(def.ExtUtxoDelTablePrefix), bucketAndKey...)
+				putKey := append([]byte(ledgerBase.ExtUtxoDelTablePrefix), bucketAndKey...)
 				batch.Put(putKey, []byte(previousVersion))
-				delKey := append([]byte(def.ExtUtxoTablePrefix), bucketAndKey...)
+				delKey := append([]byte(ledgerBase.ExtUtxoTablePrefix), bucketAndKey...)
 				batch.Delete(delKey)
 				s.logger.Debug("    undo xmodel put gc", "putkey", string(putKey), "prever", previousVersion)
 				s.logger.Debug("    undo xmodel del", "del key", string(delKey), "prever", previousVersion)
 			} else {
-				putKey := append([]byte(def.ExtUtxoTablePrefix), bucketAndKey...)
+				putKey := append([]byte(ledgerBase.ExtUtxoTablePrefix), bucketAndKey...)
 				batch.Put(putKey, []byte(previousVersion))
 				s.logger.Debug("    undo xmodel put", "putkey", string(putKey), "prever", previousVersion)
 				if isDelFlag(txOut.Value) { //current version is del
-					delKey := append([]byte(def.ExtUtxoDelTablePrefix), bucketAndKey...)
+					delKey := append([]byte(ledgerBase.ExtUtxoDelTablePrefix), bucketAndKey...)
 					batch.Delete(delKey) //remove garbage in gc table
 				}
 			}

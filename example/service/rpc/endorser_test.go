@@ -12,9 +12,9 @@ import (
 	xconf "github.com/wooyang2018/corechain/common/config"
 	"github.com/wooyang2018/corechain/engine"
 	engineBase "github.com/wooyang2018/corechain/engine/base"
+	"github.com/wooyang2018/corechain/engine/utils"
 	"github.com/wooyang2018/corechain/example/pb"
 	scom "github.com/wooyang2018/corechain/example/service/common"
-	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
 	ltx "github.com/wooyang2018/corechain/ledger/tx"
 	"github.com/wooyang2018/corechain/logger"
 	mock "github.com/wooyang2018/corechain/mock/config"
@@ -148,12 +148,12 @@ func MockEngine() (engineBase.Engine, error) {
 		return nil, err
 	}
 
-	engine := engine.NewEngine()
-	if err := engine.Init(conf); err != nil {
+	bcEng := engine.NewEngine()
+	if err := bcEng.Init(conf); err != nil {
 		return nil, fmt.Errorf("init engine error: %v", err)
 	}
 
-	eng, err := engine.EngineConvert(engine)
+	eng, err := engine.EngineConvert(bcEng)
 	if err != nil {
 		return nil, fmt.Errorf("engine convert error: %v", err)
 	}
@@ -177,7 +177,7 @@ func CreateLedger(conf *xconf.EnvConf) error {
 	}
 
 	genesisPath := mockConf.GenDataAbsPath("genesis/xuper.json")
-	err = ledgerBase.CreateLedger("xuper", genesisPath, conf)
+	err = utils.CreateLedger("xuper", genesisPath, conf)
 	if err != nil {
 		log.Printf("create ledger failed.err:%v\n", err)
 		return fmt.Errorf("create ledger failed")

@@ -9,7 +9,7 @@ import (
 	xctx "github.com/wooyang2018/corechain/common/context"
 	"github.com/wooyang2018/corechain/common/timer"
 	"github.com/wooyang2018/corechain/logger"
-	nctx "github.com/wooyang2018/corechain/network/context"
+	netBase "github.com/wooyang2018/corechain/network/base"
 	"github.com/wooyang2018/corechain/protos"
 )
 
@@ -20,20 +20,8 @@ var (
 	ErrChannelBlock    = errors.New("channel block")
 )
 
-// Stream send p2p response message
-type Stream interface {
-	Send(*protos.CoreMessage) error
-}
-
-// Subscriber is the interface for p2p message SubscriberImpl
-type Subscriber interface {
-	GetMessageType() protos.CoreMessage_MessageType
-	Match(*protos.CoreMessage) bool
-	HandleMessage(xctx.Context, *protos.CoreMessage, Stream) error
-}
-
 type SubscriberImpl struct {
-	ctx *nctx.NetCtx
+	ctx *netBase.NetCtx
 	log logger.Logger
 
 	typ protos.CoreMessage_MessageType // 订阅消息类型
@@ -48,22 +36,24 @@ type SubscriberImpl struct {
 
 type HandleFunc func(xctx.Context, *protos.CoreMessage) (*protos.CoreMessage, error)
 
-type SubscriberOption func(*SubscriberImpl)
-
-func WithFilterFrom(from string) SubscriberOption {
-	return func(s *SubscriberImpl) {
-		s.from = from
+func WithFilterFrom(from string) netBase.SubscriberOption {
+	return func(s netBase.Subscriber) {
+		if sub, ok := s.(*SubscriberImpl); ok {
+			sub.from = from
+		}
 	}
 }
 
-func WithFilterBCName(bcName string) SubscriberOption {
-	return func(s *SubscriberImpl) {
-		s.bcName = bcName
+func WithFilterBCName(bcName string) netBase.SubscriberOption {
+	return func(s netBase.Subscriber) {
+		if sub, ok := s.(*SubscriberImpl); ok {
+			sub.bcName = bcName
+		}
 	}
 }
 
-func NewSubscriber(ctx *nctx.NetCtx, typ protos.CoreMessage_MessageType,
-	v interface{}, opts ...SubscriberOption) Subscriber {
+func NewSubscriber(ctx *netBase.NetCtx, typ protos.CoreMessage_MessageType,
+	v interface{}, opts ...netBase.SubscriberOption) netBase.Subscriber {
 
 	s := &SubscriberImpl{
 		ctx: ctx,
@@ -93,7 +83,7 @@ func NewSubscriber(ctx *nctx.NetCtx, typ protos.CoreMessage_MessageType,
 	return s
 }
 
-var _ Subscriber = &SubscriberImpl{}
+var _ netBase.Subscriber = &SubscriberImpl{}
 
 func (s *SubscriberImpl) GetMessageType() protos.CoreMessage_MessageType {
 	return s.typ
@@ -115,7 +105,7 @@ func (s *SubscriberImpl) Match(msg *protos.CoreMessage) bool {
 	return true
 }
 
-func (s *SubscriberImpl) HandleMessage(ctx xctx.Context, msg *protos.CoreMessage, stream Stream) error {
+func (s *SubscriberImpl) HandleMessage(ctx xctx.Context, msg *protos.CoreMessage, stream netBase.Stream) error {
 	ctx = &xctx.BaseCtx{XLog: ctx.GetLog(), Timer: timer.NewXTimer()}
 	defer func() {
 		ctx.GetLog().Debug("HandleMessage", "bc", msg.GetHeader().GetBcname(),

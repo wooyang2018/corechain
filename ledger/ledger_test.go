@@ -10,7 +10,7 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/wooyang2018/corechain/ledger/context"
+	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
 	"github.com/wooyang2018/corechain/logger"
 	mock "github.com/wooyang2018/corechain/mock/config"
 	"github.com/wooyang2018/corechain/protos"
@@ -32,7 +32,7 @@ func openLedger() (*Ledger, error) {
 	}
 	logger.InitMLog(econf.GenConfFilePath(econf.LogConf), econf.GenDirAbsPath(econf.LogDir))
 
-	lctx, err := context.NewLedgerCtx(econf, "corechain")
+	lctx, err := ledgerBase.NewLedgerCtx(econf, "corechain")
 	if err != nil {
 		return nil, err
 	}

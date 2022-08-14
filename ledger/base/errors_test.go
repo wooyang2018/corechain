@@ -1,4 +1,4 @@
-package def
+package base
 
 import (
 	"errors"

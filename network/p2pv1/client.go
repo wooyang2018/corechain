@@ -9,6 +9,7 @@ import (
 	xctx "github.com/wooyang2018/corechain/common/context"
 	"github.com/wooyang2018/corechain/common/metrics"
 	"github.com/wooyang2018/corechain/network"
+	"github.com/wooyang2018/corechain/network/base"
 	"github.com/wooyang2018/corechain/protos"
 	"google.golang.org/protobuf/proto"
 )
@@ -19,7 +20,7 @@ var (
 )
 
 // SendMessage send message to peers using given filter strategy
-func (p *P2PServerV1) SendMessage(ctx xctx.Context, msg *protos.CoreMessage, optFunc ...network.OptionFunc) error {
+func (p *P2PServerV1) SendMessage(ctx xctx.Context, msg *protos.CoreMessage, optFunc ...base.OptionFunc) error {
 	if p.ctx.EnvCfg.MetricSwitch {
 		tm := time.Now()
 		defer func() {
@@ -33,7 +34,7 @@ func (p *P2PServerV1) SendMessage(ctx xctx.Context, msg *protos.CoreMessage, opt
 		}()
 	}
 
-	opt := network.Apply(optFunc) //根据optFunc构造option
+	opt := base.Apply(optFunc) //根据optFunc构造option
 	filter := p.getFilter(msg, opt)
 	peerIDs, err := filter.Filter()
 	if err != nil {
@@ -79,7 +80,7 @@ func (p *P2PServerV1) sendMessage(ctx xctx.Context, msg *protos.CoreMessage, pee
 }
 
 // SendMessageWithResponse send message to peers using given filter strategy, expect response from peers
-func (p *P2PServerV1) SendMessageWithResponse(ctx xctx.Context, msg *protos.CoreMessage, optFunc ...network.OptionFunc) ([]*protos.CoreMessage, error) {
+func (p *P2PServerV1) SendMessageWithResponse(ctx xctx.Context, msg *protos.CoreMessage, optFunc ...base.OptionFunc) ([]*protos.CoreMessage, error) {
 	if p.ctx.EnvCfg.MetricSwitch {
 		tm := time.Now()
 		defer func() {
@@ -93,7 +94,7 @@ func (p *P2PServerV1) SendMessageWithResponse(ctx xctx.Context, msg *protos.Core
 		}()
 	}
 
-	opt := network.Apply(optFunc)
+	opt := base.Apply(optFunc)
 	filter := p.getFilter(msg, opt)
 	peerIDs, err := filter.Filter()
 	if err != nil {
@@ -162,10 +163,10 @@ func (p *P2PServerV1) sendMessageWithResponse(ctx xctx.Context, msg *protos.Core
 	return response, nil
 }
 
-func (p *P2PServerV1) getFilter(msg *protos.CoreMessage, opt *network.Option) PeerFilter {
+func (p *P2PServerV1) getFilter(msg *protos.CoreMessage, opt *base.Option) PeerFilter {
 	if len(opt.Filters) <= 0 && len(opt.Addresses) <= 0 &&
 		len(opt.PeerIDs) <= 0 && len(opt.Accounts) <= 0 {
-		opt.Filters = []network.FilterStrategy{network.DefaultStrategy}
+		opt.Filters = []base.FilterStrategy{base.DefaultStrategy}
 	}
 
 	bcname := msg.GetHeader().GetBcname()

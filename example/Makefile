@@ -1,7 +1,6 @@
 # init project PATH
 HOMEDIR := $(shell pwd)
 OUTDIR  := $(HOMEDIR)/output
-COMPILECACHEDIR := $(HOMEDIR)/.compile_cache
 TESTNETDIR := $(HOMEDIR)/testnet
 
 # init command params
@@ -21,13 +20,11 @@ test: unit
 unit:
 	go test -coverprofile=coverage.txt -covermode=atomic ./...
 # make clean
-cleanall: clean cleantest cleancache
+cleanall: clean cleantest
 clean:
 	rm -rf $(OUTDIR)
 cleantest:
 	rm -rf $(TESTNETDIR)
-cleancache:
-	rm -rf $(COMPILECACHEDIR)
 # deploy test network
 testnet: cleantest
 	bash $(HOMEDIR)/auto/testnet.sh

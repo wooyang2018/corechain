@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2021, Baidu.com, Inc. All Rights Reserved.
- */
-
 package cmd
 
 import (
@@ -11,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 	xconf "github.com/wooyang2018/corechain/common/config"
 	"github.com/wooyang2018/corechain/common/utils"
-	"github.com/wooyang2018/corechain/ledger/base"
+	utils2 "github.com/wooyang2018/corechain/engine/utils"
 	"github.com/wooyang2018/corechain/logger"
 	_ "github.com/wooyang2018/corechain/storage/leveldb"
 )
@@ -64,7 +60,7 @@ func (c *CreateChainCommand) CreateChain() error {
 	}
 
 	logger.InitMLog(econf.GenConfFilePath(econf.LogConf), econf.GenDirAbsPath(econf.LogDir))
-	err = base.CreateLedger(c.Name, c.GenesisConf, econf)
+	err = utils2.CreateLedger(c.Name, c.GenesisConf, econf)
 	if err != nil {
 		log.Printf("create ledger failed.err:%v\n", err)
 		return fmt.Errorf("create ledger failed")

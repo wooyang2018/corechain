@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2021, Baidu.com, Inc. All Rights Reserved.
- */
-
 package cmd
 
 import (
@@ -15,11 +11,10 @@ import (
 	"github.com/wooyang2018/corechain/crypto/client"
 	"github.com/wooyang2018/corechain/example/pb"
 	"github.com/wooyang2018/corechain/ledger"
-	lctx "github.com/wooyang2018/corechain/ledger/context"
-	"github.com/wooyang2018/corechain/ledger/def"
+	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/state"
-	sctx "github.com/wooyang2018/corechain/state/base"
+	stateBase "github.com/wooyang2018/corechain/state/base"
 	_ "github.com/wooyang2018/corechain/storage/leveldb"
 	"google.golang.org/protobuf/proto"
 )
@@ -69,7 +64,7 @@ func (c *PruneLedgerCommand) PruneLedger(econf *xconf.EnvConf) error {
 		c.Name, c.Target, c.EnvConf)
 
 	logger.InitMLog(econf.GenConfFilePath(econf.LogConf), econf.GenDirAbsPath(econf.LogDir))
-	lctx, err := lctx.NewLedgerCtx(econf, c.Name)
+	lctx, err := ledgerBase.NewLedgerCtx(econf, c.Name)
 	if err != nil {
 		return err
 	}
@@ -81,7 +76,7 @@ func (c *PruneLedgerCommand) PruneLedger(econf *xconf.EnvConf) error {
 	if err != nil {
 		return err
 	}
-	ctx, err := sctx.NewStateCtx(econf, c.Name, xledger, crypt)
+	ctx, err := stateBase.NewStateCtx(econf, c.Name, xledger, crypt)
 	if err != nil {
 		return err
 	}
@@ -124,7 +119,7 @@ func (c *PruneLedgerCommand) PruneLedger(econf *xconf.EnvConf) error {
 		log.Printf("meta proto marshal error:%v", err)
 		return pbErr
 	}
-	batch.Put([]byte(def.MetaTablePrefix), metaBuf)
+	batch.Put([]byte(ledgerBase.MetaTablePrefix), metaBuf)
 	// 剪掉所有无效分支
 	// step1: 获取所有无效分支
 	branchHeadArr, branchErr := xledger.GetBranchInfo(targetBlockId, targetBlock.Height)
@@ -136,17 +131,17 @@ func (c *PruneLedgerCommand) PruneLedger(econf *xconf.EnvConf) error {
 	for _, v := range branchHeadArr {
 		// get base parent from higher to lower and truncate all of them
 		commonParentBlockid, err := xledger.GetCommonParentBlockid(targetBlockId, []byte(v))
-		if err != nil && def.NormalizeKVError(err) != def.ErrKVNotFound && err != ledger.ErrBlockNotExist {
+		if err != nil && ledgerBase.NormalizeKVError(err) != ledgerBase.ErrKVNotFound && err != ledger.ErrBlockNotExist {
 			log.Printf("get parent blockid error:%v", err)
 			return err
 		}
 		err = xledger.RemoveBlocks([]byte(v), commonParentBlockid, batch)
-		if err != nil && def.NormalizeKVError(err) != def.ErrKVNotFound && err != ledger.ErrBlockNotExist {
+		if err != nil && ledgerBase.NormalizeKVError(err) != ledgerBase.ErrKVNotFound && err != ledger.ErrBlockNotExist {
 			log.Printf("branch prune RemoveBlocks error:%v", err)
 			return err
 		}
 		// 将无效分支头信息也删掉
-		err = batch.Delete(append([]byte(def.BranchInfoPrefix), []byte(v)...))
+		err = batch.Delete(append([]byte(ledgerBase.BranchInfoPrefix), []byte(v)...))
 		if err != nil {
 			log.Printf("branchInfo batch delete error:%v", err)
 			return err

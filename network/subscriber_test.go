@@ -6,7 +6,7 @@ import (
 
 	xctx "github.com/wooyang2018/corechain/common/context"
 	mock "github.com/wooyang2018/corechain/mock/config"
-	nctx "github.com/wooyang2018/corechain/network/context"
+	netBase "github.com/wooyang2018/corechain/network/base"
 	"github.com/wooyang2018/corechain/protos"
 )
 
@@ -34,7 +34,7 @@ var mockHandleNilFunc HandleFunc = func(ctx xctx.Context, msg *protos.CoreMessag
 type subscriberCase struct {
 	v      interface{}
 	msg    *protos.CoreMessage
-	stream Stream
+	stream netBase.Stream
 	err    error
 }
 
@@ -42,9 +42,9 @@ func TestSubscriber(t *testing.T) {
 	mock.InitFakeLogger()
 
 	msg := NewMessage(protos.CoreMessage_GET_BLOCK, &protos.CoreMessage{},
-		WithBCName(BlockChain),
+		WithBCName(netBase.BlockChain),
 		WithLogId("1234567890"),
-		WithVersion(MessageVersion),
+		WithVersion(netBase.MessageVersion),
 	)
 	msg.Header.From = "from"
 
@@ -82,7 +82,7 @@ func TestSubscriber(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	ctx, _ := nctx.NewNetCtx(ecfg)
+	ctx, _ := netBase.NewNetCtx(ecfg)
 
 	for i, c := range cases {
 		sub := NewSubscriber(ctx, protos.CoreMessage_GET_BLOCK, c.v, WithFilterFrom("from"))

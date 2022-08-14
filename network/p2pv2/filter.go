@@ -5,7 +5,7 @@ import (
 
 	"github.com/libp2p/go-libp2p-core/peer"
 	kbucket "github.com/libp2p/go-libp2p-kbucket"
-	"github.com/wooyang2018/corechain/network"
+	"github.com/wooyang2018/corechain/network/base"
 )
 
 // PeerFilter the interface for filter peers
@@ -36,7 +36,7 @@ type NearestBucketFilter struct {
 
 // Filter 广播给最近的Bucket
 func (nf *NearestBucketFilter) Filter() ([]peer.ID, error) {
-	peers := nf.srv.kdht.RoutingTable().NearestPeers(kbucket.ConvertPeerID(nf.srv.id), network.MaxBroadCast)
+	peers := nf.srv.kdht.RoutingTable().NearestPeers(kbucket.ConvertPeerID(nf.srv.id), base.MaxBroadCast)
 	return peers, nil
 }
 
@@ -58,7 +58,7 @@ type BucketsFilterWithFactor struct {
 func (nf *BucketsFilterWithFactor) Filter() ([]peer.ID, error) {
 	factor := nf.factor
 	if factor <= 0 || factor > 1 {
-		factor = network.BucketsFilterFactor
+		factor = base.BucketsFilterFactor
 	}
 
 	rt := nf.srv.kdht.RoutingTable()

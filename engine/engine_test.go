@@ -11,17 +11,17 @@ import (
 	_ "github.com/wooyang2018/corechain/contract/evm"
 	_ "github.com/wooyang2018/corechain/contract/kernel"
 	_ "github.com/wooyang2018/corechain/crypto/client"
-	mock "github.com/wooyang2018/corechain/mock/config"
+	"github.com/wooyang2018/corechain/engine/utils"
 	_ "github.com/wooyang2018/corechain/network/p2pv1"
 	_ "github.com/wooyang2018/corechain/storage/leveldb"
 
 	xconf "github.com/wooyang2018/corechain/common/config"
 	engineBase "github.com/wooyang2018/corechain/engine/base"
-	"github.com/wooyang2018/corechain/ledger/base"
 	"github.com/wooyang2018/corechain/logger"
+	mock "github.com/wooyang2018/corechain/mock/config"
 )
 
-func CreateLedger(conf *xconf.EnvConf) error {
+func CreateLedgerWithConf(conf *xconf.EnvConf) error {
 	mockConf, err := mock.GetMockEnvConf()
 	if err != nil {
 		return fmt.Errorf("new mock env conf error: %v", err)
@@ -29,7 +29,7 @@ func CreateLedger(conf *xconf.EnvConf) error {
 	logger.InitMLog(mockConf.GenConfFilePath(mockConf.LogConf), mockConf.GenDirAbsPath(mockConf.LogDir))
 
 	genesisPath := mockConf.GenDataAbsPath("genesis/core.json")
-	err = base.CreateLedger("corechain", genesisPath, conf)
+	err = utils.CreateLedger("corechain", genesisPath, conf)
 	if err != nil {
 		log.Printf("create ledger failed.err:%v\n", err)
 		return fmt.Errorf("create ledger failed")
@@ -53,7 +53,7 @@ func MockEngine(path string) (engineBase.Engine, error) {
 	}
 
 	RemoveLedger(conf)
-	if err = CreateLedger(conf); err != nil {
+	if err = CreateLedgerWithConf(conf); err != nil {
 		return nil, err
 	}
 

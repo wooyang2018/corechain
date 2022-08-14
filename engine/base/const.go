@@ -3,7 +3,7 @@ package base
 // 引擎常量配置
 const (
 	// 引擎名
-	BCEngineName = "xengine"
+	BCEngineName = "engine"
 )
 
 // 广播模式

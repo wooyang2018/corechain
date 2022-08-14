@@ -6,12 +6,12 @@ import (
 	"sync"
 
 	xctx "github.com/wooyang2018/corechain/common/context"
-	nctx "github.com/wooyang2018/corechain/network/context"
+	netBase "github.com/wooyang2018/corechain/network/base"
 	"github.com/wooyang2018/corechain/protos"
 )
 
 // 创建P2PServer实例方法
-type NewP2PServFunc func() Network
+type NewP2PServFunc func() netBase.Network
 
 var (
 	servMu   sync.RWMutex
@@ -45,7 +45,7 @@ func Drivers() []string {
 	return list
 }
 
-func createP2PServ(name string) Network {
+func createP2PServ(name string) netBase.Network {
 	servMu.RLock()
 	defer servMu.RUnlock()
 
@@ -59,11 +59,11 @@ func createP2PServ(name string) Network {
 // 如果有领域内公共逻辑，可以在这层扩展，对上层暴露高级接口
 // 暂时没有特殊的逻辑，先简单透传，预留方便后续扩展
 type NetworkImpl struct {
-	ctx     *nctx.NetCtx
-	p2pServ Network
+	ctx     *netBase.NetCtx
+	p2pServ netBase.Network
 }
 
-func (t *NetworkImpl) Init(ctx *nctx.NetCtx) error {
+func (t *NetworkImpl) Init(ctx *netBase.NetCtx) error {
 	if ctx == nil {
 		return fmt.Errorf("new network failed because context set error")
 	}
@@ -81,7 +81,7 @@ func (t *NetworkImpl) Init(ctx *nctx.NetCtx) error {
 	return nil
 }
 
-func NewNetwork(ctx *nctx.NetCtx) (Network, error) {
+func NewNetwork(ctx *netBase.NetCtx) (netBase.Network, error) {
 	if ctx == nil {
 		return nil, fmt.Errorf("new network failed because context set error")
 	}
@@ -108,11 +108,11 @@ func (t *NetworkImpl) Stop() {
 	t.p2pServ.Stop()
 }
 
-func (t *NetworkImpl) Context() *nctx.NetCtx {
+func (t *NetworkImpl) Context() *netBase.NetCtx {
 	return t.ctx
 }
 
-func (t *NetworkImpl) SendMessage(ctx xctx.Context, msg *protos.CoreMessage, opts ...OptionFunc) error {
+func (t *NetworkImpl) SendMessage(ctx xctx.Context, msg *protos.CoreMessage, opts ...netBase.OptionFunc) error {
 	if !t.isInit() || ctx == nil || msg == nil {
 		return fmt.Errorf("network not init or param set error")
 	}
@@ -121,7 +121,7 @@ func (t *NetworkImpl) SendMessage(ctx xctx.Context, msg *protos.CoreMessage, opt
 }
 
 func (t *NetworkImpl) SendMessageWithResponse(ctx xctx.Context, msg *protos.CoreMessage,
-	opts ...OptionFunc) ([]*protos.CoreMessage, error) {
+	opts ...netBase.OptionFunc) ([]*protos.CoreMessage, error) {
 
 	if !t.isInit() || ctx == nil || msg == nil {
 		return nil, fmt.Errorf("network not init or param set error")
@@ -131,7 +131,7 @@ func (t *NetworkImpl) SendMessageWithResponse(ctx xctx.Context, msg *protos.Core
 }
 
 func (t *NetworkImpl) NewSubscriber(typ protos.CoreMessage_MessageType, v interface{},
-	opts ...SubscriberOption) Subscriber {
+	opts ...netBase.SubscriberOption) netBase.Subscriber {
 
 	if !t.isInit() || v == nil {
 		return nil
@@ -140,7 +140,7 @@ func (t *NetworkImpl) NewSubscriber(typ protos.CoreMessage_MessageType, v interf
 	return t.p2pServ.NewSubscriber(typ, v, opts...)
 }
 
-func (t *NetworkImpl) Register(sub Subscriber) error {
+func (t *NetworkImpl) Register(sub netBase.Subscriber) error {
 	if !t.isInit() || sub == nil {
 		return fmt.Errorf("network not init or param set error")
 	}
@@ -148,7 +148,7 @@ func (t *NetworkImpl) Register(sub Subscriber) error {
 	return t.p2pServ.Register(sub)
 }
 
-func (t *NetworkImpl) UnRegister(sub Subscriber) error {
+func (t *NetworkImpl) UnRegister(sub netBase.Subscriber) error {
 	if !t.isInit() || sub == nil {
 		return fmt.Errorf("network not init or param set error")
 	}

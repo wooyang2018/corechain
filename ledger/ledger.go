@@ -6,7 +6,6 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"github.com/wooyang2018/corechain/storage/leveldb"
 	"math/big"
 	"path/filepath"
 	"runtime"
@@ -19,11 +18,11 @@ import (
 	"github.com/wooyang2018/corechain/common/utils"
 	cryptoClient "github.com/wooyang2018/corechain/crypto/client"
 	cryptoBase "github.com/wooyang2018/corechain/crypto/client/base"
-	"github.com/wooyang2018/corechain/ledger/context"
-	"github.com/wooyang2018/corechain/ledger/def"
+	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/protos"
 	"github.com/wooyang2018/corechain/storage"
+	"github.com/wooyang2018/corechain/storage/leveldb"
 	_ "github.com/wooyang2018/corechain/storage/leveldb"
 	"google.golang.org/protobuf/proto"
 )
@@ -74,7 +73,7 @@ const (
 // Ledger define data structure of Ledger
 type Ledger struct {
 	// 运行上下文
-	ctx            *context.LedgerCtx
+	ctx            *ledgerBase.LedgerCtx
 	baseDB         storage.Database // 底层是一个leveldb实例，kvdb进行了包装
 	metaTable      storage.Database // 记录区块链的根节点、高度、末端节点
 	confirmedTable storage.Database // 已确认的订单表
@@ -102,23 +101,23 @@ type ConfirmStatus struct {
 }
 
 // NewLedger create an empty ledger, if it already exists, open it directly
-func CreateLedger(lctx *context.LedgerCtx, genesisCfg []byte) (*Ledger, error) {
+func CreateLedger(lctx *ledgerBase.LedgerCtx, genesisCfg []byte) (*Ledger, error) {
 	return newLedger(lctx, true, genesisCfg)
 }
 
 // OpenLedger open ledger which already exists
-func OpenLedger(lctx *context.LedgerCtx) (*Ledger, error) {
+func OpenLedger(lctx *ledgerBase.LedgerCtx) (*Ledger, error) {
 	return newLedger(lctx, false, nil)
 }
 
-func newLedger(lctx *context.LedgerCtx, createIfMissing bool, genesisCfg []byte) (*Ledger, error) {
+func newLedger(lctx *ledgerBase.LedgerCtx, createIfMissing bool, genesisCfg []byte) (*Ledger, error) {
 	ledger := &Ledger{}
 	ledger.mutex = &sync.RWMutex{}
 
 	// new kvdb instance
 	storePath := lctx.EnvCfg.GenDataAbsPath(lctx.EnvCfg.ChainDir)
 	storePath = filepath.Join(storePath, lctx.BCName)
-	ledgDBPath := filepath.Join(storePath, def.LedgerStrgDirName)
+	ledgDBPath := filepath.Join(storePath, ledgerBase.LedgerStrgDirName)
 	kvParam := &leveldb.KVParameter{
 		DBPath:                ledgDBPath,
 		KVEngineType:          lctx.LedgerCfg.KVEngineType,
@@ -135,11 +134,11 @@ func newLedger(lctx *context.LedgerCtx, createIfMissing bool, genesisCfg []byte)
 
 	ledger.ctx = lctx
 	ledger.baseDB = baseDB
-	ledger.metaTable = storage.NewTable(baseDB, def.MetaTablePrefix)
-	ledger.confirmedTable = storage.NewTable(baseDB, def.ConfirmedTablePrefix)
-	ledger.blocksTable = storage.NewTable(baseDB, def.BlocksTablePrefix)
-	ledger.pendingTable = storage.NewTable(baseDB, def.PendingBlocksTablePrefix)
-	ledger.heightTable = storage.NewTable(baseDB, def.BlockHeightPrefix)
+	ledger.metaTable = storage.NewTable(baseDB, ledgerBase.MetaTablePrefix)
+	ledger.confirmedTable = storage.NewTable(baseDB, ledgerBase.ConfirmedTablePrefix)
+	ledger.blocksTable = storage.NewTable(baseDB, ledgerBase.BlocksTablePrefix)
+	ledger.pendingTable = storage.NewTable(baseDB, ledgerBase.PendingBlocksTablePrefix)
+	ledger.heightTable = storage.NewTable(baseDB, ledgerBase.BlockHeightPrefix)
 	ledger.xlog = lctx.XLog
 	ledger.meta = &protos.LedgerMeta{}
 
@@ -158,7 +157,7 @@ func newLedger(lctx *context.LedgerCtx, createIfMissing bool, genesisCfg []byte)
 	ledger.confirmBatch = baseDB.NewBatch()
 	metaBuf, metaErr := ledger.metaTable.Get([]byte(""))
 	emptyLedger := false
-	if metaErr != nil && def.NormalizeKVError(metaErr) == def.ErrKVNotFound && createIfMissing {
+	if metaErr != nil && ledgerBase.NormalizeKVError(metaErr) == ledgerBase.ErrKVNotFound && createIfMissing {
 		//说明是新创建的账本
 		metaBuf, pbErr := proto.Marshal(ledger.meta)
 		if pbErr != nil {
@@ -363,10 +362,10 @@ func (l *Ledger) saveBlock(block *protos.InternalBlock, batchWrite storage.Batch
 		l.xlog.Warn("marshal block fail", "pbErr", pbErr)
 		return pbErr
 	}
-	batchWrite.Put(append([]byte(def.BlocksTablePrefix), block.Blockid...), blockBuf)
+	batchWrite.Put(append([]byte(ledgerBase.BlocksTablePrefix), block.Blockid...), blockBuf)
 	if block.InTrunk {
 		sHeight := []byte(fmt.Sprintf("%020d", block.Height))
-		batchWrite.Put(append([]byte(def.BlockHeightPrefix), sHeight...), block.Blockid)
+		batchWrite.Put(append([]byte(ledgerBase.BlockHeightPrefix), sHeight...), block.Blockid)
 	}
 	return nil
 }
@@ -388,7 +387,7 @@ func (l *Ledger) fetchBlock(blockid []byte) (*protos.InternalBlock, error) {
 		return blkInCache.(*protos.InternalBlock), nil
 	}
 	blockBuf, findErr := l.blocksTable.Get(blockid)
-	if def.NormalizeKVError(findErr) == def.ErrKVNotFound {
+	if ledgerBase.NormalizeKVError(findErr) == ledgerBase.ErrKVNotFound {
 		l.xlog.Warn("block can not be found", "findErr", findErr, "blockid", utils.F(blockid))
 		return nil, findErr
 	} else if findErr != nil {
@@ -422,7 +421,7 @@ func (l *Ledger) correctTxsBlockid(blockID []byte, batchWrite storage.Batch) err
 				l.xlog.Warn("marshal trasaction failed when confirm block", "err", err)
 				return err
 			}
-			batchWrite.Put(append([]byte(def.ConfirmedTablePrefix), tx.Txid...), pbTxBuf)
+			batchWrite.Put(append([]byte(ledgerBase.ConfirmedTablePrefix), tx.Txid...), pbTxBuf)
 		}
 	}
 	return nil
@@ -730,7 +729,7 @@ func (l *Ledger) ConfirmBlock(block *protos.InternalBlock, isRoot bool) ConfirmS
 		}
 		hasTx := txExist[string(tx.Txid)]
 		if !hasTx {
-			batchWrite.Put(append([]byte(def.ConfirmedTablePrefix), tx.Txid...), pbTxBuf)
+			batchWrite.Put(append([]byte(ledgerBase.ConfirmedTablePrefix), tx.Txid...), pbTxBuf)
 		} else {
 			//confirm表已经存在这个交易了，需要检查一下是否存在多个主干block包含同样trasnaction的情况
 			oldPbTxBuf, _ := l.confirmedTable.Get(tx.Txid)
@@ -747,9 +746,9 @@ func (l *Ledger) ConfirmBlock(block *protos.InternalBlock, isRoot bool) ConfirmS
 			} else {
 				oldPbBlockBuf, blockErr := l.blocksTable.Get(oldTx.Blockid)
 				if blockErr != nil {
-					if def.NormalizeKVError(blockErr) == def.ErrKVNotFound {
+					if ledgerBase.NormalizeKVError(blockErr) == ledgerBase.ErrKVNotFound {
 						l.xlog.Warn("old block that contains the tx has been truncated", "txid", utils.F(tx.Txid), "blockid", utils.F(oldTx.Blockid))
-						batchWrite.Put(append([]byte(def.ConfirmedTablePrefix), tx.Txid...), pbTxBuf) //overwrite with newtx
+						batchWrite.Put(append([]byte(ledgerBase.ConfirmedTablePrefix), tx.Txid...), pbTxBuf) //overwrite with newtx
 						continue
 					}
 					confirmStatus.Succ = false
@@ -773,14 +772,14 @@ func (l *Ledger) ConfirmBlock(block *protos.InternalBlock, isRoot bool) ConfirmS
 				return confirmStatus
 			} else if block.InTrunk {
 				l.xlog.Info("change blockid of tx", "txid", utils.F(tx.Txid), "blockid", utils.F(block.Blockid))
-				batchWrite.Put(append([]byte(def.ConfirmedTablePrefix), tx.Txid...), pbTxBuf)
+				batchWrite.Put(append([]byte(ledgerBase.ConfirmedTablePrefix), tx.Txid...), pbTxBuf)
 			}
 		}
 	}
 	trace("saveTx")
 	blkTimer.Mark("saveAllTxs")
 	//删除pendingBlock中对应的数据
-	batchWrite.Delete(append([]byte(def.PendingBlocksTablePrefix), block.Blockid...))
+	batchWrite.Delete(append([]byte(ledgerBase.PendingBlocksTablePrefix), block.Blockid...))
 	//改meta
 	metaBuf, pbErr := proto.Marshal(newMeta)
 	if pbErr != nil {
@@ -788,7 +787,7 @@ func (l *Ledger) ConfirmBlock(block *protos.InternalBlock, isRoot bool) ConfirmS
 		confirmStatus.Succ = false
 		return confirmStatus
 	}
-	batchWrite.Put([]byte(def.MetaTablePrefix), metaBuf)
+	batchWrite.Put([]byte(ledgerBase.MetaTablePrefix), metaBuf)
 	l.xlog.Debug("print block size when confirm block", "blockSize", batchWrite.ValueSize(), "blockid", utils.F(block.Blockid))
 	kvErr := batchWrite.Write() // blocks, confirmed_transaction两张表原子写入
 	blkTimer.Mark("saveToDisk")
@@ -827,7 +826,7 @@ func (l *Ledger) ExistBlock(blockid []byte) bool {
 func (l *Ledger) queryBlock(blockid []byte, needBody bool) (*protos.InternalBlock, error) {
 	pbBlockBuf, err := l.blocksTable.Get(blockid)
 	if err != nil {
-		if def.NormalizeKVError(err) == def.ErrKVNotFound {
+		if ledgerBase.NormalizeKVError(err) == ledgerBase.ErrKVNotFound {
 			err = ErrBlockNotExist
 		}
 		return nil, err
@@ -900,7 +899,7 @@ func (l *Ledger) QueryTransaction(txid []byte) (*protos.Transaction, error) {
 	table := l.confirmedTable
 	pbTxBuf, kvErr := table.Get(txid)
 	if kvErr != nil {
-		if def.NormalizeKVError(kvErr) == def.ErrKVNotFound {
+		if ledgerBase.NormalizeKVError(kvErr) == ledgerBase.ErrKVNotFound {
 			return nil, ErrTxNotFound
 		}
 		return nil, kvErr
@@ -1016,7 +1015,7 @@ func (l *Ledger) FindUndoAndTodoBlocks(curBlockid []byte, destBlockid []byte) ([
 func (l *Ledger) Dump() ([][]string, error) {
 	l.mutex.RLock()
 	defer l.mutex.RUnlock()
-	it := l.baseDB.NewIteratorWithPrefix([]byte(def.BlocksTablePrefix))
+	it := l.baseDB.NewIteratorWithPrefix([]byte(ledgerBase.BlocksTablePrefix))
 	defer it.Release()
 	blocks := make([][]string, l.meta.TrunkHeight+1)
 	for it.Next() {
@@ -1099,7 +1098,7 @@ func (l *Ledger) GetPendingBlock(blockID []byte) (*protos.InternalBlock, error) 
 	l.xlog.Debug("get pending block", "bockid", utils.F(blockID))
 	blockBuf, ldbErr := l.pendingTable.Get(blockID)
 	if ldbErr != nil {
-		if def.NormalizeKVError(ldbErr) != def.ErrKVNotFound { //其他kv错误
+		if ledgerBase.NormalizeKVError(ldbErr) != ledgerBase.ErrKVNotFound { //其他kv错误
 			l.xlog.Warn("get pending block fail", "err", ldbErr, "blockid", utils.F(blockID))
 		} else { //不存在表里面
 			l.xlog.Debug("the block not in pending blocks", "blocid", utils.F(blockID))
@@ -1121,7 +1120,7 @@ func (l *Ledger) QueryBlockByHeight(height int64) (*protos.InternalBlock, error)
 	sHeight := []byte(fmt.Sprintf("%020d", height))
 	blockID, kvErr := l.heightTable.Get(sHeight)
 	if kvErr != nil {
-		if def.NormalizeKVError(kvErr) == def.ErrKVNotFound {
+		if ledgerBase.NormalizeKVError(kvErr) == ledgerBase.ErrKVNotFound {
 			return nil, ErrBlockNotExist
 		}
 		return nil, kvErr
@@ -1134,7 +1133,7 @@ func (l *Ledger) QueryBlockHeaderByHeight(height int64) (*protos.InternalBlock, 
 	sHeight := []byte(fmt.Sprintf("%020d", height))
 	blockID, kvErr := l.heightTable.Get(sHeight)
 	if kvErr != nil {
-		if def.NormalizeKVError(kvErr) == def.ErrKVNotFound {
+		if ledgerBase.NormalizeKVError(kvErr) == ledgerBase.ErrKVNotFound {
 			return nil, ErrBlockNotExist
 		}
 		return nil, kvErr
@@ -1162,10 +1161,10 @@ func (l *Ledger) removeBlocks(fromBlockid []byte, toBlockid []byte, batch storag
 		l.xlog.Info("remove block", "blockid", utils.F(fromBlock.Blockid), "height", fromBlock.Height)
 		l.blkHeaderCache.Del(string(fromBlock.Blockid))
 		l.blockCache.Del(string(fromBlock.Blockid))
-		batch.Delete(append([]byte(def.BlocksTablePrefix), fromBlock.Blockid...))
+		batch.Delete(append([]byte(ledgerBase.BlocksTablePrefix), fromBlock.Blockid...))
 		if fromBlock.InTrunk {
 			sHeight := []byte(fmt.Sprintf("%020d", fromBlock.Height))
-			batch.Delete(append([]byte(def.BlockHeightPrefix), sHeight...))
+			batch.Delete(append([]byte(ledgerBase.BlockHeightPrefix), sHeight...))
 		}
 		//iter to prev block
 		fromBlock, findErr = l.fetchBlock(fromBlock.PreHash)
@@ -1226,7 +1225,7 @@ func (l *Ledger) Truncate(utxovmLastID []byte) error {
 		l.xlog.Warn("failed to marshal pb meta")
 		return err
 	}
-	batchWrite.Put([]byte(def.MetaTablePrefix), metaBuf)
+	batchWrite.Put([]byte(ledgerBase.MetaTablePrefix), metaBuf)
 	err = batchWrite.Write()
 	if err != nil {
 		l.xlog.Warn("batch write failed when truncate", "err", err)

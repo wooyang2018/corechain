@@ -6,6 +6,7 @@ import (
 
 	"github.com/golang/snappy"
 	"github.com/wooyang2018/corechain/common/utils"
+	"github.com/wooyang2018/corechain/network/base"
 	"github.com/wooyang2018/corechain/protos"
 	"google.golang.org/protobuf/proto"
 )
@@ -20,8 +21,8 @@ var (
 func NewMessage(typ protos.CoreMessage_MessageType, message proto.Message, opts ...MessageOption) *protos.CoreMessage {
 	msg := &protos.CoreMessage{
 		Header: &protos.CoreMessage_MessageHeader{
-			Version:        MessageVersion,
-			Bcname:         BlockChain,
+			Version:        base.MessageVersion,
+			Bcname:         base.BlockChain,
 			Logid:          utils.GenLogId(),
 			Type:           typ,
 			EnableCompress: false,

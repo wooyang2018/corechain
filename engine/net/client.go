@@ -4,6 +4,7 @@ import (
 	xctx "github.com/wooyang2018/corechain/common/context"
 	"github.com/wooyang2018/corechain/engine/base"
 	"github.com/wooyang2018/corechain/network"
+	netBase "github.com/wooyang2018/corechain/network/base"
 	"github.com/wooyang2018/corechain/protos"
 )
 
@@ -19,7 +20,7 @@ func (t *NetEvent) GetBlock(ctx xctx.Context, request *protos.CoreMessage) (*pro
 		network.WithLogId(request.Header.Bcname),
 	}
 	msg := network.NewMessage(protos.CoreMessage_GET_BLOCK, &block, msgOpts...)
-	responses, err := t.engine.Context().Net.SendMessageWithResponse(ctx, msg, network.WithPeerIDs([]string{request.GetHeader().GetFrom()}))
+	responses, err := t.engine.Context().Net.SendMessageWithResponse(ctx, msg, netBase.WithPeerIDs([]string{request.GetHeader().GetFrom()}))
 	if err != nil {
 		return nil, base.ErrSendMessageFailed
 	}

@@ -12,8 +12,7 @@ import (
 	"github.com/wooyang2018/corechain/common/cache"
 	xctx "github.com/wooyang2018/corechain/common/context"
 	"github.com/wooyang2018/corechain/logger"
-	"github.com/wooyang2018/corechain/network"
-	nctx "github.com/wooyang2018/corechain/network/context"
+	netBase "github.com/wooyang2018/corechain/network/base"
 )
 
 // define base errors
@@ -23,8 +22,8 @@ var (
 
 // StreamPool manage all the stream
 type StreamPool struct {
-	dispatcher     network.Dispatcher
-	ctx            *nctx.NetCtx
+	dispatcher     netBase.Dispatcher
+	ctx            *netBase.NetCtx
 	log            logger.Logger
 	host           host.Host
 	kdht           *dht.IpfsDHT
@@ -35,7 +34,7 @@ type StreamPool struct {
 }
 
 // NewStreamPool create StreamPool instance
-func NewStreamPool(ctx *nctx.NetCtx, ho host.Host, dispatcher network.Dispatcher) (*StreamPool, error) {
+func NewStreamPool(ctx *netBase.NetCtx, ho host.Host, dispatcher netBase.Dispatcher) (*StreamPool, error) {
 	cfg := ctx.P2PConf
 	limit := &StreamLimit{}
 	limit.Init(ctx)
@@ -78,7 +77,7 @@ func (sp *StreamPool) Get(ctx xctx.Context, peerId peer.ID) (*StreamImpl, error)
 		}
 	}
 
-	netStream, err := sp.host.NewStream(sp.ctx, peerId, network.ProtocolVersion)
+	netStream, err := sp.host.NewStream(sp.ctx, peerId, netBase.ProtocolVersion)
 	if err != nil {
 		if errors.Is(err, swarm.ErrDialToSelf) {
 			ctx.GetLog().Info("new net stream error", "peerId", peerId, "error", err)

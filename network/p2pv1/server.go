@@ -16,8 +16,8 @@ import (
 	"github.com/wooyang2018/corechain/common/metrics"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/network"
+	netBase "github.com/wooyang2018/corechain/network/base"
 	"github.com/wooyang2018/corechain/network/config"
-	nctx "github.com/wooyang2018/corechain/network/context"
 	"github.com/wooyang2018/corechain/protos"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -40,13 +40,13 @@ func init() {
 
 // P2PServerV1
 type P2PServerV1 struct {
-	ctx    *nctx.NetCtx
+	ctx    *netBase.NetCtx
 	log    logger.Logger
 	config *config.NetConf
 
 	address    multiaddr.Multiaddr
 	pool       *ConnPool
-	dispatcher network.Dispatcher
+	dispatcher netBase.Dispatcher
 
 	bootNodes    []string
 	staticNodes  map[string][]string
@@ -58,15 +58,15 @@ type P2PServerV1 struct {
 	accounts *cache.Cache
 }
 
-var _ network.Network = &P2PServerV1{}
+var _ netBase.Network = &P2PServerV1{}
 
 // NewP2PServerV1 create P2PServerV1 instance
-func NewP2PServerV1() network.Network {
+func NewP2PServerV1() netBase.Network {
 	return &P2PServerV1{}
 }
 
 // Init initialize network server using given config
-func (p *P2PServerV1) Init(ctx *nctx.NetCtx) error {
+func (p *P2PServerV1) Init(ctx *netBase.NetCtx) error {
 	pool, err := NewConnPool(ctx)
 	if err != nil {
 		p.log.Error("Init P2PServerV1 NewConnPool error", "error", err)
@@ -189,19 +189,19 @@ func (p *P2PServerV1) SendP2PMessage(stream protos.P2PService_SendP2PMessageServ
 	return nil
 }
 
-func (p *P2PServerV1) NewSubscriber(typ protos.CoreMessage_MessageType, v interface{}, opts ...network.SubscriberOption) network.Subscriber {
+func (p *P2PServerV1) NewSubscriber(typ protos.CoreMessage_MessageType, v interface{}, opts ...netBase.SubscriberOption) netBase.Subscriber {
 	return network.NewSubscriber(p.ctx, typ, v, opts...)
 }
 
-func (p *P2PServerV1) Register(sub network.Subscriber) error {
+func (p *P2PServerV1) Register(sub netBase.Subscriber) error {
 	return p.dispatcher.Register(sub)
 }
 
-func (p *P2PServerV1) UnRegister(sub network.Subscriber) error {
+func (p *P2PServerV1) UnRegister(sub netBase.Subscriber) error {
 	return p.dispatcher.UnRegister(sub)
 }
 
-func (p *P2PServerV1) Context() *nctx.NetCtx {
+func (p *P2PServerV1) Context() *netBase.NetCtx {
 	return p.ctx
 }
 
@@ -316,8 +316,8 @@ func (p *P2PServerV1) connectStaticNodes() {
 	}
 
 	// "xuper" blockchain is super set of all blockchains
-	if len(p.staticNodes[network.BlockChain]) < len(allAddresses) {
-		p.staticNodes[network.BlockChain] = allAddresses
+	if len(p.staticNodes[netBase.BlockChain]) < len(allAddresses) {
+		p.staticNodes[netBase.BlockChain] = allAddresses
 	}
 
 	p.GetPeerInfo(allAddresses)

@@ -12,8 +12,8 @@ import (
 	ptimer "github.com/wooyang2018/corechain/contract/proposal/timer"
 	cryptoBase "github.com/wooyang2018/corechain/crypto/client/base"
 	"github.com/wooyang2018/corechain/ledger"
+	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
 	lconf "github.com/wooyang2018/corechain/ledger/config"
-	"github.com/wooyang2018/corechain/ledger/def"
 	"github.com/wooyang2018/corechain/logger"
 	aclBase "github.com/wooyang2018/corechain/permission/base"
 )
@@ -58,7 +58,7 @@ func NewStateCtx(envCfg *xconf.EnvConf, bcName string,
 	if err != nil {
 		return nil, fmt.Errorf("create state context failed because load config error.err:%v", err)
 	}
-	log, err := logger.NewLogger("", def.StateSubModName)
+	log, err := logger.NewLogger("", ledgerBase.StateSubModName)
 	if err != nil {
 		return nil, fmt.Errorf("create state context failed because new logger error. err:%v", err)
 	}

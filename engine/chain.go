@@ -16,7 +16,7 @@ import (
 	"github.com/wooyang2018/corechain/engine/base"
 	"github.com/wooyang2018/corechain/engine/miner"
 	"github.com/wooyang2018/corechain/engine/parachain"
-	"github.com/wooyang2018/corechain/ledger/tx"
+	ltx "github.com/wooyang2018/corechain/ledger/tx"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/protos"
 	"github.com/wooyang2018/corechain/state"
@@ -123,7 +123,7 @@ func (t *Chain) PreExec(ctx xctx.Context, reqs []*protos.InvokeRequest, initiato
 		return nil, base.ErrParameter.More("%v", err)
 	}
 
-	transContractName, transAmount, err := tx.ParseContractTransferRequest(reqs)
+	transContractName, transAmount, err := ltx.ParseContractTransferRequest(reqs)
 	if err != nil {
 		return nil, base.ErrParameter.More("%v", err)
 	}

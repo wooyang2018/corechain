@@ -4,20 +4,20 @@ import (
 	"bytes"
 	"strconv"
 
-	"github.com/wooyang2018/corechain/ledger/def"
+	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
 	"github.com/wooyang2018/corechain/protos"
 	"github.com/wooyang2018/corechain/storage"
 )
 
 func (l *Ledger) updateBranchInfo(addedBlockid, deletedBlockid []byte, addedBlockHeight int64, batch storage.Batch) error {
 	// delete deletedBlockid
-	err := batch.Delete(append([]byte(def.BranchInfoPrefix), deletedBlockid...))
+	err := batch.Delete(append([]byte(ledgerBase.BranchInfoPrefix), deletedBlockid...))
 	if err != nil {
 		return err
 	}
 	// put addedBlockid
 	addedBlockHeightStr := strconv.FormatInt(addedBlockHeight, 10)
-	err = batch.Put(append([]byte(def.BranchInfoPrefix), addedBlockid...), []byte(addedBlockHeightStr))
+	err = batch.Put(append([]byte(ledgerBase.BranchInfoPrefix), addedBlockid...), []byte(addedBlockHeightStr))
 	if err != nil {
 		return err
 	}
@@ -26,18 +26,18 @@ func (l *Ledger) updateBranchInfo(addedBlockid, deletedBlockid []byte, addedBloc
 
 func (l *Ledger) GetBranchInfo(targetBlockid []byte, targetBlockHeight int64) ([]string, error) {
 	result := []string{}
-	it := l.baseDB.NewIteratorWithPrefix([]byte(def.BranchInfoPrefix))
+	it := l.baseDB.NewIteratorWithPrefix([]byte(ledgerBase.BranchInfoPrefix))
 	defer it.Release()
 
 	for it.Next() {
 		key := it.Key()
-		if len(key) < len(def.BranchInfoPrefix)+1 {
+		if len(key) < len(ledgerBase.BranchInfoPrefix)+1 {
 			// 理论上不会出现这种情况
 			continue
 		}
 
 		// key格式为:前缀+blockid，去掉前缀
-		blkId := key[len(def.BranchInfoPrefix):]
+		blkId := key[len(ledgerBase.BranchInfoPrefix):]
 
 		value := string(it.Value())
 		blockHeight, err := strconv.ParseInt(value, 10, 64)

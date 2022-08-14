@@ -7,8 +7,8 @@ import (
 
 	contractBase "github.com/wooyang2018/corechain/contract/base"
 	engineBase "github.com/wooyang2018/corechain/engine/base"
+	"github.com/wooyang2018/corechain/engine/utils"
 	"github.com/wooyang2018/corechain/ledger"
-	"github.com/wooyang2018/corechain/ledger/base"
 	"github.com/wooyang2018/corechain/protos"
 )
 
@@ -86,11 +86,11 @@ func (p *paraChainContract) doCreateChain(bcName string, bcGenesisConfig string)
 		p.ChainCtx.XLog.Warn("Chain is running, no need be created", "chain", bcName)
 		return nil
 	}
-	err := base.CreateLedgerWithData(bcName, []byte(bcGenesisConfig), p.ChainCtx.EngCtx.EnvCfg)
-	if err != nil && err != base.ErrBlockChainExist {
+	err := utils.CreateLedgerWithData(bcName, []byte(bcGenesisConfig), p.ChainCtx.EngCtx.EnvCfg)
+	if err != nil && err != utils.ErrBlockChainExist {
 		return err
 	}
-	if err == base.ErrBlockChainExist {
+	if err == utils.ErrBlockChainExist {
 		p.ChainCtx.XLog.Warn("Chain created before, load again", "chain", bcName)
 
 	}
@@ -142,7 +142,7 @@ func (p *paraChainContract) createChain(ctx contractBase.KContext) (*contractBas
 	// 确保未创建过该链
 	chainRes, _ := ctx.Get(ParaChainKernelContract, []byte(bcName))
 	if chainRes != nil {
-		return newContractErrResponse(unAuthorized, base.ErrBlockChainExist.Error()), base.ErrBlockChainExist
+		return newContractErrResponse(unAuthorized, utils.ErrBlockChainExist.Error()), utils.ErrBlockChainExist
 	}
 	// 创建链时，自动写入Group信息
 	group := &Group{
@@ -272,7 +272,7 @@ func (p *paraChainContract) parseArgs(args map[string][]byte) (string, string, *
 		return bcName, bcData, nil, ErrBcNameEmpty
 	}
 	if bcName == p.ChainCtx.EngCtx.EngCfg.RootChain {
-		return bcName, bcData, nil, base.ErrBlockChainExist
+		return bcName, bcData, nil, utils.ErrBlockChainExist
 	}
 	if bcData == "" {
 		return bcName, bcData, nil, ErrBcDataEmpty

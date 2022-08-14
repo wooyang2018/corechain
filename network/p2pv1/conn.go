@@ -9,8 +9,8 @@ import (
 	xctx "github.com/wooyang2018/corechain/common/context"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/network"
+	netBase "github.com/wooyang2018/corechain/network/base"
 	"github.com/wooyang2018/corechain/network/config"
-	nctx "github.com/wooyang2018/corechain/network/context"
 	"github.com/wooyang2018/corechain/protos"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/connectivity"
@@ -18,7 +18,7 @@ import (
 )
 
 type Conn struct {
-	ctx    *nctx.NetCtx
+	ctx    *netBase.NetCtx
 	log    logger.Logger
 	config *config.NetConf
 
@@ -27,7 +27,7 @@ type Conn struct {
 }
 
 // NewConn create new connection with addr
-func NewConn(ctx *nctx.NetCtx, addr string) (*Conn, error) {
+func NewConn(ctx *netBase.NetCtx, addr string) (*Conn, error) {
 	c := &Conn{
 		id:     addr,
 		config: ctx.P2PConf,

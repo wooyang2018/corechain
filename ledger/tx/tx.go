@@ -10,7 +10,7 @@ import (
 
 	"github.com/wooyang2018/corechain/common/utils"
 	"github.com/wooyang2018/corechain/ledger"
-	"github.com/wooyang2018/corechain/ledger/def"
+	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
 	"github.com/wooyang2018/corechain/state/base"
 	"github.com/wooyang2018/corechain/state/txhash"
 	"github.com/wooyang2018/corechain/storage"
@@ -61,7 +61,7 @@ func NewTxHandler(sctx *base.StateCtx, stateDB storage.Database) (*TxHandler, er
 	tx := &TxHandler{
 		log:              sctx.XLog,
 		ldb:              stateDB,
-		unconfirmedTable: storage.NewTable(stateDB, def.UnconfirmedTablePrefix),
+		unconfirmedTable: storage.NewTable(stateDB, ledgerBase.UnconfirmedTablePrefix),
 		// UnconfirmTxInMem:  &sync.Map{},
 		ledger:            sctx.Ledger,
 		maxConfirmedDelay: DefaultMaxConfirmedDelay,
@@ -170,7 +170,7 @@ func ParseContractTransferRequest(requests []*protos.InvokeRequest) (string, *bi
 func (t *TxHandler) QueryTx(txid []byte) (*protos.Transaction, error) {
 	pbBuf, findErr := t.unconfirmedTable.Get(txid)
 	if findErr != nil {
-		if def.NormalizeKVError(findErr) == def.ErrKVNotFound {
+		if ledgerBase.NormalizeKVError(findErr) == ledgerBase.ErrKVNotFound {
 			return nil, ErrTxNotFound
 		}
 		t.log.Warn("unexpected leveldb error, when do QueryTx, it may corrupted.", "findErr", findErr)
@@ -287,7 +287,7 @@ func (t *TxHandler) SortUnconfirmedTx(sizeLimit int) ([]*protos.Transaction, []*
 
 //从disk还原unconfirm表到内存, 初始化的时候
 func (t *TxHandler) LoadUnconfirmedTxFromDisk() error {
-	iter := t.ldb.NewIteratorWithPrefix([]byte(def.UnconfirmedTablePrefix))
+	iter := t.ldb.NewIteratorWithPrefix([]byte(ledgerBase.UnconfirmedTablePrefix))
 	defer iter.Release()
 	count := 0
 	for iter.Next() {

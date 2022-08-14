@@ -7,6 +7,7 @@ import (
 	"github.com/patrickmn/go-cache"
 	xctx "github.com/wooyang2018/corechain/common/context"
 	"github.com/wooyang2018/corechain/network"
+	"github.com/wooyang2018/corechain/network/base"
 	"github.com/wooyang2018/corechain/protos"
 )
 
@@ -40,7 +41,7 @@ func (p *P2PServerV1) GetPeerInfo(addresses []string) ([]*protos.PeerInfo, error
 func (p *P2PServerV1) GetPeer(peerInfo protos.PeerInfo, addr string) []*protos.PeerInfo {
 	var remotePeers []*protos.PeerInfo
 	msg := network.NewMessage(protos.CoreMessage_GET_PEER_INFO, &peerInfo)
-	response, err := p.SendMessageWithResponse(p.ctx, msg, network.WithAddresses([]string{addr}))
+	response, err := p.SendMessageWithResponse(p.ctx, msg, base.WithAddresses([]string{addr}))
 	if err != nil {
 		p.log.Error("get peer error", "log_id", msg.GetHeader().GetLogid(), "error", err)
 		return nil

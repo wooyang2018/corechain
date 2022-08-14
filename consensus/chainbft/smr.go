@@ -15,6 +15,7 @@ import (
 	"github.com/wooyang2018/corechain/ledger"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/network"
+	netBase "github.com/wooyang2018/corechain/network/base"
 	"github.com/wooyang2018/corechain/protos"
 )
 
@@ -55,7 +56,7 @@ type SMR struct {
 	// subscribeList is the Subscriber list of the smr instance
 	subscribeList *list.List
 	// p2p interface
-	p2p          network.Network
+	p2p          netBase.Network
 	cryptoClient *CBFTCrypto
 	// quitCh stop channel
 	quitCh      chan bool
@@ -72,7 +73,7 @@ type SMR struct {
 	mtx        sync.Mutex
 }
 
-func NewSMR(bcName, address string, log logger.Logger, p2p network.Network, cryptoClient *CBFTCrypto, pacemaker Pacemaker,
+func NewSMR(bcName, address string, log logger.Logger, p2p netBase.Network, cryptoClient *CBFTCrypto, pacemaker Pacemaker,
 	saftyrules SafetyRules, election ProposerElection, qcTree *quorum.QCPendingTree) *SMR {
 	s := &SMR{
 		bcName:        bcName,
@@ -134,7 +135,7 @@ func (s *SMR) UnRegisterToNetwork() {
 	for i := 0; i < s.subscribeList.Len() && e != nil; i++ {
 		e = s.subscribeList.Front()
 		next := e.Next()
-		sub, _ := e.Value.(network.Subscriber)
+		sub, _ := e.Value.(netBase.Subscriber)
 		if err := s.p2p.UnRegister(sub); err == nil {
 			s.subscribeList.Remove(e)
 		}
@@ -378,7 +379,7 @@ func (s *SMR) ProcessProposal(viewNumber int64, proposalID []byte, parentID []by
 		return ErrP2PInternalErr
 	}
 
-	go s.p2p.SendMessage(createNewBCtx(), netMsg, network.WithAccounts(s.removeLocalValidator(validatesIpInfo)))
+	go s.p2p.SendMessage(createNewBCtx(), netMsg, netBase.WithAccounts(s.removeLocalValidator(validatesIpInfo)))
 	s.log.Debug("smr::ProcessProposal::proposal", "localAddress", s.address, "validatesIpInfo", validatesIpInfo,
 		"ProposalView", proposal.ProposalView, "ProposalId", utils.F(proposal.ProposalId),
 		"Timestamp", proposal.Timestamp, "JustifyQC", proposal.JustifyQC)
@@ -519,7 +520,7 @@ func (s *SMR) handleReceivedProposal(msg *protos.CoreMessage) error {
 		leader := newProposalMsg.GetSign().GetAddress()
 		// 此处如果失败，仍会执行下层逻辑，因为是多个节点通知该轮Leader，因此若发不出去仍可继续运行
 		if leader != "" && netMsg != nil && leader != s.address {
-			go s.p2p.SendMessage(createNewBCtx(), netMsg, network.WithAccounts([]string{leader}))
+			go s.p2p.SendMessage(createNewBCtx(), netMsg, netBase.WithAccounts([]string{leader}))
 			s.log.Debug("smr::handleReceivedProposal::proposal", "localAddress", s.address, "leader", leader,
 				"ProposalView", newProposalMsg.ProposalView, "ProposalId", utils.F(newProposalMsg.ProposalId),
 				"Timestamp", newProposalMsg.Timestamp, "JustifyQC", newProposalMsg.JustifyQC)
@@ -598,7 +599,7 @@ func (s *SMR) voteProposal(msg []byte, vote *quorum.VoteInfo, ledger *quorum.Led
 		s.log.Error("smr::ProcessProposal::NewMessage error")
 		return
 	}
-	go s.p2p.SendMessage(createNewBCtx(), netMsg, network.WithAccounts([]string{voteTo}))
+	go s.p2p.SendMessage(createNewBCtx(), netMsg, netBase.WithAccounts([]string{voteTo}))
 	s.log.Debug("smr::voteProposal::vote", "vote to next leader", voteTo, "vote view number", vote.ProposalView)
 }
 

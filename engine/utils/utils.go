@@ -1,4 +1,4 @@
-package base
+package utils
 
 import (
 	"encoding/json"
@@ -11,11 +11,11 @@ import (
 	"github.com/wooyang2018/corechain/common/utils"
 	"github.com/wooyang2018/corechain/crypto/client"
 	"github.com/wooyang2018/corechain/ledger"
-	lctx "github.com/wooyang2018/corechain/ledger/context"
-	"github.com/wooyang2018/corechain/ledger/tx"
+	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
+	ltx "github.com/wooyang2018/corechain/ledger/tx"
 	"github.com/wooyang2018/corechain/protos"
 	"github.com/wooyang2018/corechain/state"
-	sctx "github.com/wooyang2018/corechain/state/base"
+	stateBase "github.com/wooyang2018/corechain/state/base"
 )
 
 var (
@@ -25,7 +25,7 @@ var (
 	ErrCreateBlockChain = errors.New("create blockchain error")
 )
 
-// 通过创世块配置创建全新账本
+// CreateLedger 通过创世块配置文件地址创建全新账本
 func CreateLedger(bcName, genesisConf string, envCfg *xconf.EnvConf) error {
 	if bcName == "" || genesisConf == "" || envCfg == nil {
 		return fmt.Errorf("param set error")
@@ -37,7 +37,7 @@ func CreateLedger(bcName, genesisConf string, envCfg *xconf.EnvConf) error {
 	return createLedger(bcName, data, envCfg)
 }
 
-// 通过创世块全字段创建全新账本
+// CreateLedgerWithData 通过创世块字节数据创建全新账本
 func CreateLedgerWithData(bcName string, genesisData []byte, envCfg *xconf.EnvConf) error {
 	if bcName == "" || genesisData == nil || envCfg == nil {
 		return fmt.Errorf("param set error")
@@ -61,7 +61,7 @@ func createLedger(bcName string, data []byte, envCfg *xconf.EnvConf) error {
 		os.RemoveAll(fullpath)
 		return err
 	}
-	lctx, err := lctx.NewLedgerCtx(envCfg, bcName)
+	lctx, err := ledgerBase.NewLedgerCtx(envCfg, bcName)
 	if err != nil {
 		return err
 	}
@@ -70,7 +70,7 @@ func createLedger(bcName string, data []byte, envCfg *xconf.EnvConf) error {
 		os.RemoveAll(fullpath)
 		return err
 	}
-	tx, err := tx.GenerateRootTx(data)
+	tx, err := ltx.GenerateRootTx(data)
 	if err != nil {
 		os.RemoveAll(fullpath)
 		return err
@@ -92,7 +92,7 @@ func createLedger(bcName string, data []byte, envCfg *xconf.EnvConf) error {
 		os.RemoveAll(fullpath)
 		return ErrCreateBlockChain
 	}
-	sctx, err := sctx.NewStateCtx(envCfg, bcName, xledger, crypt)
+	sctx, err := stateBase.NewStateCtx(envCfg, bcName, xledger, crypt)
 	if err != nil {
 		os.RemoveAll(fullpath)
 		return err
@@ -112,6 +112,7 @@ func createLedger(bcName string, data []byte, envCfg *xconf.EnvConf) error {
 	return nil
 }
 
+//GetCryptoType 解析json中的crypto字段并返回
 func GetCryptoType(data []byte) (string, error) {
 	rootJSON := map[string]interface{}{}
 	err := json.Unmarshal(data, &rootJSON)

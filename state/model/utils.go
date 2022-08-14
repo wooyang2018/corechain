@@ -6,7 +6,7 @@ import (
 	"sort"
 
 	"github.com/wooyang2018/corechain/ledger"
-	"github.com/wooyang2018/corechain/ledger/def"
+	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
 	"github.com/wooyang2018/corechain/protos"
 	"github.com/wooyang2018/corechain/storage"
 	"google.golang.org/protobuf/proto"
@@ -50,7 +50,7 @@ func saveUnconfirmTx(tx *protos.Transaction, batch storage.Batch) error {
 	if err != nil {
 		return err
 	}
-	rawKey := append([]byte(def.UnconfirmedTablePrefix), []byte(tx.Txid)...)
+	rawKey := append([]byte(ledgerBase.UnconfirmedTablePrefix), []byte(tx.Txid)...)
 	batch.Put(rawKey, buf)
 	return nil
 }
@@ -142,5 +142,5 @@ func GenWriteKeyWithPrefix(txOutputExt *protos.TxOutputExt) string {
 	bucket := txOutputExt.GetBucket()
 	key := txOutputExt.GetKey()
 	baseWriteSetKey := bucket + fmt.Sprintf("%s", key)
-	return def.ExtUtxoTablePrefix + baseWriteSetKey
+	return ledgerBase.ExtUtxoTablePrefix + baseWriteSetKey
 }

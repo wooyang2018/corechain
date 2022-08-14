@@ -1,7 +1,7 @@
 package p2pv1
 
 import (
-	"github.com/wooyang2018/corechain/network"
+	"github.com/wooyang2018/corechain/network/base"
 )
 
 // PeerFilter the interface for filter peers
@@ -20,7 +20,7 @@ type StaticNodeStrategy struct {
 func (ss *StaticNodeStrategy) Filter() ([]string, error) {
 	var peers []string
 	if ss.broadcast {
-		peers = append(peers, ss.srv.staticNodes[network.BlockChain]...)
+		peers = append(peers, ss.srv.staticNodes[base.BlockChain]...)
 	} else {
 		peers = append(peers, ss.srv.staticNodes[ss.bcname]...)
 	}

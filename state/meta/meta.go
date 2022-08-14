@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	"github.com/wooyang2018/corechain/ledger"
-	"github.com/wooyang2018/corechain/ledger/def"
+	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/protos"
 	"github.com/wooyang2018/corechain/state/base"
@@ -41,7 +41,7 @@ func NewMeta(sctx *base.StateCtx, stateDB storage.Database) (*Meta, error) {
 		UtxoMeta: &protos.UtxoMeta{},
 		TempMeta: &protos.UtxoMeta{},
 		Mutex:    &sync.Mutex{},
-		Table:    storage.NewTable(stateDB, def.MetaTablePrefix),
+		Table:    storage.NewTable(stateDB, ledgerBase.MetaTablePrefix),
 	}
 
 	var loadErr error
@@ -109,7 +109,7 @@ func (t *Meta) LoadNewAccountResourceAmount() (int64, error) {
 		utxoMeta := &protos.UtxoMeta{}
 		err := proto.Unmarshal(newAccountResourceAmountBuf, utxoMeta)
 		return utxoMeta.GetNewAccountResourceAmount(), err
-	} else if def.NormalizeKVError(findErr) == def.ErrKVNotFound {
+	} else if ledgerBase.NormalizeKVError(findErr) == ledgerBase.ErrKVNotFound {
 		genesisNewAccountResourceAmount := t.Ledger.GetNewAccountResourceAmount()
 		if genesisNewAccountResourceAmount < 0 {
 			return genesisNewAccountResourceAmount, ErrProposalParamsIsNegativeNumber
@@ -132,7 +132,7 @@ func (t *Meta) UpdateNewAccountResourceAmount(newAccountResourceAmount int64, ba
 		t.Log.Warn("failed to marshal pb meta")
 		return pbErr
 	}
-	err := batch.Put([]byte(def.MetaTablePrefix+ledger.NewAccountResourceAmountKey), newAccountResourceAmountBuf)
+	err := batch.Put([]byte(ledgerBase.MetaTablePrefix+ledger.NewAccountResourceAmountKey), newAccountResourceAmountBuf)
 	if err == nil {
 		t.Log.Info("Update newAccountResourceAmount succeed")
 	}
@@ -156,7 +156,7 @@ func (t *Meta) LoadMaxBlockSize() (int64, error) {
 		utxoMeta := &protos.UtxoMeta{}
 		err := proto.Unmarshal(maxBlockSizeBuf, utxoMeta)
 		return utxoMeta.GetMaxBlockSize(), err
-	} else if def.NormalizeKVError(findErr) == def.ErrKVNotFound {
+	} else if ledgerBase.NormalizeKVError(findErr) == ledgerBase.ErrKVNotFound {
 		genesisMaxBlockSize := t.Ledger.GetMaxBlockSize()
 		if genesisMaxBlockSize <= 0 {
 			return genesisMaxBlockSize, ErrProposalParamsIsNotPositiveNumber
@@ -184,7 +184,7 @@ func (t *Meta) UpdateMaxBlockSize(maxBlockSize int64, batch storage.Batch) error
 		t.Log.Warn("failed to marshal pb meta")
 		return pbErr
 	}
-	err := batch.Put([]byte(def.MetaTablePrefix+ledger.MaxBlockSizeKey), maxBlockSizeBuf)
+	err := batch.Put([]byte(ledgerBase.MetaTablePrefix+ledger.MaxBlockSizeKey), maxBlockSizeBuf)
 	if err == nil {
 		t.Log.Info("Update maxBlockSize succeed")
 	}
@@ -206,7 +206,7 @@ func (t *Meta) LoadReservedContracts() ([]*protos.InvokeRequest, error) {
 		utxoMeta := &protos.UtxoMeta{}
 		err := proto.Unmarshal(reservedContractsBuf, utxoMeta)
 		return utxoMeta.GetReservedContracts(), err
-	} else if def.NormalizeKVError(findErr) == def.ErrKVNotFound {
+	} else if ledgerBase.NormalizeKVError(findErr) == ledgerBase.ErrKVNotFound {
 		return t.Ledger.GetReservedContracts()
 	}
 	return nil, findErr
@@ -225,7 +225,7 @@ func (t *Meta) UpdateReservedContracts(params []*protos.InvokeRequest, batch sto
 		t.Log.Warn("failed to marshal pb meta")
 		return pbErr
 	}
-	err := batch.Put([]byte(def.MetaTablePrefix+ledger.ReservedContractsKey), paramsBuf)
+	err := batch.Put([]byte(ledgerBase.MetaTablePrefix+ledger.ReservedContractsKey), paramsBuf)
 	if err == nil {
 		t.Log.Info("Update reservered contract succeed")
 	}
@@ -253,7 +253,7 @@ func (t *Meta) LoadGroupChainContract() (*protos.InvokeRequest, error) {
 		utxoMeta := &protos.UtxoMeta{}
 		err := proto.Unmarshal(groupChainContractBuf, utxoMeta)
 		return utxoMeta.GetGroupChainContract(), err
-	} else if def.NormalizeKVError(findErr) == def.ErrKVNotFound {
+	} else if ledgerBase.NormalizeKVError(findErr) == ledgerBase.ErrKVNotFound {
 		requests, err := t.Ledger.GetGroupChainContract()
 		if len(requests) > 0 {
 			return requests[0], err
@@ -269,7 +269,7 @@ func (t *Meta) LoadForbiddenContract() (*protos.InvokeRequest, error) {
 		utxoMeta := &protos.UtxoMeta{}
 		err := proto.Unmarshal(forbiddenContractBuf, utxoMeta)
 		return utxoMeta.GetForbiddenContract(), err
-	} else if def.NormalizeKVError(findErr) == def.ErrKVNotFound {
+	} else if ledgerBase.NormalizeKVError(findErr) == ledgerBase.ErrKVNotFound {
 		requests, err := t.Ledger.GetForbiddenContract()
 		if len(requests) > 0 {
 			return requests[0], err
@@ -291,7 +291,7 @@ func (t *Meta) UpdateForbiddenContract(param *protos.InvokeRequest, batch storag
 		t.Log.Warn("failed to marshal pb meta")
 		return pbErr
 	}
-	err := batch.Put([]byte(def.MetaTablePrefix+ledger.ForbiddenContractKey), paramBuf)
+	err := batch.Put([]byte(ledgerBase.MetaTablePrefix+ledger.ForbiddenContractKey), paramBuf)
 	if err == nil {
 		t.Log.Info("Update forbidden contract succeed")
 	}
@@ -307,7 +307,7 @@ func (t *Meta) LoadIrreversibleBlockHeight() (int64, error) {
 		utxoMeta := &protos.UtxoMeta{}
 		err := proto.Unmarshal(irreversibleBlockHeightBuf, utxoMeta)
 		return utxoMeta.GetIrreversibleBlockHeight(), err
-	} else if def.NormalizeKVError(findErr) == def.ErrKVNotFound {
+	} else if ledgerBase.NormalizeKVError(findErr) == ledgerBase.ErrKVNotFound {
 		return int64(0), nil
 	}
 	return int64(0), findErr
@@ -319,7 +319,7 @@ func (t *Meta) LoadIrreversibleSlideWindow() (int64, error) {
 		utxoMeta := &protos.UtxoMeta{}
 		err := proto.Unmarshal(irreversibleSlideWindowBuf, utxoMeta)
 		return utxoMeta.GetIrreversibleSlideWindow(), err
-	} else if def.NormalizeKVError(findErr) == def.ErrKVNotFound {
+	} else if ledgerBase.NormalizeKVError(findErr) == ledgerBase.ErrKVNotFound {
 		genesisSlideWindow := t.Ledger.GetIrreversibleSlideWindow()
 		// negative number is not meaningful
 		if genesisSlideWindow < 0 {
@@ -351,7 +351,7 @@ func (t *Meta) UpdateIrreversibleBlockHeight(nextIrreversibleBlockHeight int64, 
 		t.Log.Warn("failed to marshal pb meta")
 		return pbErr
 	}
-	err := batch.Put([]byte(def.MetaTablePrefix+ledger.IrreversibleBlockHeightKey), irreversibleBlockHeightBuf)
+	err := batch.Put([]byte(ledgerBase.MetaTablePrefix+ledger.IrreversibleBlockHeightKey), irreversibleBlockHeightBuf)
 	if err != nil {
 		return err
 	}
@@ -424,7 +424,7 @@ func (t *Meta) UpdateIrreversibleSlideWindow(nextIrreversibleSlideWindow int64, 
 		t.Log.Warn("failed to marshal pb meta")
 		return pbErr
 	}
-	err := batch.Put([]byte(def.MetaTablePrefix+ledger.IrreversibleSlideWindowKey), irreversibleSlideWindowBuf)
+	err := batch.Put([]byte(ledgerBase.MetaTablePrefix+ledger.IrreversibleSlideWindowKey), irreversibleSlideWindowBuf)
 	if err != nil {
 		return err
 	}
@@ -449,7 +449,7 @@ func (t *Meta) LoadGasPrice() (*protos.GasPrice, error) {
 		utxoMeta := &protos.UtxoMeta{}
 		err := proto.Unmarshal(gasPriceBuf, utxoMeta)
 		return utxoMeta.GetGasPrice(), err
-	} else if def.NormalizeKVError(findErr) == def.ErrKVNotFound {
+	} else if ledgerBase.NormalizeKVError(findErr) == ledgerBase.ErrKVNotFound {
 		nofee := t.Ledger.GetNoFee()
 		if nofee {
 			gasPrice := &protos.GasPrice{
@@ -503,7 +503,7 @@ func (t *Meta) UpdateGasPrice(nextGasPrice *protos.GasPrice, batch storage.Batch
 		t.Log.Warn("failed to marshal pb meta")
 		return pbErr
 	}
-	err := batch.Put([]byte(def.MetaTablePrefix+ledger.GasPriceKey), gasPriceBuf)
+	err := batch.Put([]byte(ledgerBase.MetaTablePrefix+ledger.GasPriceKey), gasPriceBuf)
 	if err != nil {
 		return err
 	}

@@ -15,7 +15,7 @@ import (
 	"github.com/wooyang2018/corechain/common/timer"
 	"github.com/wooyang2018/corechain/common/utils"
 	"github.com/wooyang2018/corechain/engine/base"
-	"github.com/wooyang2018/corechain/ledger/tx"
+	ltx "github.com/wooyang2018/corechain/ledger/tx"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/protos"
 	"github.com/wooyang2018/corechain/state"
@@ -442,7 +442,7 @@ func (t *Miner) getAwardTx(height int64) (*protos.Transaction, error) {
 		return nil, errors.New("amount in transaction can not be negative number")
 	}
 
-	awardTx, err := tx.GenerateAwardTx(t.ctx.Address.Address, amount.String(), []byte("award"))
+	awardTx, err := ltx.GenerateAwardTx(t.ctx.Address.Address, amount.String(), []byte("award"))
 	if err != nil {
 		return nil, err
 	}

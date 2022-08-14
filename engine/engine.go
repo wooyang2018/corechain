@@ -15,7 +15,7 @@ import (
 	"github.com/wooyang2018/corechain/engine/worker"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/network"
-	nctx "github.com/wooyang2018/corechain/network/context"
+	netBase "github.com/wooyang2018/corechain/network/base"
 	"github.com/wooyang2018/corechain/storage"
 )
 
@@ -107,8 +107,8 @@ func (t *Engine) Init(envCfg *xconf.EnvConf) error {
 	return nil
 }
 
-func (t *Engine) CreateNetwork(envCfg *xconf.EnvConf) (network.Network, error) {
-	ctx, err := nctx.NewNetCtx(envCfg)
+func (t *Engine) CreateNetwork(envCfg *xconf.EnvConf) (netBase.Network, error) {
+	ctx, err := netBase.NewNetCtx(envCfg)
 	if err != nil {
 		return nil, fmt.Errorf("create network context failed.err:%v", err)
 	}

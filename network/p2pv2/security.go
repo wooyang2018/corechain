@@ -16,7 +16,7 @@ import (
 	"github.com/libp2p/go-libp2p-core/peer"
 	"github.com/libp2p/go-libp2p-core/sec"
 	"github.com/multiformats/go-multiaddr"
-	"github.com/wooyang2018/corechain/network"
+	"github.com/wooyang2018/corechain/network/base"
 	"github.com/wooyang2018/corechain/network/config"
 )
 
@@ -166,15 +166,15 @@ func (blankValidator) Validate(_ string, _ []byte) error        { return nil }
 func (blankValidator) Select(_ string, _ [][]byte) (int, error) { return 0, nil }
 
 func Key(account string) string {
-	return fmt.Sprintf("/%s/account/%s", network.Namespace, account)
+	return fmt.Sprintf("/%s/account/%s", base.Namespace, account)
 }
 
 func GenAccountKey(account string) string {
-	return fmt.Sprintf("/%s/account/%s", network.Namespace, account)
+	return fmt.Sprintf("/%s/account/%s", base.Namespace, account)
 }
 
 func GenPeerIDKey(id peer.ID) string {
-	return fmt.Sprintf("/%s/id/%s", network.Namespace, id)
+	return fmt.Sprintf("/%s/id/%s", base.Namespace, id)
 }
 
 // GetPeerIDByAddress return peer ID corresponding to peerAddr

@@ -1,4 +1,4 @@
-package network
+package base
 
 // FilterStrategy defines the supported filter strategies
 type FilterStrategy string

@@ -7,7 +7,7 @@ import (
 	"github.com/wooyang2018/corechain/common/utils"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/network"
-	nctx "github.com/wooyang2018/corechain/network/context"
+	netBase "github.com/wooyang2018/corechain/network/base"
 )
 
 func GetMockEnvConf(paths ...string) (*xconf.EnvConf, error) {
@@ -26,13 +26,13 @@ func GetMockEnvConf(paths ...string) (*xconf.EnvConf, error) {
 	return econf, nil
 }
 
-func NewFakeP2P(node string, module ...string) (network.Network, *nctx.NetCtx, error) {
+func NewFakeP2P(node string, module ...string) (netBase.Network, *netBase.NetCtx, error) {
 	ecfg, _ := GetMockEnvConf(node + "/conf/env.yaml")
 	logger.InitMLog(ecfg.GenConfFilePath(ecfg.LogConf), ecfg.GenDirAbsPath(ecfg.LogDir))
 	if module != nil && len(module) == 1 {
 		ecfg.NetConf = module[0] + ".yaml"
 	}
-	ctx, _ := nctx.NewNetCtx(ecfg)
+	ctx, _ := netBase.NewNetCtx(ecfg)
 	netObj, err := network.NewNetwork(ctx)
 	if err != nil {
 		return nil, nil, err

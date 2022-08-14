@@ -5,14 +5,14 @@ import (
 
 	"github.com/wooyang2018/corechain/logger"
 	mock "github.com/wooyang2018/corechain/mock/config"
-	nctx "github.com/wooyang2018/corechain/network/context"
+	netBase "github.com/wooyang2018/corechain/network/base"
 	"github.com/wooyang2018/corechain/protos"
 )
 
 type dispatcherCase struct {
-	sub       Subscriber
+	sub       netBase.Subscriber
 	msg       *protos.CoreMessage
-	stream    Stream
+	stream    netBase.Stream
 	regErr    error
 	handleErr error
 }
@@ -23,7 +23,7 @@ func TestDispatcher(t *testing.T) {
 		t.Fatal(err)
 	}
 	logger.InitMLog(ecfg.GenConfFilePath(ecfg.LogConf), ecfg.GenDirAbsPath(ecfg.LogDir))
-	netCtx, _ := nctx.NewNetCtx(ecfg)
+	netCtx, _ := netBase.NewNetCtx(ecfg)
 
 	ch := make(chan *protos.CoreMessage, 1)
 	stream := &mockStream{}
@@ -31,13 +31,13 @@ func TestDispatcher(t *testing.T) {
 	msg := NewMessage(protos.CoreMessage_GET_BLOCK, &protos.CoreMessage{},
 		WithBCName("Core"),
 		WithLogId("1234567890"),
-		WithVersion(MessageVersion),
+		WithVersion(netBase.MessageVersion),
 	)
 
 	msgPostTx := NewMessage(protos.CoreMessage_POSTTX, &protos.CoreMessage{},
 		WithBCName("Core"),
 		WithLogId("1234567890"),
-		WithVersion(MessageVersion),
+		WithVersion(netBase.MessageVersion),
 	)
 
 	cases := []dispatcherCase{

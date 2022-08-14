@@ -5,7 +5,7 @@ import (
 	xctx "github.com/wooyang2018/corechain/common/context"
 	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/crypto/client/base"
-	"github.com/wooyang2018/corechain/network"
+	netBase "github.com/wooyang2018/corechain/network/base"
 )
 
 //ConsensusCtx 共识运行环境上下文
@@ -16,5 +16,5 @@ type ConsensusCtx struct {
 	Crypto   base.CryptoClient
 	Contract contractBase.Manager
 	Ledger   LedgerRely
-	Network  network.Network
+	Network  netBase.Network
 }

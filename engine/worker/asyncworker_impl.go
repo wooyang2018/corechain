@@ -10,7 +10,7 @@ import (
 
 	"github.com/wooyang2018/corechain/engine/base"
 	"github.com/wooyang2018/corechain/engine/event"
-	"github.com/wooyang2018/corechain/ledger/def"
+	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/protos"
 	"github.com/wooyang2018/corechain/storage"
@@ -241,7 +241,7 @@ func (aw *AsyncWorkerImpl) storeCursor(cursor asyncWorkerCursor) error {
 // reload 从上一次执行恢复，需要在断点处开始无缺漏的执行到当前高度，后在启动新的订阅协程
 func (aw *AsyncWorkerImpl) reloadCursor() (*asyncWorkerCursor, error) {
 	buf, err := aw.finishTable.Get([]byte(aw.bcname))
-	if err != nil && def.NormalizeKVError(err) == def.ErrKVNotFound {
+	if err != nil && ledgerBase.NormalizeKVError(err) == ledgerBase.ErrKVNotFound {
 		return nil, emptyErr
 	}
 	if err != nil {

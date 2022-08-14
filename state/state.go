@@ -19,7 +19,7 @@ import (
 	"github.com/wooyang2018/corechain/contract/proposal/propose"
 	ptimer "github.com/wooyang2018/corechain/contract/proposal/timer"
 	"github.com/wooyang2018/corechain/ledger"
-	"github.com/wooyang2018/corechain/ledger/def"
+	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
 	ltx "github.com/wooyang2018/corechain/ledger/tx"
 	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/permission/base"
@@ -92,7 +92,7 @@ func NewState(sctx *stateBase.StateCtx) (*State, error) {
 	var err error
 	storePath := sctx.EnvCfg.GenDataAbsPath(sctx.EnvCfg.ChainDir)
 	storePath = filepath.Join(storePath, sctx.BCName)
-	stateDBPath := filepath.Join(storePath, def.StateStrgDirName)
+	stateDBPath := filepath.Join(storePath, ledgerBase.StateStrgDirName)
 	kvParam := &leveldb.KVParameter{
 		DBPath:                stateDBPath, //状态机的持久化文件存储路径
 		KVEngineType:          sctx.LedgerCfg.KVEngineType,
@@ -131,7 +131,7 @@ func NewState(sctx *stateBase.StateCtx) (*State, error) {
 	if findErr == nil {
 		obj.latestBlockid = latestBlockid
 	} else {
-		if def.NormalizeKVError(findErr) != def.ErrKVNotFound {
+		if ledgerBase.NormalizeKVError(findErr) != ledgerBase.ErrKVNotFound {
 			return nil, findErr
 		}
 	}
@@ -246,7 +246,7 @@ func (t *State) HasTx(txid []byte) (bool, error) {
 }
 
 func (t *State) GetFrozenBalance(addr string) (*big.Int, error) {
-	addrPrefix := fmt.Sprintf("%s%s_", def.UTXOTablePrefix, addr)
+	addrPrefix := fmt.Sprintf("%s%s_", ledgerBase.UTXOTablePrefix, addr)
 	utxoFrozen := big.NewInt(0)
 	curHeight := t.sctx.Ledger.GetMeta().TrunkHeight
 	it := t.ldb.NewIteratorWithPrefix([]byte(addrPrefix))
@@ -271,7 +271,7 @@ func (t *State) GetFrozenBalance(addr string) (*big.Int, error) {
 
 // GetFrozenBalance 查询Address的被冻结的余额 / 未冻结的余额
 func (t *State) GetBalanceDetail(addr string) ([]*protos.BalanceDetailInfo, error) {
-	addrPrefix := fmt.Sprintf("%s%s_", def.UTXOTablePrefix, addr)
+	addrPrefix := fmt.Sprintf("%s%s_", ledgerBase.UTXOTablePrefix, addr)
 	utxoFrozen := big.NewInt(0)
 	utxoUnFrozen := big.NewInt(0)
 	curHeight := t.sctx.Ledger.GetMeta().TrunkHeight
@@ -418,7 +418,7 @@ func (t *State) PlayForMiner(blockid []byte) error {
 				return err
 			}
 		} else {
-			batch.Delete(append([]byte(def.UnconfirmedTablePrefix), []byte(txid)...))
+			batch.Delete(append([]byte(ledgerBase.UnconfirmedTablePrefix), []byte(txid)...))
 		}
 		err = t.payFee(tx, batch, block)
 		if err != nil {
@@ -798,7 +798,7 @@ func (t *State) doTxSync(tx *protos.Transaction) error {
 		return err
 	}
 
-	batch.Put(append([]byte(def.UnconfirmedTablePrefix), tx.Txid...), pbTxBuf)
+	batch.Put(append([]byte(ledgerBase.UnconfirmedTablePrefix), tx.Txid...), pbTxBuf)
 	t.log.Debug("print tx size when DoTx", "tx_size", batch.ValueSize(), "txid", utils.F(tx.Txid))
 	beginTime = time.Now()
 	writeErr := batch.Write()
@@ -955,7 +955,7 @@ func (t *State) undoUnconfirmedTx(tx *protos.Transaction,
 	if undoErr != nil {
 		return undoErr
 	}
-	batch.Delete(append([]byte(def.UnconfirmedTablePrefix), tx.Txid...))
+	batch.Delete(append([]byte(ledgerBase.UnconfirmedTablePrefix), tx.Txid...))
 
 	// 记录回滚交易，用于重放
 	if undoDone != nil {
@@ -1108,7 +1108,7 @@ func (t *State) updateLatestBlockid(newBlockid []byte, batch storage.Batch, reas
 	if err != nil {
 		return err
 	}
-	batch.Put(append([]byte(def.MetaTablePrefix), []byte(utxo.LatestBlockKey)...), newBlockid)
+	batch.Put(append([]byte(ledgerBase.MetaTablePrefix), []byte(utxo.LatestBlockKey)...), newBlockid)
 	writeErr := batch.Write()
 	if writeErr != nil {
 		t.ClearCache()
@@ -1368,7 +1368,7 @@ func (t *State) processUnconfirmTxs(block *protos.InternalBlock, batch storage.B
 
 		txid := string(tx.GetTxid())
 		if t.tx.Mempool.HasTx(txid) {
-			batch.Delete(append([]byte(def.UnconfirmedTablePrefix), []byte(txid)...))
+			batch.Delete(append([]byte(ledgerBase.UnconfirmedTablePrefix), []byte(txid)...))
 			t.log.Debug("delete from unconfirmed", "txid", fmt.Sprintf("%x", tx.GetTxid()))
 			unconfirmToConfirm[txid] = true
 		} else { // 如果区块中的交易不在 mempool 中再去检查冲突交易。
@@ -1384,7 +1384,7 @@ func (t *State) processUnconfirmTxs(block *protos.InternalBlock, batch storage.B
 		if undoDone[string(undoTx.Txid)] {
 			continue
 		}
-		batch.Delete(append([]byte(def.UnconfirmedTablePrefix), undoTx.Txid...)) // mempool 中删除后，db 的未确认交易中也要删除。
+		batch.Delete(append([]byte(ledgerBase.UnconfirmedTablePrefix), undoTx.Txid...)) // mempool 中删除后，db 的未确认交易中也要删除。
 		undoErr := t.undoUnconfirmedTx(undoTx, batch, undoDone, nil)
 		if undoErr != nil {
 			t.log.Warn("fail to undo tx", "undoErr", undoErr)
