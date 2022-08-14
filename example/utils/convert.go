@@ -267,6 +267,7 @@ func ContractStatusListToXchain(contractStatusList []*protos.ContractStatus) ([]
 	return tmpList, nil
 }
 
+//*****
 func PeerInfoToStrings(info protos.PeerInfo) []string {
 	peerUrls := make([]string, 0, len(info.Peer))
 	for _, peer := range info.Peer {

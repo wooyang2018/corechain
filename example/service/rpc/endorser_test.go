@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"testing"
@@ -14,11 +13,11 @@ import (
 	engineBase "github.com/wooyang2018/corechain/engine/base"
 	"github.com/wooyang2018/corechain/engine/utils"
 	"github.com/wooyang2018/corechain/example/base"
+	"github.com/wooyang2018/corechain/example/mock"
 	"github.com/wooyang2018/corechain/example/pb"
 	scom "github.com/wooyang2018/corechain/example/utils"
 	ltx "github.com/wooyang2018/corechain/ledger/tx"
 	"github.com/wooyang2018/corechain/logger"
-	mock "github.com/wooyang2018/corechain/mock/config"
 
 	// import要使用的内核核心组件驱动
 	_ "github.com/wooyang2018/corechain/consensus/pow"
@@ -39,10 +38,7 @@ var (
 )
 
 func TestEndorserCall(t *testing.T) {
-	workspace, dirErr := ioutil.TempDir("/tmp", "")
-	if dirErr != nil {
-		t.Fatal(dirErr)
-	}
+	workspace := mock.GetTempDirPath()
 	os.RemoveAll(workspace)
 	defer os.RemoveAll(workspace)
 	conf, _ := mock.GetMockEnvConf()
@@ -128,7 +124,7 @@ func TestEndorserCall(t *testing.T) {
 	}
 	req = &pb.EndorserRequest{
 		RequestName: "TxQuery",
-		BcName:      "xuper",
+		BcName:      "corecahin",
 		RequestData: requestData,
 	}
 	resp, err = endor.EndorserCall(ctx, req)
@@ -163,7 +159,7 @@ func MockEngine() (engineBase.Engine, error) {
 }
 
 func RemoveLedger(conf *xconf.EnvConf) error {
-	path := conf.GenDataAbsPath("blockchain")
+	path := conf.GenDataAbsPath("chains")
 	if err := os.RemoveAll(path); err != nil {
 		log.Printf("remove ledger failed.err:%v\n", err)
 		return err

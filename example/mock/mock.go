@@ -2,7 +2,11 @@ package mock
 
 import (
 	"fmt"
+	"math"
+	"math/rand"
 	"path/filepath"
+	"strconv"
+	"time"
 
 	xconf "github.com/wooyang2018/corechain/common/config"
 	"github.com/wooyang2018/corechain/common/utils"
@@ -20,6 +24,11 @@ func GetEnvDataDirPath() string {
 
 func GetGenesisConfFilePath(name string) string {
 	return filepath.Join(dir, fmt.Sprintf("../data/genesis/%s.json", name))
+}
+
+func GetTempDirPath() string {
+	rand.Seed(time.Now().UnixNano())
+	return filepath.Join("temp", strconv.Itoa(rand.Intn(math.MaxInt)))
 }
 
 func GetServerConfFilePath() string {
