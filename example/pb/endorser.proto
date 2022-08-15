@@ -2,7 +2,7 @@ syntax = "proto3";
 option go_package = "github.com/wooyang2018/corechain/example/pb";
 package pb;
 
-import "contract.proto";
+import "common.proto";
 import "google/api/annotations.proto";
 
 // 请求参数

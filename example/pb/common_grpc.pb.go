@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.21.1
-// source: contract.proto
+// source: common.proto
 
 package pb
 
@@ -1169,5 +1169,5 @@ var MXchain_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "contract.proto",
+	Metadata: "common.proto",
 }
