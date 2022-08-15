@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.28.0
 // 	protoc        v3.21.1
-// source: xchain.proto
+// source: contract.proto
 
 package pb
 
@@ -141,11 +141,11 @@ func (x XChainErrorEnum) String() string {
 }
 
 func (XChainErrorEnum) Descriptor() protoreflect.EnumDescriptor {
-	return file_xchain_proto_enumTypes[0].Descriptor()
+	return file_contract_proto_enumTypes[0].Descriptor()
 }
 
 func (XChainErrorEnum) Type() protoreflect.EnumType {
-	return &file_xchain_proto_enumTypes[0]
+	return &file_contract_proto_enumTypes[0]
 }
 
 func (x XChainErrorEnum) Number() protoreflect.EnumNumber {
@@ -154,7 +154,7 @@ func (x XChainErrorEnum) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use XChainErrorEnum.Descriptor instead.
 func (XChainErrorEnum) EnumDescriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{0}
+	return file_contract_proto_rawDescGZIP(), []int{0}
 }
 
 // TransactionStatus is the status of transaction
@@ -206,11 +206,11 @@ func (x TransactionStatus) String() string {
 }
 
 func (TransactionStatus) Descriptor() protoreflect.EnumDescriptor {
-	return file_xchain_proto_enumTypes[1].Descriptor()
+	return file_contract_proto_enumTypes[1].Descriptor()
 }
 
 func (TransactionStatus) Type() protoreflect.EnumType {
-	return &file_xchain_proto_enumTypes[1]
+	return &file_contract_proto_enumTypes[1]
 }
 
 func (x TransactionStatus) Number() protoreflect.EnumNumber {
@@ -219,7 +219,7 @@ func (x TransactionStatus) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use TransactionStatus.Descriptor instead.
 func (TransactionStatus) EnumDescriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{1}
+	return file_contract_proto_rawDescGZIP(), []int{1}
 }
 
 // View option to be choosed (only used in status filter currently)
@@ -267,11 +267,11 @@ func (x ViewOption) String() string {
 }
 
 func (ViewOption) Descriptor() protoreflect.EnumDescriptor {
-	return file_xchain_proto_enumTypes[2].Descriptor()
+	return file_contract_proto_enumTypes[2].Descriptor()
 }
 
 func (ViewOption) Type() protoreflect.EnumType {
-	return &file_xchain_proto_enumTypes[2]
+	return &file_contract_proto_enumTypes[2]
 }
 
 func (x ViewOption) Number() protoreflect.EnumNumber {
@@ -280,7 +280,7 @@ func (x ViewOption) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ViewOption.Descriptor instead.
 func (ViewOption) EnumDescriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{2}
+	return file_contract_proto_rawDescGZIP(), []int{2}
 }
 
 // --------   Account and Permission Section --------
@@ -329,11 +329,11 @@ func (x PermissionRule) String() string {
 }
 
 func (PermissionRule) Descriptor() protoreflect.EnumDescriptor {
-	return file_xchain_proto_enumTypes[3].Descriptor()
+	return file_contract_proto_enumTypes[3].Descriptor()
 }
 
 func (PermissionRule) Type() protoreflect.EnumType {
-	return &file_xchain_proto_enumTypes[3]
+	return &file_contract_proto_enumTypes[3]
 }
 
 func (x PermissionRule) Number() protoreflect.EnumNumber {
@@ -342,7 +342,7 @@ func (x PermissionRule) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use PermissionRule.Descriptor instead.
 func (PermissionRule) EnumDescriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{3}
+	return file_contract_proto_rawDescGZIP(), []int{3}
 }
 
 type ResourceType int32
@@ -381,11 +381,11 @@ func (x ResourceType) String() string {
 }
 
 func (ResourceType) Descriptor() protoreflect.EnumDescriptor {
-	return file_xchain_proto_enumTypes[4].Descriptor()
+	return file_contract_proto_enumTypes[4].Descriptor()
 }
 
 func (ResourceType) Type() protoreflect.EnumType {
-	return &file_xchain_proto_enumTypes[4]
+	return &file_contract_proto_enumTypes[4]
 }
 
 func (x ResourceType) Number() protoreflect.EnumNumber {
@@ -394,7 +394,7 @@ func (x ResourceType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ResourceType.Descriptor instead.
 func (ResourceType) EnumDescriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{4}
+	return file_contract_proto_rawDescGZIP(), []int{4}
 }
 
 type Block_EBlockStatus int32
@@ -433,11 +433,11 @@ func (x Block_EBlockStatus) String() string {
 }
 
 func (Block_EBlockStatus) Descriptor() protoreflect.EnumDescriptor {
-	return file_xchain_proto_enumTypes[5].Descriptor()
+	return file_contract_proto_enumTypes[5].Descriptor()
 }
 
 func (Block_EBlockStatus) Type() protoreflect.EnumType {
-	return &file_xchain_proto_enumTypes[5]
+	return &file_contract_proto_enumTypes[5]
 }
 
 func (x Block_EBlockStatus) Number() protoreflect.EnumNumber {
@@ -446,7 +446,7 @@ func (x Block_EBlockStatus) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use Block_EBlockStatus.Descriptor instead.
 func (Block_EBlockStatus) EnumDescriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{5, 0}
+	return file_contract_proto_rawDescGZIP(), []int{5, 0}
 }
 
 type Header struct {
@@ -462,7 +462,7 @@ type Header struct {
 func (x *Header) Reset() {
 	*x = Header{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[0]
+		mi := &file_contract_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -475,7 +475,7 @@ func (x *Header) String() string {
 func (*Header) ProtoMessage() {}
 
 func (x *Header) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[0]
+	mi := &file_contract_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -488,7 +488,7 @@ func (x *Header) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Header.ProtoReflect.Descriptor instead.
 func (*Header) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{0}
+	return file_contract_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Header) GetLogid() string {
@@ -525,7 +525,7 @@ type TxDataAccount struct {
 func (x *TxDataAccount) Reset() {
 	*x = TxDataAccount{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[1]
+		mi := &file_contract_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -538,7 +538,7 @@ func (x *TxDataAccount) String() string {
 func (*TxDataAccount) ProtoMessage() {}
 
 func (x *TxDataAccount) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[1]
+	mi := &file_contract_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -551,7 +551,7 @@ func (x *TxDataAccount) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TxDataAccount.ProtoReflect.Descriptor instead.
 func (*TxDataAccount) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{1}
+	return file_contract_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *TxDataAccount) GetAddress() string {
@@ -608,7 +608,7 @@ type TxData struct {
 func (x *TxData) Reset() {
 	*x = TxData{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[2]
+		mi := &file_contract_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -621,7 +621,7 @@ func (x *TxData) String() string {
 func (*TxData) ProtoMessage() {}
 
 func (x *TxData) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[2]
+	mi := &file_contract_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -634,7 +634,7 @@ func (x *TxData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TxData.ProtoReflect.Descriptor instead.
 func (*TxData) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{2}
+	return file_contract_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *TxData) GetHeader() *Header {
@@ -737,7 +737,7 @@ type TxStatus struct {
 func (x *TxStatus) Reset() {
 	*x = TxStatus{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[3]
+		mi := &file_contract_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -750,7 +750,7 @@ func (x *TxStatus) String() string {
 func (*TxStatus) ProtoMessage() {}
 
 func (x *TxStatus) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[3]
+	mi := &file_contract_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -763,7 +763,7 @@ func (x *TxStatus) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TxStatus.ProtoReflect.Descriptor instead.
 func (*TxStatus) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{3}
+	return file_contract_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *TxStatus) GetHeader() *Header {
@@ -820,7 +820,7 @@ type BatchTxs struct {
 func (x *BatchTxs) Reset() {
 	*x = BatchTxs{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[4]
+		mi := &file_contract_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -833,7 +833,7 @@ func (x *BatchTxs) String() string {
 func (*BatchTxs) ProtoMessage() {}
 
 func (x *BatchTxs) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[4]
+	mi := &file_contract_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -846,7 +846,7 @@ func (x *BatchTxs) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BatchTxs.ProtoReflect.Descriptor instead.
 func (*BatchTxs) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{4}
+	return file_contract_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *BatchTxs) GetHeader() *Header {
@@ -878,7 +878,7 @@ type Block struct {
 func (x *Block) Reset() {
 	*x = Block{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[5]
+		mi := &file_contract_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -891,7 +891,7 @@ func (x *Block) String() string {
 func (*Block) ProtoMessage() {}
 
 func (x *Block) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[5]
+	mi := &file_contract_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -904,7 +904,7 @@ func (x *Block) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Block.ProtoReflect.Descriptor instead.
 func (*Block) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{5}
+	return file_contract_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *Block) GetHeader() *Header {
@@ -957,7 +957,7 @@ type BlockID struct {
 func (x *BlockID) Reset() {
 	*x = BlockID{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[6]
+		mi := &file_contract_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -970,7 +970,7 @@ func (x *BlockID) String() string {
 func (*BlockID) ProtoMessage() {}
 
 func (x *BlockID) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[6]
+	mi := &file_contract_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -983,7 +983,7 @@ func (x *BlockID) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BlockID.ProtoReflect.Descriptor instead.
 func (*BlockID) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{6}
+	return file_contract_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *BlockID) GetHeader() *Header {
@@ -1027,7 +1027,7 @@ type BlockHeight struct {
 func (x *BlockHeight) Reset() {
 	*x = BlockHeight{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[7]
+		mi := &file_contract_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1040,7 +1040,7 @@ func (x *BlockHeight) String() string {
 func (*BlockHeight) ProtoMessage() {}
 
 func (x *BlockHeight) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[7]
+	mi := &file_contract_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1053,7 +1053,7 @@ func (x *BlockHeight) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BlockHeight.ProtoReflect.Descriptor instead.
 func (*BlockHeight) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{7}
+	return file_contract_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *BlockHeight) GetHeader() *Header {
@@ -1088,7 +1088,7 @@ type CommonReply struct {
 func (x *CommonReply) Reset() {
 	*x = CommonReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[8]
+		mi := &file_contract_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1101,7 +1101,7 @@ func (x *CommonReply) String() string {
 func (*CommonReply) ProtoMessage() {}
 
 func (x *CommonReply) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[8]
+	mi := &file_contract_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1114,7 +1114,7 @@ func (x *CommonReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CommonReply.ProtoReflect.Descriptor instead.
 func (*CommonReply) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{8}
+	return file_contract_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *CommonReply) GetHeader() *Header {
@@ -1136,7 +1136,7 @@ type CommonIn struct {
 func (x *CommonIn) Reset() {
 	*x = CommonIn{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[9]
+		mi := &file_contract_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1149,7 +1149,7 @@ func (x *CommonIn) String() string {
 func (*CommonIn) ProtoMessage() {}
 
 func (x *CommonIn) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[9]
+	mi := &file_contract_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1162,7 +1162,7 @@ func (x *CommonIn) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CommonIn.ProtoReflect.Descriptor instead.
 func (*CommonIn) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{9}
+	return file_contract_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *CommonIn) GetHeader() *Header {
@@ -1192,7 +1192,7 @@ type TokenDetail struct {
 func (x *TokenDetail) Reset() {
 	*x = TokenDetail{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[10]
+		mi := &file_contract_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1205,7 +1205,7 @@ func (x *TokenDetail) String() string {
 func (*TokenDetail) ProtoMessage() {}
 
 func (x *TokenDetail) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[10]
+	mi := &file_contract_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1218,7 +1218,7 @@ func (x *TokenDetail) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TokenDetail.ProtoReflect.Descriptor instead.
 func (*TokenDetail) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{10}
+	return file_contract_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *TokenDetail) GetBcname() string {
@@ -1255,7 +1255,7 @@ type AddressStatus struct {
 func (x *AddressStatus) Reset() {
 	*x = AddressStatus{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[11]
+		mi := &file_contract_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1268,7 +1268,7 @@ func (x *AddressStatus) String() string {
 func (*AddressStatus) ProtoMessage() {}
 
 func (x *AddressStatus) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[11]
+	mi := &file_contract_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1281,7 +1281,7 @@ func (x *AddressStatus) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddressStatus.ProtoReflect.Descriptor instead.
 func (*AddressStatus) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{11}
+	return file_contract_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *AddressStatus) GetHeader() *Header {
@@ -1317,7 +1317,7 @@ type TokenFrozenDetail struct {
 func (x *TokenFrozenDetail) Reset() {
 	*x = TokenFrozenDetail{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[12]
+		mi := &file_contract_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1330,7 +1330,7 @@ func (x *TokenFrozenDetail) String() string {
 func (*TokenFrozenDetail) ProtoMessage() {}
 
 func (x *TokenFrozenDetail) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[12]
+	mi := &file_contract_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1343,7 +1343,7 @@ func (x *TokenFrozenDetail) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TokenFrozenDetail.ProtoReflect.Descriptor instead.
 func (*TokenFrozenDetail) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{12}
+	return file_contract_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *TokenFrozenDetail) GetBalance() string {
@@ -1373,7 +1373,7 @@ type TokenFrozenDetails struct {
 func (x *TokenFrozenDetails) Reset() {
 	*x = TokenFrozenDetails{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[13]
+		mi := &file_contract_proto_msgTypes[13]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1386,7 +1386,7 @@ func (x *TokenFrozenDetails) String() string {
 func (*TokenFrozenDetails) ProtoMessage() {}
 
 func (x *TokenFrozenDetails) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[13]
+	mi := &file_contract_proto_msgTypes[13]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1399,7 +1399,7 @@ func (x *TokenFrozenDetails) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TokenFrozenDetails.ProtoReflect.Descriptor instead.
 func (*TokenFrozenDetails) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{13}
+	return file_contract_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *TokenFrozenDetails) GetBcname() string {
@@ -1436,7 +1436,7 @@ type AddressBalanceStatus struct {
 func (x *AddressBalanceStatus) Reset() {
 	*x = AddressBalanceStatus{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[14]
+		mi := &file_contract_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1449,7 +1449,7 @@ func (x *AddressBalanceStatus) String() string {
 func (*AddressBalanceStatus) ProtoMessage() {}
 
 func (x *AddressBalanceStatus) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[14]
+	mi := &file_contract_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1462,7 +1462,7 @@ func (x *AddressBalanceStatus) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddressBalanceStatus.ProtoReflect.Descriptor instead.
 func (*AddressBalanceStatus) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{14}
+	return file_contract_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *AddressBalanceStatus) GetHeader() *Header {
@@ -1507,7 +1507,7 @@ type TxInput struct {
 func (x *TxInput) Reset() {
 	*x = TxInput{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[15]
+		mi := &file_contract_proto_msgTypes[15]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1520,7 +1520,7 @@ func (x *TxInput) String() string {
 func (*TxInput) ProtoMessage() {}
 
 func (x *TxInput) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[15]
+	mi := &file_contract_proto_msgTypes[15]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1533,7 +1533,7 @@ func (x *TxInput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TxInput.ProtoReflect.Descriptor instead.
 func (*TxInput) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{15}
+	return file_contract_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *TxInput) GetRefTxid() []byte {
@@ -1588,7 +1588,7 @@ type TxOutput struct {
 func (x *TxOutput) Reset() {
 	*x = TxOutput{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[16]
+		mi := &file_contract_proto_msgTypes[16]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1601,7 +1601,7 @@ func (x *TxOutput) String() string {
 func (*TxOutput) ProtoMessage() {}
 
 func (x *TxOutput) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[16]
+	mi := &file_contract_proto_msgTypes[16]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1614,7 +1614,7 @@ func (x *TxOutput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TxOutput.ProtoReflect.Descriptor instead.
 func (*TxOutput) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{16}
+	return file_contract_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *TxOutput) GetAmount() []byte {
@@ -1651,7 +1651,7 @@ type XuperSignature struct {
 func (x *XuperSignature) Reset() {
 	*x = XuperSignature{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[17]
+		mi := &file_contract_proto_msgTypes[17]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1664,7 +1664,7 @@ func (x *XuperSignature) String() string {
 func (*XuperSignature) ProtoMessage() {}
 
 func (x *XuperSignature) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[17]
+	mi := &file_contract_proto_msgTypes[17]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1677,7 +1677,7 @@ func (x *XuperSignature) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use XuperSignature.ProtoReflect.Descriptor instead.
 func (*XuperSignature) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{17}
+	return file_contract_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *XuperSignature) GetPublicKeys() [][]byte {
@@ -1745,7 +1745,7 @@ type Transaction struct {
 func (x *Transaction) Reset() {
 	*x = Transaction{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[18]
+		mi := &file_contract_proto_msgTypes[18]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1758,7 +1758,7 @@ func (x *Transaction) String() string {
 func (*Transaction) ProtoMessage() {}
 
 func (x *Transaction) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[18]
+	mi := &file_contract_proto_msgTypes[18]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1771,7 +1771,7 @@ func (x *Transaction) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Transaction.ProtoReflect.Descriptor instead.
 func (*Transaction) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{18}
+	return file_contract_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *Transaction) GetTxid() []byte {
@@ -1938,7 +1938,7 @@ type LedgerMeta struct {
 func (x *LedgerMeta) Reset() {
 	*x = LedgerMeta{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[19]
+		mi := &file_contract_proto_msgTypes[19]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1951,7 +1951,7 @@ func (x *LedgerMeta) String() string {
 func (*LedgerMeta) ProtoMessage() {}
 
 func (x *LedgerMeta) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[19]
+	mi := &file_contract_proto_msgTypes[19]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1964,7 +1964,7 @@ func (x *LedgerMeta) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LedgerMeta.ProtoReflect.Descriptor instead.
 func (*LedgerMeta) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{19}
+	return file_contract_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *LedgerMeta) GetRootBlockid() []byte {
@@ -2012,7 +2012,7 @@ type UtxoMeta struct {
 func (x *UtxoMeta) Reset() {
 	*x = UtxoMeta{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[20]
+		mi := &file_contract_proto_msgTypes[20]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2025,7 +2025,7 @@ func (x *UtxoMeta) String() string {
 func (*UtxoMeta) ProtoMessage() {}
 
 func (x *UtxoMeta) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[20]
+	mi := &file_contract_proto_msgTypes[20]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2038,7 +2038,7 @@ func (x *UtxoMeta) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UtxoMeta.ProtoReflect.Descriptor instead.
 func (*UtxoMeta) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{20}
+	return file_contract_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *UtxoMeta) GetLatestBlockid() []byte {
@@ -2146,7 +2146,7 @@ type GasPrice struct {
 func (x *GasPrice) Reset() {
 	*x = GasPrice{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[21]
+		mi := &file_contract_proto_msgTypes[21]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2159,7 +2159,7 @@ func (x *GasPrice) String() string {
 func (*GasPrice) ProtoMessage() {}
 
 func (x *GasPrice) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[21]
+	mi := &file_contract_proto_msgTypes[21]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2172,7 +2172,7 @@ func (x *GasPrice) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GasPrice.ProtoReflect.Descriptor instead.
 func (*GasPrice) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{21}
+	return file_contract_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *GasPrice) GetCpuRate() int64 {
@@ -2252,7 +2252,7 @@ type InternalBlock struct {
 func (x *InternalBlock) Reset() {
 	*x = InternalBlock{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[22]
+		mi := &file_contract_proto_msgTypes[22]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2265,7 +2265,7 @@ func (x *InternalBlock) String() string {
 func (*InternalBlock) ProtoMessage() {}
 
 func (x *InternalBlock) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[22]
+	mi := &file_contract_proto_msgTypes[22]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2278,7 +2278,7 @@ func (x *InternalBlock) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InternalBlock.ProtoReflect.Descriptor instead.
 func (*InternalBlock) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{22}
+	return file_contract_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *InternalBlock) GetVersion() int32 {
@@ -2443,7 +2443,7 @@ type BCStatus struct {
 func (x *BCStatus) Reset() {
 	*x = BCStatus{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[23]
+		mi := &file_contract_proto_msgTypes[23]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2456,7 +2456,7 @@ func (x *BCStatus) String() string {
 func (*BCStatus) ProtoMessage() {}
 
 func (x *BCStatus) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[23]
+	mi := &file_contract_proto_msgTypes[23]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2469,7 +2469,7 @@ func (x *BCStatus) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BCStatus.ProtoReflect.Descriptor instead.
 func (*BCStatus) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{23}
+	return file_contract_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *BCStatus) GetHeader() *Header {
@@ -2526,7 +2526,7 @@ type BCTipStatus struct {
 func (x *BCTipStatus) Reset() {
 	*x = BCTipStatus{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[24]
+		mi := &file_contract_proto_msgTypes[24]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2539,7 +2539,7 @@ func (x *BCTipStatus) String() string {
 func (*BCTipStatus) ProtoMessage() {}
 
 func (x *BCTipStatus) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[24]
+	mi := &file_contract_proto_msgTypes[24]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2552,7 +2552,7 @@ func (x *BCTipStatus) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BCTipStatus.ProtoReflect.Descriptor instead.
 func (*BCTipStatus) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{24}
+	return file_contract_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *BCTipStatus) GetHeader() *Header {
@@ -2581,7 +2581,7 @@ type BlockChains struct {
 func (x *BlockChains) Reset() {
 	*x = BlockChains{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[25]
+		mi := &file_contract_proto_msgTypes[25]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2594,7 +2594,7 @@ func (x *BlockChains) String() string {
 func (*BlockChains) ProtoMessage() {}
 
 func (x *BlockChains) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[25]
+	mi := &file_contract_proto_msgTypes[25]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2607,7 +2607,7 @@ func (x *BlockChains) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BlockChains.ProtoReflect.Descriptor instead.
 func (*BlockChains) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{25}
+	return file_contract_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *BlockChains) GetHeader() *Header {
@@ -2636,7 +2636,7 @@ type Speeds struct {
 func (x *Speeds) Reset() {
 	*x = Speeds{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[26]
+		mi := &file_contract_proto_msgTypes[26]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2649,7 +2649,7 @@ func (x *Speeds) String() string {
 func (*Speeds) ProtoMessage() {}
 
 func (x *Speeds) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[26]
+	mi := &file_contract_proto_msgTypes[26]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2662,7 +2662,7 @@ func (x *Speeds) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Speeds.ProtoReflect.Descriptor instead.
 func (*Speeds) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{26}
+	return file_contract_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *Speeds) GetSumSpeeds() map[string]float64 {
@@ -2690,7 +2690,7 @@ type BCSpeeds struct {
 func (x *BCSpeeds) Reset() {
 	*x = BCSpeeds{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[27]
+		mi := &file_contract_proto_msgTypes[27]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2703,7 +2703,7 @@ func (x *BCSpeeds) String() string {
 func (*BCSpeeds) ProtoMessage() {}
 
 func (x *BCSpeeds) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[27]
+	mi := &file_contract_proto_msgTypes[27]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2716,7 +2716,7 @@ func (x *BCSpeeds) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BCSpeeds.ProtoReflect.Descriptor instead.
 func (*BCSpeeds) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{27}
+	return file_contract_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *BCSpeeds) GetBcSpeed() map[string]float64 {
@@ -2740,7 +2740,7 @@ type SystemsStatus struct {
 func (x *SystemsStatus) Reset() {
 	*x = SystemsStatus{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[28]
+		mi := &file_contract_proto_msgTypes[28]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2753,7 +2753,7 @@ func (x *SystemsStatus) String() string {
 func (*SystemsStatus) ProtoMessage() {}
 
 func (x *SystemsStatus) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[28]
+	mi := &file_contract_proto_msgTypes[28]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2766,7 +2766,7 @@ func (x *SystemsStatus) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SystemsStatus.ProtoReflect.Descriptor instead.
 func (*SystemsStatus) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{28}
+	return file_contract_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *SystemsStatus) GetHeader() *Header {
@@ -2809,7 +2809,7 @@ type SystemsStatusReply struct {
 func (x *SystemsStatusReply) Reset() {
 	*x = SystemsStatusReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[29]
+		mi := &file_contract_proto_msgTypes[29]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2822,7 +2822,7 @@ func (x *SystemsStatusReply) String() string {
 func (*SystemsStatusReply) ProtoMessage() {}
 
 func (x *SystemsStatusReply) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[29]
+	mi := &file_contract_proto_msgTypes[29]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2835,7 +2835,7 @@ func (x *SystemsStatusReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SystemsStatusReply.ProtoReflect.Descriptor instead.
 func (*SystemsStatusReply) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{29}
+	return file_contract_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *SystemsStatusReply) GetHeader() *Header {
@@ -2864,7 +2864,7 @@ type ConsensusStatRequest struct {
 func (x *ConsensusStatRequest) Reset() {
 	*x = ConsensusStatRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[30]
+		mi := &file_contract_proto_msgTypes[30]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2877,7 +2877,7 @@ func (x *ConsensusStatRequest) String() string {
 func (*ConsensusStatRequest) ProtoMessage() {}
 
 func (x *ConsensusStatRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[30]
+	mi := &file_contract_proto_msgTypes[30]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2890,7 +2890,7 @@ func (x *ConsensusStatRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConsensusStatRequest.ProtoReflect.Descriptor instead.
 func (*ConsensusStatRequest) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{30}
+	return file_contract_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *ConsensusStatRequest) GetHeader() *Header {
@@ -2927,7 +2927,7 @@ type ConsensusStatus struct {
 func (x *ConsensusStatus) Reset() {
 	*x = ConsensusStatus{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[31]
+		mi := &file_contract_proto_msgTypes[31]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2940,7 +2940,7 @@ func (x *ConsensusStatus) String() string {
 func (*ConsensusStatus) ProtoMessage() {}
 
 func (x *ConsensusStatus) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[31]
+	mi := &file_contract_proto_msgTypes[31]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2953,7 +2953,7 @@ func (x *ConsensusStatus) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConsensusStatus.ProtoReflect.Descriptor instead.
 func (*ConsensusStatus) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{31}
+	return file_contract_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *ConsensusStatus) GetHeader() *Header {
@@ -3004,7 +3004,7 @@ type RawUrl struct {
 func (x *RawUrl) Reset() {
 	*x = RawUrl{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[32]
+		mi := &file_contract_proto_msgTypes[32]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3017,7 +3017,7 @@ func (x *RawUrl) String() string {
 func (*RawUrl) ProtoMessage() {}
 
 func (x *RawUrl) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[32]
+	mi := &file_contract_proto_msgTypes[32]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3030,7 +3030,7 @@ func (x *RawUrl) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RawUrl.ProtoReflect.Descriptor instead.
 func (*RawUrl) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{32}
+	return file_contract_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *RawUrl) GetHeader() *Header {
@@ -3062,7 +3062,7 @@ type Utxo struct {
 func (x *Utxo) Reset() {
 	*x = Utxo{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[33]
+		mi := &file_contract_proto_msgTypes[33]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3075,7 +3075,7 @@ func (x *Utxo) String() string {
 func (*Utxo) ProtoMessage() {}
 
 func (x *Utxo) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[33]
+	mi := &file_contract_proto_msgTypes[33]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3088,7 +3088,7 @@ func (x *Utxo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Utxo.ProtoReflect.Descriptor instead.
 func (*Utxo) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{33}
+	return file_contract_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *Utxo) GetAmount() []byte {
@@ -3150,7 +3150,7 @@ type UtxoInput struct {
 func (x *UtxoInput) Reset() {
 	*x = UtxoInput{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[34]
+		mi := &file_contract_proto_msgTypes[34]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3163,7 +3163,7 @@ func (x *UtxoInput) String() string {
 func (*UtxoInput) ProtoMessage() {}
 
 func (x *UtxoInput) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[34]
+	mi := &file_contract_proto_msgTypes[34]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3176,7 +3176,7 @@ func (x *UtxoInput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UtxoInput.ProtoReflect.Descriptor instead.
 func (*UtxoInput) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{34}
+	return file_contract_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *UtxoInput) GetHeader() *Header {
@@ -3246,7 +3246,7 @@ type UtxoOutput struct {
 func (x *UtxoOutput) Reset() {
 	*x = UtxoOutput{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[35]
+		mi := &file_contract_proto_msgTypes[35]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3259,7 +3259,7 @@ func (x *UtxoOutput) String() string {
 func (*UtxoOutput) ProtoMessage() {}
 
 func (x *UtxoOutput) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[35]
+	mi := &file_contract_proto_msgTypes[35]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3272,7 +3272,7 @@ func (x *UtxoOutput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UtxoOutput.ProtoReflect.Descriptor instead.
 func (*UtxoOutput) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{35}
+	return file_contract_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *UtxoOutput) GetHeader() *Header {
@@ -3316,7 +3316,7 @@ type NativeCodeDesc struct {
 func (x *NativeCodeDesc) Reset() {
 	*x = NativeCodeDesc{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[36]
+		mi := &file_contract_proto_msgTypes[36]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3329,7 +3329,7 @@ func (x *NativeCodeDesc) String() string {
 func (*NativeCodeDesc) ProtoMessage() {}
 
 func (x *NativeCodeDesc) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[36]
+	mi := &file_contract_proto_msgTypes[36]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3342,7 +3342,7 @@ func (x *NativeCodeDesc) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NativeCodeDesc.ProtoReflect.Descriptor instead.
 func (*NativeCodeDesc) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{36}
+	return file_contract_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *NativeCodeDesc) GetName() string {
@@ -3395,7 +3395,7 @@ type WasmCodeDesc struct {
 func (x *WasmCodeDesc) Reset() {
 	*x = WasmCodeDesc{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[37]
+		mi := &file_contract_proto_msgTypes[37]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3408,7 +3408,7 @@ func (x *WasmCodeDesc) String() string {
 func (*WasmCodeDesc) ProtoMessage() {}
 
 func (x *WasmCodeDesc) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[37]
+	mi := &file_contract_proto_msgTypes[37]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3421,7 +3421,7 @@ func (x *WasmCodeDesc) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WasmCodeDesc.ProtoReflect.Descriptor instead.
 func (*WasmCodeDesc) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{37}
+	return file_contract_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *WasmCodeDesc) GetRuntime() string {
@@ -3472,7 +3472,7 @@ type NativeCodeStatus struct {
 func (x *NativeCodeStatus) Reset() {
 	*x = NativeCodeStatus{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[38]
+		mi := &file_contract_proto_msgTypes[38]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3485,7 +3485,7 @@ func (x *NativeCodeStatus) String() string {
 func (*NativeCodeStatus) ProtoMessage() {}
 
 func (x *NativeCodeStatus) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[38]
+	mi := &file_contract_proto_msgTypes[38]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3498,7 +3498,7 @@ func (x *NativeCodeStatus) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NativeCodeStatus.ProtoReflect.Descriptor instead.
 func (*NativeCodeStatus) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{38}
+	return file_contract_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *NativeCodeStatus) GetDesc() *NativeCodeDesc {
@@ -3535,7 +3535,7 @@ type DposCandidatesRequest struct {
 func (x *DposCandidatesRequest) Reset() {
 	*x = DposCandidatesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[39]
+		mi := &file_contract_proto_msgTypes[39]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3548,7 +3548,7 @@ func (x *DposCandidatesRequest) String() string {
 func (*DposCandidatesRequest) ProtoMessage() {}
 
 func (x *DposCandidatesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[39]
+	mi := &file_contract_proto_msgTypes[39]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3561,7 +3561,7 @@ func (x *DposCandidatesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DposCandidatesRequest.ProtoReflect.Descriptor instead.
 func (*DposCandidatesRequest) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{39}
+	return file_contract_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *DposCandidatesRequest) GetHeader() *Header {
@@ -3591,7 +3591,7 @@ type DposCandidatesResponse struct {
 func (x *DposCandidatesResponse) Reset() {
 	*x = DposCandidatesResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[40]
+		mi := &file_contract_proto_msgTypes[40]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3604,7 +3604,7 @@ func (x *DposCandidatesResponse) String() string {
 func (*DposCandidatesResponse) ProtoMessage() {}
 
 func (x *DposCandidatesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[40]
+	mi := &file_contract_proto_msgTypes[40]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3617,7 +3617,7 @@ func (x *DposCandidatesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DposCandidatesResponse.ProtoReflect.Descriptor instead.
 func (*DposCandidatesResponse) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{40}
+	return file_contract_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *DposCandidatesResponse) GetHeader() *Header {
@@ -3648,7 +3648,7 @@ type DposNominateRecordsRequest struct {
 func (x *DposNominateRecordsRequest) Reset() {
 	*x = DposNominateRecordsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[41]
+		mi := &file_contract_proto_msgTypes[41]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3661,7 +3661,7 @@ func (x *DposNominateRecordsRequest) String() string {
 func (*DposNominateRecordsRequest) ProtoMessage() {}
 
 func (x *DposNominateRecordsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[41]
+	mi := &file_contract_proto_msgTypes[41]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3674,7 +3674,7 @@ func (x *DposNominateRecordsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DposNominateRecordsRequest.ProtoReflect.Descriptor instead.
 func (*DposNominateRecordsRequest) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{41}
+	return file_contract_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *DposNominateRecordsRequest) GetHeader() *Header {
@@ -3711,7 +3711,7 @@ type DposNominateInfo struct {
 func (x *DposNominateInfo) Reset() {
 	*x = DposNominateInfo{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[42]
+		mi := &file_contract_proto_msgTypes[42]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3724,7 +3724,7 @@ func (x *DposNominateInfo) String() string {
 func (*DposNominateInfo) ProtoMessage() {}
 
 func (x *DposNominateInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[42]
+	mi := &file_contract_proto_msgTypes[42]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3737,7 +3737,7 @@ func (x *DposNominateInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DposNominateInfo.ProtoReflect.Descriptor instead.
 func (*DposNominateInfo) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{42}
+	return file_contract_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *DposNominateInfo) GetCandidate() string {
@@ -3767,7 +3767,7 @@ type DposNominateRecordsResponse struct {
 func (x *DposNominateRecordsResponse) Reset() {
 	*x = DposNominateRecordsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[43]
+		mi := &file_contract_proto_msgTypes[43]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3780,7 +3780,7 @@ func (x *DposNominateRecordsResponse) String() string {
 func (*DposNominateRecordsResponse) ProtoMessage() {}
 
 func (x *DposNominateRecordsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[43]
+	mi := &file_contract_proto_msgTypes[43]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3793,7 +3793,7 @@ func (x *DposNominateRecordsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DposNominateRecordsResponse.ProtoReflect.Descriptor instead.
 func (*DposNominateRecordsResponse) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{43}
+	return file_contract_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *DposNominateRecordsResponse) GetHeader() *Header {
@@ -3824,7 +3824,7 @@ type DposNomineeRecordsRequest struct {
 func (x *DposNomineeRecordsRequest) Reset() {
 	*x = DposNomineeRecordsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[44]
+		mi := &file_contract_proto_msgTypes[44]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3837,7 +3837,7 @@ func (x *DposNomineeRecordsRequest) String() string {
 func (*DposNomineeRecordsRequest) ProtoMessage() {}
 
 func (x *DposNomineeRecordsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[44]
+	mi := &file_contract_proto_msgTypes[44]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3850,7 +3850,7 @@ func (x *DposNomineeRecordsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DposNomineeRecordsRequest.ProtoReflect.Descriptor instead.
 func (*DposNomineeRecordsRequest) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{44}
+	return file_contract_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *DposNomineeRecordsRequest) GetHeader() *Header {
@@ -3887,7 +3887,7 @@ type DposNomineeRecordsResponse struct {
 func (x *DposNomineeRecordsResponse) Reset() {
 	*x = DposNomineeRecordsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[45]
+		mi := &file_contract_proto_msgTypes[45]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3900,7 +3900,7 @@ func (x *DposNomineeRecordsResponse) String() string {
 func (*DposNomineeRecordsResponse) ProtoMessage() {}
 
 func (x *DposNomineeRecordsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[45]
+	mi := &file_contract_proto_msgTypes[45]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3913,7 +3913,7 @@ func (x *DposNomineeRecordsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DposNomineeRecordsResponse.ProtoReflect.Descriptor instead.
 func (*DposNomineeRecordsResponse) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{45}
+	return file_contract_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *DposNomineeRecordsResponse) GetHeader() *Header {
@@ -3944,7 +3944,7 @@ type DposVoteRecordsRequest struct {
 func (x *DposVoteRecordsRequest) Reset() {
 	*x = DposVoteRecordsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[46]
+		mi := &file_contract_proto_msgTypes[46]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3957,7 +3957,7 @@ func (x *DposVoteRecordsRequest) String() string {
 func (*DposVoteRecordsRequest) ProtoMessage() {}
 
 func (x *DposVoteRecordsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[46]
+	mi := &file_contract_proto_msgTypes[46]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3970,7 +3970,7 @@ func (x *DposVoteRecordsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DposVoteRecordsRequest.ProtoReflect.Descriptor instead.
 func (*DposVoteRecordsRequest) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{46}
+	return file_contract_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *DposVoteRecordsRequest) GetHeader() *Header {
@@ -4007,7 +4007,7 @@ type VoteRecord struct {
 func (x *VoteRecord) Reset() {
 	*x = VoteRecord{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[47]
+		mi := &file_contract_proto_msgTypes[47]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4020,7 +4020,7 @@ func (x *VoteRecord) String() string {
 func (*VoteRecord) ProtoMessage() {}
 
 func (x *VoteRecord) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[47]
+	mi := &file_contract_proto_msgTypes[47]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4033,7 +4033,7 @@ func (x *VoteRecord) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VoteRecord.ProtoReflect.Descriptor instead.
 func (*VoteRecord) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{47}
+	return file_contract_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *VoteRecord) GetCandidate() string {
@@ -4064,7 +4064,7 @@ type DposVoteRecordsResponse struct {
 func (x *DposVoteRecordsResponse) Reset() {
 	*x = DposVoteRecordsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[48]
+		mi := &file_contract_proto_msgTypes[48]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4077,7 +4077,7 @@ func (x *DposVoteRecordsResponse) String() string {
 func (*DposVoteRecordsResponse) ProtoMessage() {}
 
 func (x *DposVoteRecordsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[48]
+	mi := &file_contract_proto_msgTypes[48]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4090,7 +4090,7 @@ func (x *DposVoteRecordsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DposVoteRecordsResponse.ProtoReflect.Descriptor instead.
 func (*DposVoteRecordsResponse) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{48}
+	return file_contract_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *DposVoteRecordsResponse) GetHeader() *Header {
@@ -4121,7 +4121,7 @@ type DposVotedRecordsRequest struct {
 func (x *DposVotedRecordsRequest) Reset() {
 	*x = DposVotedRecordsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[49]
+		mi := &file_contract_proto_msgTypes[49]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4134,7 +4134,7 @@ func (x *DposVotedRecordsRequest) String() string {
 func (*DposVotedRecordsRequest) ProtoMessage() {}
 
 func (x *DposVotedRecordsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[49]
+	mi := &file_contract_proto_msgTypes[49]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4147,7 +4147,7 @@ func (x *DposVotedRecordsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DposVotedRecordsRequest.ProtoReflect.Descriptor instead.
 func (*DposVotedRecordsRequest) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{49}
+	return file_contract_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *DposVotedRecordsRequest) GetHeader() *Header {
@@ -4184,7 +4184,7 @@ type VotedRecord struct {
 func (x *VotedRecord) Reset() {
 	*x = VotedRecord{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[50]
+		mi := &file_contract_proto_msgTypes[50]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4197,7 +4197,7 @@ func (x *VotedRecord) String() string {
 func (*VotedRecord) ProtoMessage() {}
 
 func (x *VotedRecord) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[50]
+	mi := &file_contract_proto_msgTypes[50]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4210,7 +4210,7 @@ func (x *VotedRecord) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VotedRecord.ProtoReflect.Descriptor instead.
 func (*VotedRecord) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{50}
+	return file_contract_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *VotedRecord) GetVoter() string {
@@ -4241,7 +4241,7 @@ type DposVotedRecordsResponse struct {
 func (x *DposVotedRecordsResponse) Reset() {
 	*x = DposVotedRecordsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[51]
+		mi := &file_contract_proto_msgTypes[51]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4254,7 +4254,7 @@ func (x *DposVotedRecordsResponse) String() string {
 func (*DposVotedRecordsResponse) ProtoMessage() {}
 
 func (x *DposVotedRecordsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[51]
+	mi := &file_contract_proto_msgTypes[51]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4267,7 +4267,7 @@ func (x *DposVotedRecordsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DposVotedRecordsResponse.ProtoReflect.Descriptor instead.
 func (*DposVotedRecordsResponse) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{51}
+	return file_contract_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *DposVotedRecordsResponse) GetHeader() *Header {
@@ -4298,7 +4298,7 @@ type DposCheckResultsRequest struct {
 func (x *DposCheckResultsRequest) Reset() {
 	*x = DposCheckResultsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[52]
+		mi := &file_contract_proto_msgTypes[52]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4311,7 +4311,7 @@ func (x *DposCheckResultsRequest) String() string {
 func (*DposCheckResultsRequest) ProtoMessage() {}
 
 func (x *DposCheckResultsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[52]
+	mi := &file_contract_proto_msgTypes[52]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4324,7 +4324,7 @@ func (x *DposCheckResultsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DposCheckResultsRequest.ProtoReflect.Descriptor instead.
 func (*DposCheckResultsRequest) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{52}
+	return file_contract_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *DposCheckResultsRequest) GetHeader() *Header {
@@ -4362,7 +4362,7 @@ type DposCheckResultsResponse struct {
 func (x *DposCheckResultsResponse) Reset() {
 	*x = DposCheckResultsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[53]
+		mi := &file_contract_proto_msgTypes[53]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4375,7 +4375,7 @@ func (x *DposCheckResultsResponse) String() string {
 func (*DposCheckResultsResponse) ProtoMessage() {}
 
 func (x *DposCheckResultsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[53]
+	mi := &file_contract_proto_msgTypes[53]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4388,7 +4388,7 @@ func (x *DposCheckResultsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DposCheckResultsResponse.ProtoReflect.Descriptor instead.
 func (*DposCheckResultsResponse) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{53}
+	return file_contract_proto_rawDescGZIP(), []int{53}
 }
 
 func (x *DposCheckResultsResponse) GetHeader() *Header {
@@ -4425,7 +4425,7 @@ type DposStatusRequest struct {
 func (x *DposStatusRequest) Reset() {
 	*x = DposStatusRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[54]
+		mi := &file_contract_proto_msgTypes[54]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4438,7 +4438,7 @@ func (x *DposStatusRequest) String() string {
 func (*DposStatusRequest) ProtoMessage() {}
 
 func (x *DposStatusRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[54]
+	mi := &file_contract_proto_msgTypes[54]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4451,7 +4451,7 @@ func (x *DposStatusRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DposStatusRequest.ProtoReflect.Descriptor instead.
 func (*DposStatusRequest) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{54}
+	return file_contract_proto_rawDescGZIP(), []int{54}
 }
 
 func (x *DposStatusRequest) GetHeader() *Header {
@@ -4481,7 +4481,7 @@ type DposStatusResponse struct {
 func (x *DposStatusResponse) Reset() {
 	*x = DposStatusResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[55]
+		mi := &file_contract_proto_msgTypes[55]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4494,7 +4494,7 @@ func (x *DposStatusResponse) String() string {
 func (*DposStatusResponse) ProtoMessage() {}
 
 func (x *DposStatusResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[55]
+	mi := &file_contract_proto_msgTypes[55]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4507,7 +4507,7 @@ func (x *DposStatusResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DposStatusResponse.ProtoReflect.Descriptor instead.
 func (*DposStatusResponse) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{55}
+	return file_contract_proto_rawDescGZIP(), []int{55}
 }
 
 func (x *DposStatusResponse) GetHeader() *Header {
@@ -4539,7 +4539,7 @@ type DposStatus struct {
 func (x *DposStatus) Reset() {
 	*x = DposStatus{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[56]
+		mi := &file_contract_proto_msgTypes[56]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4552,7 +4552,7 @@ func (x *DposStatus) String() string {
 func (*DposStatus) ProtoMessage() {}
 
 func (x *DposStatus) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[56]
+	mi := &file_contract_proto_msgTypes[56]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4565,7 +4565,7 @@ func (x *DposStatus) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DposStatus.ProtoReflect.Descriptor instead.
 func (*DposStatus) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{56}
+	return file_contract_proto_rawDescGZIP(), []int{56}
 }
 
 func (x *DposStatus) GetTerm() int64 {
@@ -4618,7 +4618,7 @@ type InvokeRPCRequest struct {
 func (x *InvokeRPCRequest) Reset() {
 	*x = InvokeRPCRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[57]
+		mi := &file_contract_proto_msgTypes[57]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4631,7 +4631,7 @@ func (x *InvokeRPCRequest) String() string {
 func (*InvokeRPCRequest) ProtoMessage() {}
 
 func (x *InvokeRPCRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[57]
+	mi := &file_contract_proto_msgTypes[57]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4644,7 +4644,7 @@ func (x *InvokeRPCRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InvokeRPCRequest.ProtoReflect.Descriptor instead.
 func (*InvokeRPCRequest) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{57}
+	return file_contract_proto_rawDescGZIP(), []int{57}
 }
 
 func (x *InvokeRPCRequest) GetHeader() *Header {
@@ -4695,7 +4695,7 @@ type InvokeRPCResponse struct {
 func (x *InvokeRPCResponse) Reset() {
 	*x = InvokeRPCResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[58]
+		mi := &file_contract_proto_msgTypes[58]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4708,7 +4708,7 @@ func (x *InvokeRPCResponse) String() string {
 func (*InvokeRPCResponse) ProtoMessage() {}
 
 func (x *InvokeRPCResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[58]
+	mi := &file_contract_proto_msgTypes[58]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4721,7 +4721,7 @@ func (x *InvokeRPCResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InvokeRPCResponse.ProtoReflect.Descriptor instead.
 func (*InvokeRPCResponse) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{58}
+	return file_contract_proto_rawDescGZIP(), []int{58}
 }
 
 func (x *InvokeRPCResponse) GetHeader() *Header {
@@ -4764,7 +4764,7 @@ type InvokeRequest struct {
 func (x *InvokeRequest) Reset() {
 	*x = InvokeRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[59]
+		mi := &file_contract_proto_msgTypes[59]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4777,7 +4777,7 @@ func (x *InvokeRequest) String() string {
 func (*InvokeRequest) ProtoMessage() {}
 
 func (x *InvokeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[59]
+	mi := &file_contract_proto_msgTypes[59]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4790,7 +4790,7 @@ func (x *InvokeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InvokeRequest.ProtoReflect.Descriptor instead.
 func (*InvokeRequest) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{59}
+	return file_contract_proto_rawDescGZIP(), []int{59}
 }
 
 func (x *InvokeRequest) GetModuleName() string {
@@ -4854,7 +4854,7 @@ type InvokeResponse struct {
 func (x *InvokeResponse) Reset() {
 	*x = InvokeResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[60]
+		mi := &file_contract_proto_msgTypes[60]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4867,7 +4867,7 @@ func (x *InvokeResponse) String() string {
 func (*InvokeResponse) ProtoMessage() {}
 
 func (x *InvokeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[60]
+	mi := &file_contract_proto_msgTypes[60]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4880,7 +4880,7 @@ func (x *InvokeResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InvokeResponse.ProtoReflect.Descriptor instead.
 func (*InvokeResponse) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{60}
+	return file_contract_proto_rawDescGZIP(), []int{60}
 }
 
 func (x *InvokeResponse) GetInputs() []*TxInputExt {
@@ -4954,7 +4954,7 @@ type TxInputExt struct {
 func (x *TxInputExt) Reset() {
 	*x = TxInputExt{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[61]
+		mi := &file_contract_proto_msgTypes[61]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -4967,7 +4967,7 @@ func (x *TxInputExt) String() string {
 func (*TxInputExt) ProtoMessage() {}
 
 func (x *TxInputExt) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[61]
+	mi := &file_contract_proto_msgTypes[61]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4980,7 +4980,7 @@ func (x *TxInputExt) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TxInputExt.ProtoReflect.Descriptor instead.
 func (*TxInputExt) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{61}
+	return file_contract_proto_rawDescGZIP(), []int{61}
 }
 
 func (x *TxInputExt) GetBucket() string {
@@ -5025,7 +5025,7 @@ type TxOutputExt struct {
 func (x *TxOutputExt) Reset() {
 	*x = TxOutputExt{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[62]
+		mi := &file_contract_proto_msgTypes[62]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5038,7 +5038,7 @@ func (x *TxOutputExt) String() string {
 func (*TxOutputExt) ProtoMessage() {}
 
 func (x *TxOutputExt) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[62]
+	mi := &file_contract_proto_msgTypes[62]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5051,7 +5051,7 @@ func (x *TxOutputExt) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TxOutputExt.ProtoReflect.Descriptor instead.
 func (*TxOutputExt) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{62}
+	return file_contract_proto_rawDescGZIP(), []int{62}
 }
 
 func (x *TxOutputExt) GetBucket() string {
@@ -5088,7 +5088,7 @@ type SignatureInfo struct {
 func (x *SignatureInfo) Reset() {
 	*x = SignatureInfo{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[63]
+		mi := &file_contract_proto_msgTypes[63]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5101,7 +5101,7 @@ func (x *SignatureInfo) String() string {
 func (*SignatureInfo) ProtoMessage() {}
 
 func (x *SignatureInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[63]
+	mi := &file_contract_proto_msgTypes[63]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5114,7 +5114,7 @@ func (x *SignatureInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SignatureInfo.ProtoReflect.Descriptor instead.
 func (*SignatureInfo) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{63}
+	return file_contract_proto_rawDescGZIP(), []int{63}
 }
 
 func (x *SignatureInfo) GetPublicKey() string {
@@ -5143,7 +5143,7 @@ type PermissionModel struct {
 func (x *PermissionModel) Reset() {
 	*x = PermissionModel{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[64]
+		mi := &file_contract_proto_msgTypes[64]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5156,7 +5156,7 @@ func (x *PermissionModel) String() string {
 func (*PermissionModel) ProtoMessage() {}
 
 func (x *PermissionModel) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[64]
+	mi := &file_contract_proto_msgTypes[64]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5169,7 +5169,7 @@ func (x *PermissionModel) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PermissionModel.ProtoReflect.Descriptor instead.
 func (*PermissionModel) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{64}
+	return file_contract_proto_rawDescGZIP(), []int{64}
 }
 
 func (x *PermissionModel) GetRule() PermissionRule {
@@ -5198,7 +5198,7 @@ type AkSet struct {
 func (x *AkSet) Reset() {
 	*x = AkSet{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[65]
+		mi := &file_contract_proto_msgTypes[65]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5211,7 +5211,7 @@ func (x *AkSet) String() string {
 func (*AkSet) ProtoMessage() {}
 
 func (x *AkSet) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[65]
+	mi := &file_contract_proto_msgTypes[65]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5224,7 +5224,7 @@ func (x *AkSet) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AkSet.ProtoReflect.Descriptor instead.
 func (*AkSet) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{65}
+	return file_contract_proto_rawDescGZIP(), []int{65}
 }
 
 func (x *AkSet) GetAks() []string {
@@ -5246,7 +5246,7 @@ type AkSets struct {
 func (x *AkSets) Reset() {
 	*x = AkSets{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[66]
+		mi := &file_contract_proto_msgTypes[66]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5259,7 +5259,7 @@ func (x *AkSets) String() string {
 func (*AkSets) ProtoMessage() {}
 
 func (x *AkSets) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[66]
+	mi := &file_contract_proto_msgTypes[66]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5272,7 +5272,7 @@ func (x *AkSets) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AkSets.ProtoReflect.Descriptor instead.
 func (*AkSets) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{66}
+	return file_contract_proto_rawDescGZIP(), []int{66}
 }
 
 func (x *AkSets) GetSets() map[string]*AkSet {
@@ -5303,7 +5303,7 @@ type Acl struct {
 func (x *Acl) Reset() {
 	*x = Acl{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[67]
+		mi := &file_contract_proto_msgTypes[67]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5316,7 +5316,7 @@ func (x *Acl) String() string {
 func (*Acl) ProtoMessage() {}
 
 func (x *Acl) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[67]
+	mi := &file_contract_proto_msgTypes[67]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5329,7 +5329,7 @@ func (x *Acl) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Acl.ProtoReflect.Descriptor instead.
 func (*Acl) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{67}
+	return file_contract_proto_rawDescGZIP(), []int{67}
 }
 
 func (x *Acl) GetPm() *PermissionModel {
@@ -5371,7 +5371,7 @@ type AclStatus struct {
 func (x *AclStatus) Reset() {
 	*x = AclStatus{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[68]
+		mi := &file_contract_proto_msgTypes[68]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5384,7 +5384,7 @@ func (x *AclStatus) String() string {
 func (*AclStatus) ProtoMessage() {}
 
 func (x *AclStatus) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[68]
+	mi := &file_contract_proto_msgTypes[68]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5397,7 +5397,7 @@ func (x *AclStatus) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AclStatus.ProtoReflect.Descriptor instead.
 func (*AclStatus) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{68}
+	return file_contract_proto_rawDescGZIP(), []int{68}
 }
 
 func (x *AclStatus) GetHeader() *Header {
@@ -5465,7 +5465,7 @@ type IdentityAuth struct {
 func (x *IdentityAuth) Reset() {
 	*x = IdentityAuth{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[69]
+		mi := &file_contract_proto_msgTypes[69]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5478,7 +5478,7 @@ func (x *IdentityAuth) String() string {
 func (*IdentityAuth) ProtoMessage() {}
 
 func (x *IdentityAuth) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[69]
+	mi := &file_contract_proto_msgTypes[69]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5491,7 +5491,7 @@ func (x *IdentityAuth) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IdentityAuth.ProtoReflect.Descriptor instead.
 func (*IdentityAuth) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{69}
+	return file_contract_proto_rawDescGZIP(), []int{69}
 }
 
 func (x *IdentityAuth) GetSign() []byte {
@@ -5541,7 +5541,7 @@ type IdentityAuths struct {
 func (x *IdentityAuths) Reset() {
 	*x = IdentityAuths{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[70]
+		mi := &file_contract_proto_msgTypes[70]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5554,7 +5554,7 @@ func (x *IdentityAuths) String() string {
 func (*IdentityAuths) ProtoMessage() {}
 
 func (x *IdentityAuths) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[70]
+	mi := &file_contract_proto_msgTypes[70]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5567,7 +5567,7 @@ func (x *IdentityAuths) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IdentityAuths.ProtoReflect.Descriptor instead.
 func (*IdentityAuths) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{70}
+	return file_contract_proto_rawDescGZIP(), []int{70}
 }
 
 func (x *IdentityAuths) GetAuth() []*IdentityAuth {
@@ -5589,7 +5589,7 @@ type ResourceLimit struct {
 func (x *ResourceLimit) Reset() {
 	*x = ResourceLimit{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[71]
+		mi := &file_contract_proto_msgTypes[71]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5602,7 +5602,7 @@ func (x *ResourceLimit) String() string {
 func (*ResourceLimit) ProtoMessage() {}
 
 func (x *ResourceLimit) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[71]
+	mi := &file_contract_proto_msgTypes[71]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5615,7 +5615,7 @@ func (x *ResourceLimit) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResourceLimit.ProtoReflect.Descriptor instead.
 func (*ResourceLimit) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{71}
+	return file_contract_proto_rawDescGZIP(), []int{71}
 }
 
 func (x *ResourceLimit) GetType() ResourceType {
@@ -5645,7 +5645,7 @@ type AK2AccountRequest struct {
 func (x *AK2AccountRequest) Reset() {
 	*x = AK2AccountRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[72]
+		mi := &file_contract_proto_msgTypes[72]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5658,7 +5658,7 @@ func (x *AK2AccountRequest) String() string {
 func (*AK2AccountRequest) ProtoMessage() {}
 
 func (x *AK2AccountRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[72]
+	mi := &file_contract_proto_msgTypes[72]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5671,7 +5671,7 @@ func (x *AK2AccountRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AK2AccountRequest.ProtoReflect.Descriptor instead.
 func (*AK2AccountRequest) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{72}
+	return file_contract_proto_rawDescGZIP(), []int{72}
 }
 
 func (x *AK2AccountRequest) GetHeader() *Header {
@@ -5708,7 +5708,7 @@ type AK2AccountResponse struct {
 func (x *AK2AccountResponse) Reset() {
 	*x = AK2AccountResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[73]
+		mi := &file_contract_proto_msgTypes[73]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5721,7 +5721,7 @@ func (x *AK2AccountResponse) String() string {
 func (*AK2AccountResponse) ProtoMessage() {}
 
 func (x *AK2AccountResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[73]
+	mi := &file_contract_proto_msgTypes[73]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5734,7 +5734,7 @@ func (x *AK2AccountResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AK2AccountResponse.ProtoReflect.Descriptor instead.
 func (*AK2AccountResponse) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{73}
+	return file_contract_proto_rawDescGZIP(), []int{73}
 }
 
 func (x *AK2AccountResponse) GetHeader() *Header {
@@ -5772,7 +5772,7 @@ type GetAccountContractsRequest struct {
 func (x *GetAccountContractsRequest) Reset() {
 	*x = GetAccountContractsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[74]
+		mi := &file_contract_proto_msgTypes[74]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5785,7 +5785,7 @@ func (x *GetAccountContractsRequest) String() string {
 func (*GetAccountContractsRequest) ProtoMessage() {}
 
 func (x *GetAccountContractsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[74]
+	mi := &file_contract_proto_msgTypes[74]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5798,7 +5798,7 @@ func (x *GetAccountContractsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAccountContractsRequest.ProtoReflect.Descriptor instead.
 func (*GetAccountContractsRequest) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{74}
+	return file_contract_proto_rawDescGZIP(), []int{74}
 }
 
 func (x *GetAccountContractsRequest) GetHeader() *Header {
@@ -5835,7 +5835,7 @@ type GetAccountContractsResponse struct {
 func (x *GetAccountContractsResponse) Reset() {
 	*x = GetAccountContractsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[75]
+		mi := &file_contract_proto_msgTypes[75]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5848,7 +5848,7 @@ func (x *GetAccountContractsResponse) String() string {
 func (*GetAccountContractsResponse) ProtoMessage() {}
 
 func (x *GetAccountContractsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[75]
+	mi := &file_contract_proto_msgTypes[75]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5861,7 +5861,7 @@ func (x *GetAccountContractsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAccountContractsResponse.ProtoReflect.Descriptor instead.
 func (*GetAccountContractsResponse) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{75}
+	return file_contract_proto_rawDescGZIP(), []int{75}
 }
 
 func (x *GetAccountContractsResponse) GetHeader() *Header {
@@ -5895,7 +5895,7 @@ type ContractStatus struct {
 func (x *ContractStatus) Reset() {
 	*x = ContractStatus{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[76]
+		mi := &file_contract_proto_msgTypes[76]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5908,7 +5908,7 @@ func (x *ContractStatus) String() string {
 func (*ContractStatus) ProtoMessage() {}
 
 func (x *ContractStatus) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[76]
+	mi := &file_contract_proto_msgTypes[76]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5921,7 +5921,7 @@ func (x *ContractStatus) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ContractStatus.ProtoReflect.Descriptor instead.
 func (*ContractStatus) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{76}
+	return file_contract_proto_rawDescGZIP(), []int{76}
 }
 
 func (x *ContractStatus) GetContractName() string {
@@ -5984,7 +5984,7 @@ type PreExecWithSelectUTXORequest struct {
 func (x *PreExecWithSelectUTXORequest) Reset() {
 	*x = PreExecWithSelectUTXORequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[77]
+		mi := &file_contract_proto_msgTypes[77]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -5997,7 +5997,7 @@ func (x *PreExecWithSelectUTXORequest) String() string {
 func (*PreExecWithSelectUTXORequest) ProtoMessage() {}
 
 func (x *PreExecWithSelectUTXORequest) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[77]
+	mi := &file_contract_proto_msgTypes[77]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6010,7 +6010,7 @@ func (x *PreExecWithSelectUTXORequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PreExecWithSelectUTXORequest.ProtoReflect.Descriptor instead.
 func (*PreExecWithSelectUTXORequest) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{77}
+	return file_contract_proto_rawDescGZIP(), []int{77}
 }
 
 func (x *PreExecWithSelectUTXORequest) GetHeader() *Header {
@@ -6078,7 +6078,7 @@ type PreExecWithSelectUTXOResponse struct {
 func (x *PreExecWithSelectUTXOResponse) Reset() {
 	*x = PreExecWithSelectUTXOResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[78]
+		mi := &file_contract_proto_msgTypes[78]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6091,7 +6091,7 @@ func (x *PreExecWithSelectUTXOResponse) String() string {
 func (*PreExecWithSelectUTXOResponse) ProtoMessage() {}
 
 func (x *PreExecWithSelectUTXOResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[78]
+	mi := &file_contract_proto_msgTypes[78]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6104,7 +6104,7 @@ func (x *PreExecWithSelectUTXOResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PreExecWithSelectUTXOResponse.ProtoReflect.Descriptor instead.
 func (*PreExecWithSelectUTXOResponse) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{78}
+	return file_contract_proto_rawDescGZIP(), []int{78}
 }
 
 func (x *PreExecWithSelectUTXOResponse) GetHeader() *Header {
@@ -6149,7 +6149,7 @@ type ContractResponse struct {
 func (x *ContractResponse) Reset() {
 	*x = ContractResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[79]
+		mi := &file_contract_proto_msgTypes[79]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6162,7 +6162,7 @@ func (x *ContractResponse) String() string {
 func (*ContractResponse) ProtoMessage() {}
 
 func (x *ContractResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[79]
+	mi := &file_contract_proto_msgTypes[79]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6175,7 +6175,7 @@ func (x *ContractResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ContractResponse.ProtoReflect.Descriptor instead.
 func (*ContractResponse) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{79}
+	return file_contract_proto_rawDescGZIP(), []int{79}
 }
 
 func (x *ContractResponse) GetStatus() int32 {
@@ -6219,7 +6219,7 @@ type ModifyBlock struct {
 func (x *ModifyBlock) Reset() {
 	*x = ModifyBlock{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[80]
+		mi := &file_contract_proto_msgTypes[80]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6232,7 +6232,7 @@ func (x *ModifyBlock) String() string {
 func (*ModifyBlock) ProtoMessage() {}
 
 func (x *ModifyBlock) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[80]
+	mi := &file_contract_proto_msgTypes[80]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6245,7 +6245,7 @@ func (x *ModifyBlock) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ModifyBlock.ProtoReflect.Descriptor instead.
 func (*ModifyBlock) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{80}
+	return file_contract_proto_rawDescGZIP(), []int{80}
 }
 
 func (x *ModifyBlock) GetEffectiveTxid() string {
@@ -6297,7 +6297,7 @@ type HDInfo struct {
 func (x *HDInfo) Reset() {
 	*x = HDInfo{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[81]
+		mi := &file_contract_proto_msgTypes[81]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6310,7 +6310,7 @@ func (x *HDInfo) String() string {
 func (*HDInfo) ProtoMessage() {}
 
 func (x *HDInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[81]
+	mi := &file_contract_proto_msgTypes[81]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6323,7 +6323,7 @@ func (x *HDInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HDInfo.ProtoReflect.Descriptor instead.
 func (*HDInfo) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{81}
+	return file_contract_proto_rawDescGZIP(), []int{81}
 }
 
 func (x *HDInfo) GetHdPublicKey() []byte {
@@ -6357,7 +6357,7 @@ type UtxoRecordDetail struct {
 func (x *UtxoRecordDetail) Reset() {
 	*x = UtxoRecordDetail{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[82]
+		mi := &file_contract_proto_msgTypes[82]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6370,7 +6370,7 @@ func (x *UtxoRecordDetail) String() string {
 func (*UtxoRecordDetail) ProtoMessage() {}
 
 func (x *UtxoRecordDetail) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[82]
+	mi := &file_contract_proto_msgTypes[82]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6383,7 +6383,7 @@ func (x *UtxoRecordDetail) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UtxoRecordDetail.ProtoReflect.Descriptor instead.
 func (*UtxoRecordDetail) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{82}
+	return file_contract_proto_rawDescGZIP(), []int{82}
 }
 
 func (x *UtxoRecordDetail) GetHeader() *Header {
@@ -6448,7 +6448,7 @@ type UtxoRecord struct {
 func (x *UtxoRecord) Reset() {
 	*x = UtxoRecord{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[83]
+		mi := &file_contract_proto_msgTypes[83]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6461,7 +6461,7 @@ func (x *UtxoRecord) String() string {
 func (*UtxoRecord) ProtoMessage() {}
 
 func (x *UtxoRecord) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[83]
+	mi := &file_contract_proto_msgTypes[83]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6474,7 +6474,7 @@ func (x *UtxoRecord) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UtxoRecord.ProtoReflect.Descriptor instead.
 func (*UtxoRecord) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{83}
+	return file_contract_proto_rawDescGZIP(), []int{83}
 }
 
 func (x *UtxoRecord) GetUtxoCount() string {
@@ -6511,7 +6511,7 @@ type UtxoKey struct {
 func (x *UtxoKey) Reset() {
 	*x = UtxoKey{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[84]
+		mi := &file_contract_proto_msgTypes[84]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6524,7 +6524,7 @@ func (x *UtxoKey) String() string {
 func (*UtxoKey) ProtoMessage() {}
 
 func (x *UtxoKey) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[84]
+	mi := &file_contract_proto_msgTypes[84]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6537,7 +6537,7 @@ func (x *UtxoKey) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UtxoKey.ProtoReflect.Descriptor instead.
 func (*UtxoKey) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{84}
+	return file_contract_proto_rawDescGZIP(), []int{84}
 }
 
 func (x *UtxoKey) GetRefTxid() string {
@@ -6573,7 +6573,7 @@ type ContractStatDataRequest struct {
 func (x *ContractStatDataRequest) Reset() {
 	*x = ContractStatDataRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[85]
+		mi := &file_contract_proto_msgTypes[85]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6586,7 +6586,7 @@ func (x *ContractStatDataRequest) String() string {
 func (*ContractStatDataRequest) ProtoMessage() {}
 
 func (x *ContractStatDataRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[85]
+	mi := &file_contract_proto_msgTypes[85]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6599,7 +6599,7 @@ func (x *ContractStatDataRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ContractStatDataRequest.ProtoReflect.Descriptor instead.
 func (*ContractStatDataRequest) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{85}
+	return file_contract_proto_rawDescGZIP(), []int{85}
 }
 
 func (x *ContractStatDataRequest) GetHeader() *Header {
@@ -6629,7 +6629,7 @@ type ContractStatDataResponse struct {
 func (x *ContractStatDataResponse) Reset() {
 	*x = ContractStatDataResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[86]
+		mi := &file_contract_proto_msgTypes[86]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6642,7 +6642,7 @@ func (x *ContractStatDataResponse) String() string {
 func (*ContractStatDataResponse) ProtoMessage() {}
 
 func (x *ContractStatDataResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[86]
+	mi := &file_contract_proto_msgTypes[86]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6655,7 +6655,7 @@ func (x *ContractStatDataResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ContractStatDataResponse.ProtoReflect.Descriptor instead.
 func (*ContractStatDataResponse) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{86}
+	return file_contract_proto_rawDescGZIP(), []int{86}
 }
 
 func (x *ContractStatDataResponse) GetHeader() *Header {
@@ -6691,7 +6691,7 @@ type ContractStatData struct {
 func (x *ContractStatData) Reset() {
 	*x = ContractStatData{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[87]
+		mi := &file_contract_proto_msgTypes[87]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6704,7 +6704,7 @@ func (x *ContractStatData) String() string {
 func (*ContractStatData) ProtoMessage() {}
 
 func (x *ContractStatData) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[87]
+	mi := &file_contract_proto_msgTypes[87]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6717,7 +6717,7 @@ func (x *ContractStatData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ContractStatData.ProtoReflect.Descriptor instead.
 func (*ContractStatData) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{87}
+	return file_contract_proto_rawDescGZIP(), []int{87}
 }
 
 func (x *ContractStatData) GetAccountCount() int64 {
@@ -6749,7 +6749,7 @@ type AddressContractsRequest struct {
 func (x *AddressContractsRequest) Reset() {
 	*x = AddressContractsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[88]
+		mi := &file_contract_proto_msgTypes[88]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6762,7 +6762,7 @@ func (x *AddressContractsRequest) String() string {
 func (*AddressContractsRequest) ProtoMessage() {}
 
 func (x *AddressContractsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[88]
+	mi := &file_contract_proto_msgTypes[88]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6775,7 +6775,7 @@ func (x *AddressContractsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddressContractsRequest.ProtoReflect.Descriptor instead.
 func (*AddressContractsRequest) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{88}
+	return file_contract_proto_rawDescGZIP(), []int{88}
 }
 
 func (x *AddressContractsRequest) GetHeader() *Header {
@@ -6817,7 +6817,7 @@ type ContractList struct {
 func (x *ContractList) Reset() {
 	*x = ContractList{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[89]
+		mi := &file_contract_proto_msgTypes[89]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6830,7 +6830,7 @@ func (x *ContractList) String() string {
 func (*ContractList) ProtoMessage() {}
 
 func (x *ContractList) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[89]
+	mi := &file_contract_proto_msgTypes[89]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6843,7 +6843,7 @@ func (x *ContractList) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ContractList.ProtoReflect.Descriptor instead.
 func (*ContractList) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{89}
+	return file_contract_proto_rawDescGZIP(), []int{89}
 }
 
 func (x *ContractList) GetContractStatus() []*ContractStatus {
@@ -6866,7 +6866,7 @@ type AddressContractsResponse struct {
 func (x *AddressContractsResponse) Reset() {
 	*x = AddressContractsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[90]
+		mi := &file_contract_proto_msgTypes[90]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6879,7 +6879,7 @@ func (x *AddressContractsResponse) String() string {
 func (*AddressContractsResponse) ProtoMessage() {}
 
 func (x *AddressContractsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[90]
+	mi := &file_contract_proto_msgTypes[90]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6892,7 +6892,7 @@ func (x *AddressContractsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddressContractsResponse.ProtoReflect.Descriptor instead.
 func (*AddressContractsResponse) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{90}
+	return file_contract_proto_rawDescGZIP(), []int{90}
 }
 
 func (x *AddressContractsResponse) GetHeader() *Header {
@@ -6924,7 +6924,7 @@ type CrossQueryRequest struct {
 func (x *CrossQueryRequest) Reset() {
 	*x = CrossQueryRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[91]
+		mi := &file_contract_proto_msgTypes[91]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6937,7 +6937,7 @@ func (x *CrossQueryRequest) String() string {
 func (*CrossQueryRequest) ProtoMessage() {}
 
 func (x *CrossQueryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[91]
+	mi := &file_contract_proto_msgTypes[91]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6950,7 +6950,7 @@ func (x *CrossQueryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CrossQueryRequest.ProtoReflect.Descriptor instead.
 func (*CrossQueryRequest) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{91}
+	return file_contract_proto_rawDescGZIP(), []int{91}
 }
 
 func (x *CrossQueryRequest) GetBcname() string {
@@ -6999,7 +6999,7 @@ type CrossQueryResponse struct {
 func (x *CrossQueryResponse) Reset() {
 	*x = CrossQueryResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[92]
+		mi := &file_contract_proto_msgTypes[92]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7012,7 +7012,7 @@ func (x *CrossQueryResponse) String() string {
 func (*CrossQueryResponse) ProtoMessage() {}
 
 func (x *CrossQueryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[92]
+	mi := &file_contract_proto_msgTypes[92]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7025,7 +7025,7 @@ func (x *CrossQueryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CrossQueryResponse.ProtoReflect.Descriptor instead.
 func (*CrossQueryResponse) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{92}
+	return file_contract_proto_rawDescGZIP(), []int{92}
 }
 
 func (x *CrossQueryResponse) GetResponse() *ContractResponse {
@@ -7047,7 +7047,7 @@ type CrossChainMeta struct {
 func (x *CrossChainMeta) Reset() {
 	*x = CrossChainMeta{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[93]
+		mi := &file_contract_proto_msgTypes[93]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7060,7 +7060,7 @@ func (x *CrossChainMeta) String() string {
 func (*CrossChainMeta) ProtoMessage() {}
 
 func (x *CrossChainMeta) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[93]
+	mi := &file_contract_proto_msgTypes[93]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7073,7 +7073,7 @@ func (x *CrossChainMeta) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CrossChainMeta.ProtoReflect.Descriptor instead.
 func (*CrossChainMeta) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{93}
+	return file_contract_proto_rawDescGZIP(), []int{93}
 }
 
 func (x *CrossChainMeta) GetType() string {
@@ -7104,7 +7104,7 @@ type CrossEndorsor struct {
 func (x *CrossEndorsor) Reset() {
 	*x = CrossEndorsor{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[94]
+		mi := &file_contract_proto_msgTypes[94]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7117,7 +7117,7 @@ func (x *CrossEndorsor) String() string {
 func (*CrossEndorsor) ProtoMessage() {}
 
 func (x *CrossEndorsor) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[94]
+	mi := &file_contract_proto_msgTypes[94]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7130,7 +7130,7 @@ func (x *CrossEndorsor) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CrossEndorsor.ProtoReflect.Descriptor instead.
 func (*CrossEndorsor) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{94}
+	return file_contract_proto_rawDescGZIP(), []int{94}
 }
 
 func (x *CrossEndorsor) GetAddress() string {
@@ -7166,7 +7166,7 @@ type CrossQueryMeta struct {
 func (x *CrossQueryMeta) Reset() {
 	*x = CrossQueryMeta{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[95]
+		mi := &file_contract_proto_msgTypes[95]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7179,7 +7179,7 @@ func (x *CrossQueryMeta) String() string {
 func (*CrossQueryMeta) ProtoMessage() {}
 
 func (x *CrossQueryMeta) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[95]
+	mi := &file_contract_proto_msgTypes[95]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7192,7 +7192,7 @@ func (x *CrossQueryMeta) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CrossQueryMeta.ProtoReflect.Descriptor instead.
 func (*CrossQueryMeta) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{95}
+	return file_contract_proto_rawDescGZIP(), []int{95}
 }
 
 func (x *CrossQueryMeta) GetChainMeta() *CrossChainMeta {
@@ -7222,7 +7222,7 @@ type CrossQueryInfo struct {
 func (x *CrossQueryInfo) Reset() {
 	*x = CrossQueryInfo{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[96]
+		mi := &file_contract_proto_msgTypes[96]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7235,7 +7235,7 @@ func (x *CrossQueryInfo) String() string {
 func (*CrossQueryInfo) ProtoMessage() {}
 
 func (x *CrossQueryInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[96]
+	mi := &file_contract_proto_msgTypes[96]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7248,7 +7248,7 @@ func (x *CrossQueryInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CrossQueryInfo.ProtoReflect.Descriptor instead.
 func (*CrossQueryInfo) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{96}
+	return file_contract_proto_rawDescGZIP(), []int{96}
 }
 
 func (x *CrossQueryInfo) GetRequest() *CrossQueryRequest {
@@ -7285,7 +7285,7 @@ type ContractEvent struct {
 func (x *ContractEvent) Reset() {
 	*x = ContractEvent{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_xchain_proto_msgTypes[97]
+		mi := &file_contract_proto_msgTypes[97]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -7298,7 +7298,7 @@ func (x *ContractEvent) String() string {
 func (*ContractEvent) ProtoMessage() {}
 
 func (x *ContractEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_xchain_proto_msgTypes[97]
+	mi := &file_contract_proto_msgTypes[97]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7311,7 +7311,7 @@ func (x *ContractEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ContractEvent.ProtoReflect.Descriptor instead.
 func (*ContractEvent) Descriptor() ([]byte, []int) {
-	return file_xchain_proto_rawDescGZIP(), []int{97}
+	return file_contract_proto_rawDescGZIP(), []int{97}
 }
 
 func (x *ContractEvent) GetContract() string {
@@ -7335,13 +7335,13 @@ func (x *ContractEvent) GetBody() []byte {
 	return nil
 }
 
-var File_xchain_proto protoreflect.FileDescriptor
+var File_contract_proto protoreflect.FileDescriptor
 
-var file_xchain_proto_rawDesc = []byte{
-	0x0a, 0x0c, 0x78, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x02,
-	0x70, 0x62, 0x1a, 0x1c, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x61,
-	0x6e, 0x6e, 0x6f, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x1a, 0x10, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x65, 0x64, 0x62, 0x66, 0x74, 0x2e, 0x70, 0x72, 0x6f,
+var file_contract_proto_rawDesc = []byte{
+	0x0a, 0x0e, 0x63, 0x6f, 0x6e, 0x74, 0x72, 0x61, 0x63, 0x74, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x12, 0x02, 0x70, 0x62, 0x1a, 0x1c, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f, 0x61, 0x70, 0x69,
+	0x2f, 0x61, 0x6e, 0x6e, 0x6f, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2e, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x1a, 0x0e, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x62, 0x66, 0x74, 0x2e, 0x70, 0x72, 0x6f,
 	0x74, 0x6f, 0x22, 0x66, 0x0a, 0x06, 0x48, 0x65, 0x61, 0x64, 0x65, 0x72, 0x12, 0x14, 0x0a, 0x05,
 	0x6c, 0x6f, 0x67, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x6c, 0x6f, 0x67,
 	0x69, 0x64, 0x12, 0x1b, 0x0a, 0x09, 0x66, 0x72, 0x6f, 0x6d, 0x5f, 0x6e, 0x6f, 0x64, 0x65, 0x18,
@@ -8502,20 +8502,20 @@ var file_xchain_proto_rawDesc = []byte{
 }
 
 var (
-	file_xchain_proto_rawDescOnce sync.Once
-	file_xchain_proto_rawDescData = file_xchain_proto_rawDesc
+	file_contract_proto_rawDescOnce sync.Once
+	file_contract_proto_rawDescData = file_contract_proto_rawDesc
 )
 
-func file_xchain_proto_rawDescGZIP() []byte {
-	file_xchain_proto_rawDescOnce.Do(func() {
-		file_xchain_proto_rawDescData = protoimpl.X.CompressGZIP(file_xchain_proto_rawDescData)
+func file_contract_proto_rawDescGZIP() []byte {
+	file_contract_proto_rawDescOnce.Do(func() {
+		file_contract_proto_rawDescData = protoimpl.X.CompressGZIP(file_contract_proto_rawDescData)
 	})
-	return file_xchain_proto_rawDescData
+	return file_contract_proto_rawDescData
 }
 
-var file_xchain_proto_enumTypes = make([]protoimpl.EnumInfo, 6)
-var file_xchain_proto_msgTypes = make([]protoimpl.MessageInfo, 106)
-var file_xchain_proto_goTypes = []interface{}{
+var file_contract_proto_enumTypes = make([]protoimpl.EnumInfo, 6)
+var file_contract_proto_msgTypes = make([]protoimpl.MessageInfo, 106)
+var file_contract_proto_goTypes = []interface{}{
 	(XChainErrorEnum)(0),                  // 0: pb.XChainErrorEnum
 	(TransactionStatus)(0),                // 1: pb.TransactionStatus
 	(ViewOption)(0),                       // 2: pb.ViewOption
@@ -8630,7 +8630,7 @@ var file_xchain_proto_goTypes = []interface{}{
 	nil,                                   // 111: pb.AddressContractsResponse.ContractsEntry
 	(*QuorumCert)(nil),                    // 112: pb.QuorumCert
 }
-var file_xchain_proto_depIdxs = []int32{
+var file_contract_proto_depIdxs = []int32{
 	0,   // 0: pb.Header.error:type_name -> pb.XChainErrorEnum
 	6,   // 1: pb.TxData.header:type_name -> pb.Header
 	7,   // 2: pb.TxData.account:type_name -> pb.TxDataAccount
@@ -8829,14 +8829,14 @@ var file_xchain_proto_depIdxs = []int32{
 	0,   // [0:133] is the sub-list for field type_name
 }
 
-func init() { file_xchain_proto_init() }
-func file_xchain_proto_init() {
-	if File_xchain_proto != nil {
+func init() { file_contract_proto_init() }
+func file_contract_proto_init() {
+	if File_contract_proto != nil {
 		return
 	}
-	file_chainedbft_proto_init()
+	file_chainbft_proto_init()
 	if !protoimpl.UnsafeEnabled {
-		file_xchain_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Header); i {
 			case 0:
 				return &v.state
@@ -8848,7 +8848,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TxDataAccount); i {
 			case 0:
 				return &v.state
@@ -8860,7 +8860,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TxData); i {
 			case 0:
 				return &v.state
@@ -8872,7 +8872,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TxStatus); i {
 			case 0:
 				return &v.state
@@ -8884,7 +8884,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*BatchTxs); i {
 			case 0:
 				return &v.state
@@ -8896,7 +8896,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Block); i {
 			case 0:
 				return &v.state
@@ -8908,7 +8908,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*BlockID); i {
 			case 0:
 				return &v.state
@@ -8920,7 +8920,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*BlockHeight); i {
 			case 0:
 				return &v.state
@@ -8932,7 +8932,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*CommonReply); i {
 			case 0:
 				return &v.state
@@ -8944,7 +8944,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*CommonIn); i {
 			case 0:
 				return &v.state
@@ -8956,7 +8956,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TokenDetail); i {
 			case 0:
 				return &v.state
@@ -8968,7 +8968,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AddressStatus); i {
 			case 0:
 				return &v.state
@@ -8980,7 +8980,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TokenFrozenDetail); i {
 			case 0:
 				return &v.state
@@ -8992,7 +8992,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TokenFrozenDetails); i {
 			case 0:
 				return &v.state
@@ -9004,7 +9004,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AddressBalanceStatus); i {
 			case 0:
 				return &v.state
@@ -9016,7 +9016,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TxInput); i {
 			case 0:
 				return &v.state
@@ -9028,7 +9028,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TxOutput); i {
 			case 0:
 				return &v.state
@@ -9040,7 +9040,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*XuperSignature); i {
 			case 0:
 				return &v.state
@@ -9052,7 +9052,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Transaction); i {
 			case 0:
 				return &v.state
@@ -9064,7 +9064,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[19].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[19].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*LedgerMeta); i {
 			case 0:
 				return &v.state
@@ -9076,7 +9076,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[20].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[20].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*UtxoMeta); i {
 			case 0:
 				return &v.state
@@ -9088,7 +9088,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[21].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[21].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GasPrice); i {
 			case 0:
 				return &v.state
@@ -9100,7 +9100,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[22].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[22].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*InternalBlock); i {
 			case 0:
 				return &v.state
@@ -9112,7 +9112,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[23].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[23].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*BCStatus); i {
 			case 0:
 				return &v.state
@@ -9124,7 +9124,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[24].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[24].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*BCTipStatus); i {
 			case 0:
 				return &v.state
@@ -9136,7 +9136,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[25].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[25].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*BlockChains); i {
 			case 0:
 				return &v.state
@@ -9148,7 +9148,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[26].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[26].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Speeds); i {
 			case 0:
 				return &v.state
@@ -9160,7 +9160,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[27].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[27].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*BCSpeeds); i {
 			case 0:
 				return &v.state
@@ -9172,7 +9172,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[28].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[28].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SystemsStatus); i {
 			case 0:
 				return &v.state
@@ -9184,7 +9184,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[29].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[29].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SystemsStatusReply); i {
 			case 0:
 				return &v.state
@@ -9196,7 +9196,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[30].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[30].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ConsensusStatRequest); i {
 			case 0:
 				return &v.state
@@ -9208,7 +9208,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[31].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[31].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ConsensusStatus); i {
 			case 0:
 				return &v.state
@@ -9220,7 +9220,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[32].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[32].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*RawUrl); i {
 			case 0:
 				return &v.state
@@ -9232,7 +9232,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[33].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[33].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Utxo); i {
 			case 0:
 				return &v.state
@@ -9244,7 +9244,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[34].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[34].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*UtxoInput); i {
 			case 0:
 				return &v.state
@@ -9256,7 +9256,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[35].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[35].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*UtxoOutput); i {
 			case 0:
 				return &v.state
@@ -9268,7 +9268,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[36].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[36].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*NativeCodeDesc); i {
 			case 0:
 				return &v.state
@@ -9280,7 +9280,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[37].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[37].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*WasmCodeDesc); i {
 			case 0:
 				return &v.state
@@ -9292,7 +9292,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[38].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[38].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*NativeCodeStatus); i {
 			case 0:
 				return &v.state
@@ -9304,7 +9304,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[39].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[39].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DposCandidatesRequest); i {
 			case 0:
 				return &v.state
@@ -9316,7 +9316,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[40].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[40].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DposCandidatesResponse); i {
 			case 0:
 				return &v.state
@@ -9328,7 +9328,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[41].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[41].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DposNominateRecordsRequest); i {
 			case 0:
 				return &v.state
@@ -9340,7 +9340,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[42].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[42].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DposNominateInfo); i {
 			case 0:
 				return &v.state
@@ -9352,7 +9352,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[43].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[43].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DposNominateRecordsResponse); i {
 			case 0:
 				return &v.state
@@ -9364,7 +9364,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[44].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[44].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DposNomineeRecordsRequest); i {
 			case 0:
 				return &v.state
@@ -9376,7 +9376,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[45].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[45].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DposNomineeRecordsResponse); i {
 			case 0:
 				return &v.state
@@ -9388,7 +9388,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[46].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[46].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DposVoteRecordsRequest); i {
 			case 0:
 				return &v.state
@@ -9400,7 +9400,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[47].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[47].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*VoteRecord); i {
 			case 0:
 				return &v.state
@@ -9412,7 +9412,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[48].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[48].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DposVoteRecordsResponse); i {
 			case 0:
 				return &v.state
@@ -9424,7 +9424,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[49].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[49].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DposVotedRecordsRequest); i {
 			case 0:
 				return &v.state
@@ -9436,7 +9436,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[50].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[50].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*VotedRecord); i {
 			case 0:
 				return &v.state
@@ -9448,7 +9448,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[51].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[51].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DposVotedRecordsResponse); i {
 			case 0:
 				return &v.state
@@ -9460,7 +9460,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[52].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[52].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DposCheckResultsRequest); i {
 			case 0:
 				return &v.state
@@ -9472,7 +9472,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[53].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[53].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DposCheckResultsResponse); i {
 			case 0:
 				return &v.state
@@ -9484,7 +9484,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[54].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[54].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DposStatusRequest); i {
 			case 0:
 				return &v.state
@@ -9496,7 +9496,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[55].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[55].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DposStatusResponse); i {
 			case 0:
 				return &v.state
@@ -9508,7 +9508,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[56].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[56].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DposStatus); i {
 			case 0:
 				return &v.state
@@ -9520,7 +9520,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[57].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[57].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*InvokeRPCRequest); i {
 			case 0:
 				return &v.state
@@ -9532,7 +9532,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[58].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[58].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*InvokeRPCResponse); i {
 			case 0:
 				return &v.state
@@ -9544,7 +9544,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[59].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[59].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*InvokeRequest); i {
 			case 0:
 				return &v.state
@@ -9556,7 +9556,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[60].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[60].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*InvokeResponse); i {
 			case 0:
 				return &v.state
@@ -9568,7 +9568,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[61].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[61].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TxInputExt); i {
 			case 0:
 				return &v.state
@@ -9580,7 +9580,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[62].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[62].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TxOutputExt); i {
 			case 0:
 				return &v.state
@@ -9592,7 +9592,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[63].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[63].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SignatureInfo); i {
 			case 0:
 				return &v.state
@@ -9604,7 +9604,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[64].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[64].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*PermissionModel); i {
 			case 0:
 				return &v.state
@@ -9616,7 +9616,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[65].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[65].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AkSet); i {
 			case 0:
 				return &v.state
@@ -9628,7 +9628,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[66].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[66].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AkSets); i {
 			case 0:
 				return &v.state
@@ -9640,7 +9640,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[67].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[67].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Acl); i {
 			case 0:
 				return &v.state
@@ -9652,7 +9652,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[68].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[68].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AclStatus); i {
 			case 0:
 				return &v.state
@@ -9664,7 +9664,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[69].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[69].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*IdentityAuth); i {
 			case 0:
 				return &v.state
@@ -9676,7 +9676,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[70].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[70].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*IdentityAuths); i {
 			case 0:
 				return &v.state
@@ -9688,7 +9688,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[71].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[71].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ResourceLimit); i {
 			case 0:
 				return &v.state
@@ -9700,7 +9700,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[72].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[72].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AK2AccountRequest); i {
 			case 0:
 				return &v.state
@@ -9712,7 +9712,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[73].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[73].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AK2AccountResponse); i {
 			case 0:
 				return &v.state
@@ -9724,7 +9724,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[74].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[74].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetAccountContractsRequest); i {
 			case 0:
 				return &v.state
@@ -9736,7 +9736,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[75].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[75].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetAccountContractsResponse); i {
 			case 0:
 				return &v.state
@@ -9748,7 +9748,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[76].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[76].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ContractStatus); i {
 			case 0:
 				return &v.state
@@ -9760,7 +9760,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[77].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[77].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*PreExecWithSelectUTXORequest); i {
 			case 0:
 				return &v.state
@@ -9772,7 +9772,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[78].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[78].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*PreExecWithSelectUTXOResponse); i {
 			case 0:
 				return &v.state
@@ -9784,7 +9784,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[79].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[79].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ContractResponse); i {
 			case 0:
 				return &v.state
@@ -9796,7 +9796,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[80].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[80].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ModifyBlock); i {
 			case 0:
 				return &v.state
@@ -9808,7 +9808,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[81].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[81].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*HDInfo); i {
 			case 0:
 				return &v.state
@@ -9820,7 +9820,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[82].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[82].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*UtxoRecordDetail); i {
 			case 0:
 				return &v.state
@@ -9832,7 +9832,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[83].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[83].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*UtxoRecord); i {
 			case 0:
 				return &v.state
@@ -9844,7 +9844,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[84].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[84].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*UtxoKey); i {
 			case 0:
 				return &v.state
@@ -9856,7 +9856,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[85].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[85].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ContractStatDataRequest); i {
 			case 0:
 				return &v.state
@@ -9868,7 +9868,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[86].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[86].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ContractStatDataResponse); i {
 			case 0:
 				return &v.state
@@ -9880,7 +9880,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[87].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[87].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ContractStatData); i {
 			case 0:
 				return &v.state
@@ -9892,7 +9892,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[88].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[88].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AddressContractsRequest); i {
 			case 0:
 				return &v.state
@@ -9904,7 +9904,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[89].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[89].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ContractList); i {
 			case 0:
 				return &v.state
@@ -9916,7 +9916,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[90].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[90].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AddressContractsResponse); i {
 			case 0:
 				return &v.state
@@ -9928,7 +9928,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[91].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[91].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*CrossQueryRequest); i {
 			case 0:
 				return &v.state
@@ -9940,7 +9940,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[92].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[92].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*CrossQueryResponse); i {
 			case 0:
 				return &v.state
@@ -9952,7 +9952,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[93].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[93].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*CrossChainMeta); i {
 			case 0:
 				return &v.state
@@ -9964,7 +9964,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[94].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[94].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*CrossEndorsor); i {
 			case 0:
 				return &v.state
@@ -9976,7 +9976,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[95].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[95].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*CrossQueryMeta); i {
 			case 0:
 				return &v.state
@@ -9988,7 +9988,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[96].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[96].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*CrossQueryInfo); i {
 			case 0:
 				return &v.state
@@ -10000,7 +10000,7 @@ func file_xchain_proto_init() {
 				return nil
 			}
 		}
-		file_xchain_proto_msgTypes[97].Exporter = func(v interface{}, i int) interface{} {
+		file_contract_proto_msgTypes[97].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ContractEvent); i {
 			case 0:
 				return &v.state
@@ -10017,19 +10017,19 @@ func file_xchain_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_xchain_proto_rawDesc,
+			RawDescriptor: file_contract_proto_rawDesc,
 			NumEnums:      6,
 			NumMessages:   106,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_xchain_proto_goTypes,
-		DependencyIndexes: file_xchain_proto_depIdxs,
-		EnumInfos:         file_xchain_proto_enumTypes,
-		MessageInfos:      file_xchain_proto_msgTypes,
+		GoTypes:           file_contract_proto_goTypes,
+		DependencyIndexes: file_contract_proto_depIdxs,
+		EnumInfos:         file_contract_proto_enumTypes,
+		MessageInfos:      file_contract_proto_msgTypes,
 	}.Build()
-	File_xchain_proto = out.File
-	file_xchain_proto_rawDesc = nil
-	file_xchain_proto_goTypes = nil
-	file_xchain_proto_depIdxs = nil
+	File_contract_proto = out.File
+	file_contract_proto_rawDesc = nil
+	file_contract_proto_goTypes = nil
+	file_contract_proto_depIdxs = nil
 }

@@ -1,9 +1,3 @@
-/*
-Copyright Baidu Inc. All Rights Reserved.
-
-<jingbo@baidu.com>
-*/
-
 package schnorr_sign_new
 
 import (

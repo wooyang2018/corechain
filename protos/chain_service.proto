@@ -1,9 +1,8 @@
 syntax = "proto3";
 option go_package = "github.com/wooyang2018/corechain/protos";
+package protos;
 
 import "contract.proto";
-
-package protos;
 
 // 通用请求Header
 message ReqHeader {

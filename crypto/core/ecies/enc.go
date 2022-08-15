@@ -1,8 +1,3 @@
-/*
-Copyright Baidu Inc. All Rights Reserved.
-
-jingbo@baidu.com
-*/
 package ecies
 
 import (

@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2021. Baidu Inc. All Rights Reserved.
- */
-
 package cmd
 
 import (
@@ -10,6 +6,7 @@ import (
 	"math/big"
 
 	"github.com/wooyang2018/corechain/example/pb"
+	"github.com/wooyang2018/corechain/protos"
 )
 
 // HexID bytes
@@ -504,7 +501,7 @@ type ContractEvent struct {
 }
 
 // FromFilteredBlockPB convert protos.FilteredBlock to FilteredBlock
-func FromFilteredBlockPB(pbblock *pb.FilteredBlock) *FilteredBlock {
+func FromFilteredBlockPB(pbblock *protos.FilteredBlock) *FilteredBlock {
 	block := &FilteredBlock{
 		Bcname:      pbblock.Bcname,
 		Blockid:     pbblock.Blockid,

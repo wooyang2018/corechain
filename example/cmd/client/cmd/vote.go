@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2021. Baidu Inc. All Rights Reserved.
- */
-
 package cmd
 
 import (
@@ -10,7 +6,6 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-
 	"github.com/wooyang2018/corechain/state/utxo"
 )
 

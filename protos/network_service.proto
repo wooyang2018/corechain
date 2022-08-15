@@ -1,12 +1,10 @@
 syntax = "proto3";
-
 option go_package = "github.com/wooyang2018/corechain/protos";
 
 package protos;
 
 // CoreMessage is the message of core p2p server
 message CoreMessage {
-
     enum MessageType {
         SENDBLOCK= 0;
         POSTTX = 1;

@@ -1,10 +1,9 @@
 syntax = "proto3";
 option optimize_for = LITE_RUNTIME;
 option go_package = "github.com/wooyang2018/corechain/protos";
+package protos;
 
 import "contract.proto";
-
-package protos;
 
 // service provided by chain code, called by xchain
 service NativeCode {

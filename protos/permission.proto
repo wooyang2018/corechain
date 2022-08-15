@@ -1,5 +1,4 @@
 syntax = "proto3";
-
 option go_package = "github.com/wooyang2018/corechain/protos";
 
 package protos;
@@ -30,6 +29,7 @@ message PermissionModel {
 message AkSet {
     repeated string aks = 1; // 一堆公钥
 }
+
 message AkSets {
     map<string, AkSet> sets = 1; // 公钥or账户名集
     string expression = 2; // 表达式，一期不支持表达式，默认集合内是and，集合间是or

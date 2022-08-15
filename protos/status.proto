@@ -1,10 +1,8 @@
 syntax = "proto3";
+option go_package = "github.com/wooyang2018/corechain/protos";
+package protos;
 
 import "contract.proto";
-
-option go_package = "github.com/wooyang2018/corechain/protos";
-
-package protos;
 
 message Transactions {
     repeated Transaction txs = 1;

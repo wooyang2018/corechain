@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2021. Baidu Inc. All Rights Reserved.
- */
-
 package cmd
 
 import (
@@ -22,6 +18,7 @@ import (
 	"github.com/spf13/viper"
 	"github.com/wooyang2018/corechain/example/pb"
 	exampleUtils "github.com/wooyang2018/corechain/example/utils"
+	"github.com/wooyang2018/corechain/protos"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
@@ -59,7 +56,7 @@ type Cli struct {
 	rootCmd *cobra.Command
 	xclient pb.MXchainClient
 
-	eventClient pb.EventServiceClient
+	eventClient protos.EventServiceClient
 }
 
 // NewCli new cli cmd
@@ -84,7 +81,7 @@ func (c *Cli) initXchainClient() error {
 		return err
 	}
 	c.xclient = pb.NewMXchainClient(conn)
-	c.eventClient = pb.NewEventServiceClient(conn)
+	c.eventClient = protos.NewEventServiceClient(conn)
 	return nil
 }
 
@@ -150,7 +147,7 @@ func (c *Cli) XchainClient() pb.MXchainClient {
 }
 
 // EventClient get EventService client
-func (c *Cli) EventClient() pb.EventServiceClient {
+func (c *Cli) EventClient() protos.EventServiceClient {
 	return c.eventClient
 }
 

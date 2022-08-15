@@ -1,7 +1,3 @@
-/*
-Copyright Baidu Inc. All Rights Reserved.
-*/
-
 package base
 
 import (

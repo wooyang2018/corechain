@@ -1,11 +1,5 @@
 package polynomial
 
-/*
-Copyright Baidu Inc. All Rights Reserved.
-
-<jingbo@baidu.com> 西二旗第一帅
-*/
-
 import (
 	"math/big"
 

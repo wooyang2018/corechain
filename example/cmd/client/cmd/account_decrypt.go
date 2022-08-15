@@ -1,10 +1,3 @@
-/*
- * Copyright (c) 2021. Baidu Inc. All Rights Reserved.
- *
- * Usage: Decrypt account from a encrypted private key file.
- *        ./xchain-cli account decrypt --output data/tmpkey --key private.key
- */
-
 package cmd
 
 import (

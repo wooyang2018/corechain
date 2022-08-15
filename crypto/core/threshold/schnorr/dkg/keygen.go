@@ -1,11 +1,5 @@
 package dkg
 
-/*
-Copyright Baidu Inc. All Rights Reserved.
-
-<jingbo@baidu.com> 西二旗第一帅
-*/
-
 import (
 	"crypto/ecdsa"
 	"crypto/elliptic"

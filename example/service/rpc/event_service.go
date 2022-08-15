@@ -5,17 +5,15 @@ import (
 	"net"
 	"sync"
 
-	sconf "github.com/wooyang2018/corechain/example/base"
-	"github.com/wooyang2018/corechain/example/pb"
-	scom "github.com/wooyang2018/corechain/example/utils"
-	"golang.org/x/net/context"
-	"google.golang.org/grpc/peer"
-
 	engineBase "github.com/wooyang2018/corechain/engine/base"
 	"github.com/wooyang2018/corechain/engine/event"
+	sconf "github.com/wooyang2018/corechain/example/base"
+	"github.com/wooyang2018/corechain/protos"
+	"golang.org/x/net/context"
+	"google.golang.org/grpc/peer"
 )
 
-// eventService implements the interface of pb.EventService
+// eventService implements the interface of protos.EventService
 type eventService struct {
 	cfg    *sconf.ServConf
 	router *event.Router
@@ -33,7 +31,7 @@ func newEventService(cfg *sconf.ServConf, engine engineBase.Engine) *eventServic
 }
 
 // Subscribe start an event subscribe
-func (e *eventService) Subscribe(req *pb.SubscribeRequest, stream pb.EventService_SubscribeServer) error {
+func (e *eventService) Subscribe(req *protos.SubscribeRequest, stream protos.EventService_SubscribeServer) error {
 	if !e.cfg.EnableEvent {
 		return errors.New("event service disabled")
 	}
@@ -45,14 +43,14 @@ func (e *eventService) Subscribe(req *pb.SubscribeRequest, stream pb.EventServic
 	}
 	defer e.releaseConn(remoteIP)
 
-	encfunc, iter, err := e.router.Subscribe(scom.ConvertEventSubType(req.GetType()), req.GetFilter())
+	encfunc, iter, err := e.router.Subscribe(req.GetType(), req.GetFilter())
 	if err != nil {
 		return err
 	}
 	for iter.Next() {
 		payload := iter.Data()
 		buf, _ := encfunc(payload)
-		event := &pb.Event{
+		event := &protos.Event{
 			Payload: buf,
 		}
 		err := stream.Send(event)

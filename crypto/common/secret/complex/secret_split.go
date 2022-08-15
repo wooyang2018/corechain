@@ -1,11 +1,5 @@
 package complex
 
-/*
-Copyright Baidu Inc. All Rights Reserved.
-
-<jingbo@baidu.com> 西二旗第一帅
-*/
-
 import (
 	"crypto/elliptic"
 	"encoding/json"
