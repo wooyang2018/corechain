@@ -3,6 +3,7 @@ package event
 import (
 	"testing"
 
+	"github.com/wooyang2018/corechain/engine/mock"
 	"github.com/wooyang2018/corechain/protos"
 )
 
@@ -47,7 +48,7 @@ func expectEventNotMatch(t *testing.T, event *protos.ContractEvent, pbfilter *pr
 }
 
 func TestFilterContractName(t *testing.T) {
-	tx := newTxBuilder().Invoke("counter", "increase", nil).Tx()
+	tx := mock.NewTxBuilder().Invoke("counter", "increase", nil).Tx()
 	t.Run("empty", func(tt *testing.T) {
 		expectTxMatch(tt, tx, &protos.BlockFilter{})
 	})
@@ -74,7 +75,7 @@ func TestFilterContractName(t *testing.T) {
 }
 
 func TestFilterInitiator(t *testing.T) {
-	tx := newTxBuilder().Initiator("addr1").Tx()
+	tx := mock.NewTxBuilder().Initiator("addr1").Tx()
 	t.Run("empty", func(tt *testing.T) {
 		expectTxMatch(tt, tx, &protos.BlockFilter{})
 	})
@@ -91,7 +92,7 @@ func TestFilterInitiator(t *testing.T) {
 }
 
 func TestFilterAuthRequire(t *testing.T) {
-	tx := newTxBuilder().AuthRequire("addr1", "addr2").Tx()
+	tx := mock.NewTxBuilder().AuthRequire("addr1", "addr2").Tx()
 	t.Run("empty", func(tt *testing.T) {
 		expectTxMatch(tt, tx, &protos.BlockFilter{})
 	})
@@ -111,7 +112,7 @@ func TestFilterAuthRequire(t *testing.T) {
 }
 
 func TestFilterFromAddr(t *testing.T) {
-	tx := newTxBuilder().Transfer("fromAddr", "toAddr", "10").Tx()
+	tx := mock.NewTxBuilder().Transfer("fromAddr", "toAddr", "10").Tx()
 	t.Run("empty", func(tt *testing.T) {
 		expectTxMatch(tt, tx, &protos.BlockFilter{})
 	})
@@ -128,7 +129,7 @@ func TestFilterFromAddr(t *testing.T) {
 }
 
 func TestFilterToAddr(t *testing.T) {
-	tx := newTxBuilder().Transfer("fromAddr", "toAddr", "10").Tx()
+	tx := mock.NewTxBuilder().Transfer("fromAddr", "toAddr", "10").Tx()
 	t.Run("empty", func(tt *testing.T) {
 		expectTxMatch(tt, tx, &protos.BlockFilter{})
 	})

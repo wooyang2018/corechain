@@ -1,9 +1,10 @@
-package event
+package mock
 
 import (
 	"errors"
 	"sync"
 
+	"github.com/wooyang2018/corechain/engine/event"
 	"github.com/wooyang2018/corechain/ledger"
 	"github.com/wooyang2018/corechain/protos"
 	"github.com/wooyang2018/corechain/state"
@@ -16,7 +17,7 @@ type mockBlockStore struct {
 	heightNotifier *state.BlockHeightNotifier
 }
 
-func newMockBlockStore() *mockBlockStore {
+func NewMockBlockStore() *mockBlockStore {
 	return &mockBlockStore{
 		heightNotifier: state.NewBlockHeightNotifier(),
 	}
@@ -57,6 +58,6 @@ func (m *mockBlockStore) AppendBlock(block *protos.InternalBlock) {
 }
 
 // GetBlockStore get BlockStore base bcname(the name of block chain)
-func (m *mockBlockStore) GetBlockStore(bcname string) (BlockStore, error) {
+func (m *mockBlockStore) GetBlockStore(bcname string) (event.BlockStore, error) {
 	return m, nil
 }

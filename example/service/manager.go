@@ -23,7 +23,7 @@ type Manager struct {
 	servers []Components
 }
 
-func NewServMG(scfg *sconf.ServConf, engine base.BCEngine) (*Manager, error) {
+func NewServMG(scfg *sconf.ServConf, engine base.BasicEngine) (*Manager, error) {
 	if scfg == nil || engine == nil {
 		return nil, fmt.Errorf("param error")
 	}

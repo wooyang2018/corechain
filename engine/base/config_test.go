@@ -1,7 +1,6 @@
 package base
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/wooyang2018/corechain/mock/config"
@@ -13,5 +12,5 @@ func TestLoadEngineConf(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmt.Println(engCfg)
+	t.Logf("%+v\n", engCfg)
 }

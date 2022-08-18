@@ -6,15 +6,16 @@ import (
 	"testing"
 	"time"
 
+	"github.com/wooyang2018/corechain/engine/mock"
 	"github.com/wooyang2018/corechain/protos"
 )
 
 func TestBlockTopicBasic(t *testing.T) {
-	ledger := newMockBlockStore()
+	ledger := mock.NewMockBlockStore()
 	const N = 5
 	var blocks []string
 	for i := 0; i < N; i++ {
-		block := newBlockBuilder().Block()
+		block := mock.NewBlockBuilder().Block()
 		blocks = append(blocks, hex.EncodeToString(block.GetBlockid()))
 		ledger.AppendBlock(block)
 	}
@@ -48,12 +49,12 @@ func TestBlockTopicBasic(t *testing.T) {
 }
 
 func TestBlockTopicWaitBlock(t *testing.T) {
-	ledger := newMockBlockStore()
+	ledger := mock.NewMockBlockStore()
 	const N = 5
 	go func() {
 		for i := 0; i < N; i++ {
 			time.Sleep(time.Millisecond * 100)
-			block := newBlockBuilder().Block()
+			block := mock.NewBlockBuilder().Block()
 			ledger.AppendBlock(block)
 		}
 	}()
@@ -80,12 +81,12 @@ func TestBlockTopicWaitBlock(t *testing.T) {
 }
 
 func TestBlockTopicEmptyRange(t *testing.T) {
-	ledger := newMockBlockStore()
+	ledger := mock.NewMockBlockStore()
 	const N = 5
 	go func() {
 		for i := 0; i < N; i++ {
 			time.Sleep(time.Millisecond * 100)
-			block := newBlockBuilder().Block()
+			block := mock.NewBlockBuilder().Block()
 			ledger.AppendBlock(block)
 		}
 	}()
@@ -112,13 +113,13 @@ func TestBlockTopicEmptyRange(t *testing.T) {
 }
 
 func TestFilterTxEvent(t *testing.T) {
-	ledger := newMockBlockStore()
-	tx := newTxBuilder().Invoke("counter", "increase", &protos.ContractEvent{
+	ledger := mock.NewMockBlockStore()
+	tx := mock.NewTxBuilder().Invoke("counter", "increase", &protos.ContractEvent{
 		Contract: "counter",
 		Name:     "increase",
 	}).Tx()
 
-	block := newBlockBuilder().AddTx(tx).Block()
+	block := mock.NewBlockBuilder().AddTx(tx).Block()
 	ledger.AppendBlock(block)
 
 	topic := NewBlockTopic(ledger)

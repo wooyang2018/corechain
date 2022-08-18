@@ -1,4 +1,3 @@
-// 统一管理系统引擎和链运行上下文
 package base
 
 import (
@@ -17,7 +16,7 @@ import (
 	"github.com/wooyang2018/corechain/state"
 )
 
-// 引擎运行上下文环境
+//EngineCtx 引擎运行上下文环境
 type EngineCtx struct {
 	// 基础上下文
 	xctx.BaseCtx
@@ -31,14 +30,14 @@ type EngineCtx struct {
 	ChainM ChainManager
 }
 
-// 链级别上下文，维护链级别上下文，每条平行链各有一个
+//ChainCtx 每条平行链各有一个链级别上下文
 type ChainCtx struct {
 	// 基础上下文
 	xctx.BaseCtx
 	// 引擎上下文
 	EngCtx *EngineCtx
 	// 链名
-	BCName string
+	BcName string
 	// 账本
 	Ledger *ledger.Ledger
 	// 状态机

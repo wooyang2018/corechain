@@ -9,7 +9,7 @@ import (
 
 type ChainCoreAgent struct {
 	log      logger.Logger
-	chainCtx *base.ChainCtx
+	chainCtx *base.ChainCtx //平行链上下文
 }
 
 func NewChainCoreAgent(chainCtx *base.ChainCtx) *ChainCoreAgent {
@@ -24,12 +24,12 @@ func (t *ChainCoreAgent) GetAccountAddresses(accountName string) ([]string, erro
 	return t.chainCtx.Acl.GetAccountAddresses(accountName)
 }
 
-// VerifyContractPermission 结合合约acl设置鉴权
+// VerifyContractPermission used to verify contract permission while contract running
 func (t *ChainCoreAgent) VerifyContractPermission(initiator string, authRequire []string, contractName, methodName string) (bool, error) {
 	return t.chainCtx.State.VerifyContractPermission(initiator, authRequire, contractName, methodName)
 }
 
-// VerifyContractOwnerPermission 结合合约acl设置鉴权
+// VerifyContractOwnerPermission used to verify contract ownership permisson
 func (t *ChainCoreAgent) VerifyContractOwnerPermission(contractName string, authRequire []string) error {
 	return t.chainCtx.State.VerifyContractOwnerPermission(contractName, authRequire)
 }

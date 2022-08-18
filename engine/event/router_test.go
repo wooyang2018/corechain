@@ -4,13 +4,14 @@ import (
 	"encoding/hex"
 	"testing"
 
+	"github.com/wooyang2018/corechain/engine/mock"
 	"github.com/wooyang2018/corechain/protos"
 	"google.golang.org/protobuf/proto"
 )
 
 func TestRouteBlockTopic(t *testing.T) {
-	ledger := newMockBlockStore()
-	block := newBlockBuilder().Block()
+	ledger := mock.NewMockBlockStore()
+	block := mock.NewBlockBuilder().Block()
 	ledger.AppendBlock(block)
 
 	router := NewRounterFromChainMG(ledger)
@@ -43,8 +44,8 @@ func TestRouteBlockTopic(t *testing.T) {
 }
 
 func TestRouteBlockTopicRaw(t *testing.T) {
-	ledger := newMockBlockStore()
-	block := newBlockBuilder().Block()
+	ledger := mock.NewMockBlockStore()
+	block := mock.NewBlockBuilder().Block()
 	ledger.AppendBlock(block)
 
 	router := NewRounterFromChainMG(ledger)

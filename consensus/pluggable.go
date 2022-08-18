@@ -3,13 +3,16 @@ package consensus
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strconv"
 	"sync"
 
 	xctx "github.com/wooyang2018/corechain/common/context"
+	"github.com/wooyang2018/corechain/common/timer"
 	"github.com/wooyang2018/corechain/consensus/base"
 	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/ledger"
+	"github.com/wooyang2018/corechain/logger"
 )
 
 const (
@@ -101,15 +104,23 @@ type PluggableConsensusImpl struct {
 
 // NewPluggableConsensus 初次创建PluggableConsensus实例，初始化可插拔共识列表
 func NewPluggableConsensus(cctx base.ConsensusCtx) (base.PluggableConsensus, error) {
+	log, err := logger.NewLogger("", base.SubModName)
+	if err != nil {
+		return nil, fmt.Errorf("create consensus failed because new logger error.err:%v", err)
+	}
+	cctx.XLog = log
+	cctx.Timer = timer.NewXTimer()
 	if cctx.BcName == "" {
 		cctx.XLog.Error("Pluggable CommonConsensus::NewPluggableConsensus::bcName is empty.")
 	}
+
 	pc := &PluggableConsensusImpl{
 		ctx: cctx,
 		stepConsensus: &stepConsensus{
 			commonConsensuses: []base.CommonConsensus{},
 		},
 	}
+
 	if cctx.Contract.GetKernRegistry() == nil {
 		return nil, ContractMngErr
 	}

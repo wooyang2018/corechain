@@ -8,6 +8,7 @@ import (
 
 	"github.com/spf13/cobra"
 	xconf "github.com/wooyang2018/corechain/common/config"
+	"github.com/wooyang2018/corechain/engine"
 	"github.com/wooyang2018/corechain/engine/base"
 	sconf "github.com/wooyang2018/corechain/example/base"
 	"github.com/wooyang2018/corechain/example/service"
@@ -67,7 +68,7 @@ func StartupChain(envCfgPath string) error {
 	logger.InitMLog(envConf.GenConfFilePath(envConf.LogConf), envConf.GenDirAbsPath(envConf.LogDir))
 
 	// 实例化区块链引擎
-	engine, err := base.CreateBCEngine(base.BCEngineName, envConf)
+	engine, err := engine.CreateBCEngine(base.BCEngineName, envConf)
 	if err != nil {
 		return err
 	}
@@ -124,7 +125,7 @@ func loadConf(envCfgPath string) (*xconf.EnvConf, *sconf.ServConf, error) {
 	return envConf, servConf, nil
 }
 
-func runEngine(engine base.BCEngine) <-chan bool {
+func runEngine(engine base.BasicEngine) <-chan bool {
 	exitCh := make(chan bool)
 
 	// 启动引擎，监听退出信号

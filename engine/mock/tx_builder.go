@@ -1,4 +1,4 @@
-package event
+package mock
 
 import (
 	"crypto/rand"
@@ -7,33 +7,12 @@ import (
 	"github.com/wooyang2018/corechain/state/model"
 )
 
-type blockBuilder struct {
-	block *protos.InternalBlock
-}
-
-func newBlockBuilder() *blockBuilder {
-	return &blockBuilder{
-		block: &protos.InternalBlock{
-			Blockid: makeRandID(),
-		},
-	}
-}
-
-func (b *blockBuilder) AddTx(tx ...*protos.Transaction) *blockBuilder {
-	b.block.Transactions = append(b.block.Transactions, tx...)
-	return b
-}
-
-func (b *blockBuilder) Block() *protos.InternalBlock {
-	return b.block
-}
-
 type txBuilder struct {
 	tx     *protos.Transaction
 	events []*protos.ContractEvent
 }
 
-func newTxBuilder() *txBuilder {
+func NewTxBuilder() *txBuilder {
 	return &txBuilder{
 		tx: &protos.Transaction{
 			Txid: makeRandID(),

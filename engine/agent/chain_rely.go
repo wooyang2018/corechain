@@ -4,19 +4,17 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/wooyang2018/corechain/common/timer"
 	"github.com/wooyang2018/corechain/consensus"
 	cbase "github.com/wooyang2018/corechain/consensus/base"
 	contractBase "github.com/wooyang2018/corechain/contract/base"
 	"github.com/wooyang2018/corechain/contract/proposal/govern"
 	"github.com/wooyang2018/corechain/contract/proposal/propose"
-	timer3 "github.com/wooyang2018/corechain/contract/proposal/timer"
+	ptimer "github.com/wooyang2018/corechain/contract/proposal/timer"
 	cryptoClient "github.com/wooyang2018/corechain/crypto/client"
 	cryptoBase "github.com/wooyang2018/corechain/crypto/client/base"
 	engineBase "github.com/wooyang2018/corechain/engine/base"
 	"github.com/wooyang2018/corechain/ledger"
 	ledgerBase "github.com/wooyang2018/corechain/ledger/base"
-	"github.com/wooyang2018/corechain/logger"
 	"github.com/wooyang2018/corechain/permission"
 	"github.com/wooyang2018/corechain/permission/base"
 	"github.com/wooyang2018/corechain/state"
@@ -25,16 +23,16 @@ import (
 
 // 区块链依赖代理
 type ChainRelyAgentImpl struct {
-	ctx *engineBase.ChainCtx
+	ctx *engineBase.ChainCtx //平行链上下文
 }
 
 func NewChainRelyAgent(chainCtx *engineBase.ChainCtx) *ChainRelyAgentImpl {
 	return &ChainRelyAgentImpl{chainCtx}
 }
 
-// 创建账本
+// CreateLedger 创建账本
 func (t *ChainRelyAgentImpl) CreateLedger() (*ledger.Ledger, error) {
-	legCtx, err := ledgerBase.NewLedgerCtx(t.ctx.EngCtx.EnvCfg, t.ctx.BCName)
+	legCtx, err := ledgerBase.NewLedgerCtx(t.ctx.EngCtx.EnvCfg, t.ctx.BcName)
 	if err != nil {
 		return nil, fmt.Errorf("new ledger ctx failed.err:%v", err)
 	}
@@ -47,11 +45,11 @@ func (t *ChainRelyAgentImpl) CreateLedger() (*ledger.Ledger, error) {
 	return leg, nil
 }
 
-// 创建状态机实例
+// CreateState 创建状态机实例
 func (t *ChainRelyAgentImpl) CreateState(leg *ledger.Ledger,
 	crypt cryptoBase.CryptoClient) (*state.State, error) {
 	// 创建状态机上下文
-	stateCtx, err := stateBase.NewStateCtx(t.ctx.EngCtx.EnvCfg, t.ctx.BCName, leg, crypt)
+	stateCtx, err := stateBase.NewStateCtx(t.ctx.EngCtx.EnvCfg, t.ctx.BcName, leg, crypt)
 	if err != nil {
 		return nil, fmt.Errorf("new state ctx failed.err:%v", err)
 	}
@@ -64,7 +62,7 @@ func (t *ChainRelyAgentImpl) CreateState(leg *ledger.Ledger,
 	return stat, nil
 }
 
-// 加密
+// CreateCrypto 创建加密客户端
 func (t *ChainRelyAgentImpl) CreateCrypto(cryptoType string) (cryptoBase.CryptoClient, error) {
 	crypto, err := cryptoClient.CreateCryptoClient(cryptoType)
 	if err != nil {
@@ -74,10 +72,10 @@ func (t *ChainRelyAgentImpl) CreateCrypto(cryptoType string) (cryptoBase.CryptoC
 	return crypto, nil
 }
 
-// Acl权限
+// CreateAcl 创建权限控制器
 func (t *ChainRelyAgentImpl) CreateAcl() (base.AclManager, error) {
 	legAgent := NewLedgerAgent(t.ctx)
-	aclCtx, err := base.NewAclCtx(t.ctx.BCName, legAgent, t.ctx.Contract)
+	aclCtx, err := base.NewAclCtx(t.ctx.BcName, legAgent, t.ctx.Contract)
 	if err != nil {
 		return nil, fmt.Errorf("create permission ctx failed.err:%v", err)
 	}
@@ -90,17 +88,17 @@ func (t *ChainRelyAgentImpl) CreateAcl() (base.AclManager, error) {
 	return aclObj, nil
 }
 
-// 创建合约实例
-func (t *ChainRelyAgentImpl) CreateContract(xmreader ledger.XReader) (contractBase.Manager, error) {
+// CreateContract 创建合约管理器
+func (t *ChainRelyAgentImpl) CreateContract(xReader ledger.XReader) (contractBase.Manager, error) {
 	envcfg := t.ctx.EngCtx.EnvCfg
-	basedir := filepath.Join(envcfg.GenDataAbsPath(envcfg.ChainDir), t.ctx.BCName)
+	basedir := filepath.Join(envcfg.GenDataAbsPath(envcfg.ChainDir), t.ctx.BcName)
 
 	mgCfg := &contractBase.ManagerConfig{
-		BCName:   t.ctx.BCName,
+		BCName:   t.ctx.BcName,
 		Basedir:  basedir,
 		EnvConf:  envcfg,
 		Core:     NewChainCoreAgent(t.ctx),
-		XMReader: xmreader,
+		XMReader: xReader,
 	}
 	contractObj, err := contractBase.CreateManager("default", mgCfg)
 	if err != nil {
@@ -110,24 +108,17 @@ func (t *ChainRelyAgentImpl) CreateContract(xmreader ledger.XReader) (contractBa
 	return contractObj, nil
 }
 
-// 创建共识实例
+// CreateConsensus 创建共识实例
 func (t *ChainRelyAgentImpl) CreateConsensus() (cbase.PluggableConsensus, error) {
 	legAgent := NewLedgerAgent(t.ctx)
 	consCtx := cbase.ConsensusCtx{
-		BcName:   t.ctx.BCName,
+		BcName:   t.ctx.BcName,
 		Address:  t.ctx.Address,
 		Crypto:   t.ctx.Crypto,
 		Contract: t.ctx.Contract,
 		Ledger:   legAgent,
 		Network:  t.ctx.EngCtx.Net,
 	}
-
-	log, err := logger.NewLogger("", cbase.SubModName)
-	if err != nil {
-		return nil, fmt.Errorf("create consensus failed because new logger error.err:%v", err)
-	}
-	consCtx.XLog = log
-	consCtx.Timer = timer.NewXTimer()
 
 	cons, err := consensus.NewPluggableConsensus(consCtx)
 	if err != nil {
@@ -137,10 +128,10 @@ func (t *ChainRelyAgentImpl) CreateConsensus() (cbase.PluggableConsensus, error)
 	return cons, nil
 }
 
-// 创建治理代币实例
+// CreateGovernToken 创建治理代币实例
 func (t *ChainRelyAgentImpl) CreateGovernToken() (govern.GovManager, error) {
 	legAgent := NewLedgerAgent(t.ctx)
-	governTokenCtx, err := govern.NewGovCtx(t.ctx.BCName, legAgent, t.ctx.Contract)
+	governTokenCtx, err := govern.NewGovCtx(t.ctx.BcName, legAgent, t.ctx.Contract)
 	if err != nil {
 		return nil, fmt.Errorf("create govern_token ctx failed.err:%v", err)
 	}
@@ -153,10 +144,10 @@ func (t *ChainRelyAgentImpl) CreateGovernToken() (govern.GovManager, error) {
 	return governTokenObj, nil
 }
 
-// 创建提案实例
+// CreateProposal 创建提案实例
 func (t *ChainRelyAgentImpl) CreateProposal() (propose.ProposeManager, error) {
 	legAgent := NewLedgerAgent(t.ctx)
-	proposalCtx, err := propose.NewProposeCtx(t.ctx.BCName, legAgent, t.ctx.Contract)
+	proposalCtx, err := propose.NewProposeCtx(t.ctx.BcName, legAgent, t.ctx.Contract)
 	if err != nil {
 		return nil, fmt.Errorf("create proposal ctx failed.err:%v", err)
 	}
@@ -169,15 +160,15 @@ func (t *ChainRelyAgentImpl) CreateProposal() (propose.ProposeManager, error) {
 	return proposalObj, nil
 }
 
-// 创建定时器任务实例
-func (t *ChainRelyAgentImpl) CreateTimerTask() (timer3.TimerManager, error) {
+// CreateTimerTask 创建定时器任务实例
+func (t *ChainRelyAgentImpl) CreateTimerTask() (ptimer.TimerManager, error) {
 	legAgent := NewLedgerAgent(t.ctx)
-	timerCtx, err := timer3.NewTimerTaskCtx(t.ctx.BCName, legAgent, t.ctx.Contract)
+	timerCtx, err := ptimer.NewTimerTaskCtx(t.ctx.BcName, legAgent, t.ctx.Contract)
 	if err != nil {
 		return nil, fmt.Errorf("create timer_task ctx failed.err:%v", err)
 	}
 
-	timerObj, err := timer3.NewTimerTaskManager(timerCtx)
+	timerObj, err := ptimer.NewTimerTaskManager(timerCtx)
 	if err != nil {
 		return nil, fmt.Errorf("create timer_task instance failed.err:%v", err)
 	}

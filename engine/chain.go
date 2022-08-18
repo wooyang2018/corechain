@@ -59,7 +59,7 @@ func LoadChain(engCtx *base.EngineCtx, bcName string) (*Chain, error) {
 	// 实例化链实例
 	ctx := &base.ChainCtx{}
 	ctx.EngCtx = engCtx
-	ctx.BCName = bcName
+	ctx.BcName = bcName
 	ctx.XLog = log
 	ctx.Timer = timer.NewXTimer()
 	chainObj := &Chain{}
@@ -188,18 +188,18 @@ func (t *Chain) PreExec(ctx xctx.Context, reqs []*protos.InvokeRequest, initiato
 		if err != nil {
 			context.Release()
 			ctx.GetLog().Error("PreExec Invoke error", "error", err, "contractName", req.ContractName)
-			metrics.ContractInvokeCounter.WithLabelValues(t.ctx.BCName, req.ModuleName, req.ContractName, req.MethodName, "InvokeError").Inc()
+			metrics.ContractInvokeCounter.WithLabelValues(t.ctx.BcName, req.ModuleName, req.ContractName, req.MethodName, "InvokeError").Inc()
 			return nil, base.ErrContractInvokeFailed.More("%v", err)
 		}
 
 		if resp.Status >= 400 && i < len(reservedRequests) {
 			context.Release()
 			ctx.GetLog().Error("PreExec Invoke error", "status", resp.Status, "contractName", req.ContractName)
-			metrics.ContractInvokeCounter.WithLabelValues(t.ctx.BCName, req.ModuleName, req.ContractName, req.MethodName, "InvokeError").Inc()
+			metrics.ContractInvokeCounter.WithLabelValues(t.ctx.BcName, req.ModuleName, req.ContractName, req.MethodName, "InvokeError").Inc()
 			return nil, base.ErrContractInvokeFailed.More("%v", resp.Message)
 		}
 
-		metrics.ContractInvokeCounter.WithLabelValues(t.ctx.BCName, req.ModuleName, req.ContractName, req.MethodName, "OK").Inc()
+		metrics.ContractInvokeCounter.WithLabelValues(t.ctx.BcName, req.ModuleName, req.ContractName, req.MethodName, "OK").Inc()
 		resourceUsed := context.ResourceUsed()
 		if i >= len(reservedRequests) {
 			gasUsed += resourceUsed.TotalGas(gasPrice)
@@ -220,7 +220,7 @@ func (t *Chain) PreExec(ctx xctx.Context, reqs []*protos.InvokeRequest, initiato
 		responseBodes = append(responseBodes, resp.Body)
 
 		context.Release()
-		metrics.ContractInvokeHistogram.WithLabelValues(t.ctx.BCName, req.ModuleName, req.ContractName, req.MethodName).Observe(time.Since(beginTime).Seconds())
+		metrics.ContractInvokeHistogram.WithLabelValues(t.ctx.BcName, req.ModuleName, req.ContractName, req.MethodName).Observe(time.Since(beginTime).Seconds())
 	}
 
 	err = sandbox.Flush()
@@ -265,7 +265,7 @@ func (t *Chain) SubmitTx(ctx xctx.Context, tx *protos.Transaction) error {
 
 	code := "OK"
 	defer func() {
-		metrics.CallMethodCounter.WithLabelValues(t.ctx.BCName, "SubmitTx", code).Inc()
+		metrics.CallMethodCounter.WithLabelValues(t.ctx.BcName, "SubmitTx", code).Inc()
 	}()
 
 	// 判断此交易是否已经存在（账本和未确认交易表中）。
@@ -329,17 +329,17 @@ func (t *Chain) initChainCtx() error {
 	// 1.实例化账本
 	leg, err := t.relyAgent.CreateLedger()
 	if err != nil {
-		t.log.Error("open ledger failed", "bcName", t.ctx.BCName, "err", err)
+		t.log.Error("open ledger failed", "bcName", t.ctx.BcName, "err", err)
 		return err
 	}
 	t.ctx.Ledger = leg
-	t.log.Debug("open ledger succ", "bcName", t.ctx.BCName)
+	t.log.Debug("open ledger succ", "bcName", t.ctx.BcName)
 
 	// 2.实例化加密组件
 	// 从账本查询加密算法类型
 	cryptoType, err := agent.NewLedgerAgent(t.ctx).GetCryptoType()
 	if err != nil {
-		t.log.Error("query crypto type failed", "bcName", t.ctx.BCName, "err", err)
+		t.log.Error("query crypto type failed", "bcName", t.ctx.BcName, "err", err)
 		return fmt.Errorf("query crypto type failed")
 	}
 	crypt, err := t.relyAgent.CreateCrypto(cryptoType)
@@ -348,97 +348,97 @@ func (t *Chain) initChainCtx() error {
 		return fmt.Errorf("create crypto client failed")
 	}
 	t.ctx.Crypto = crypt
-	t.log.Debug("create crypto client succ", "bcName", t.ctx.BCName, "cryptoType", cryptoType)
+	t.log.Debug("create crypto client succ", "bcName", t.ctx.BcName, "cryptoType", cryptoType)
 
 	// 3.实例化状态机
 	stat, err := t.relyAgent.CreateState(leg, crypt)
 	if err != nil {
-		t.log.Error("open state failed", "bcName", t.ctx.BCName, "err", err)
+		t.log.Error("open state failed", "bcName", t.ctx.BcName, "err", err)
 		return fmt.Errorf("open state failed")
 	}
 	t.ctx.State = stat
-	t.log.Debug("open state succ", "bcName", t.ctx.BCName)
+	t.log.Debug("open state succ", "bcName", t.ctx.BcName)
 
 	// 4.加载节点账户信息
 	keyPath := t.ctx.EngCtx.EnvCfg.GenDataAbsPath(t.ctx.EngCtx.EnvCfg.KeyDir)
 	addr, err := address.LoadAddrInfo(keyPath, t.ctx.Crypto)
 	if err != nil {
-		t.log.Error("load node addr info error", "bcName", t.ctx.BCName, "keyPath", keyPath, "err", err)
+		t.log.Error("load node addr info error", "bcName", t.ctx.BcName, "keyPath", keyPath, "err", err)
 		return fmt.Errorf("load node addr info error")
 	}
 	t.ctx.Address = addr
-	t.log.Debug("load node addr info succ", "bcName", t.ctx.BCName, "address", addr.Address)
+	t.log.Debug("load node addr info succ", "bcName", t.ctx.BcName, "address", addr.Address)
 
 	// 5.合约
 	contractObj, err := t.relyAgent.CreateContract(stat.CreateXMReader())
 	if err != nil {
-		t.log.Error("create contract manager error", "bcName", t.ctx.BCName, "err", err)
+		t.log.Error("create contract manager error", "bcName", t.ctx.BcName, "err", err)
 		return fmt.Errorf("create contract manager error")
 	}
 	t.ctx.Contract = contractObj
 	// 设置合约manager到状态机
 	t.ctx.State.SetContractMG(t.ctx.Contract)
-	t.log.Debug("create contract manager succ", "bcName", t.ctx.BCName)
+	t.log.Debug("create contract manager succ", "bcName", t.ctx.BcName)
 
 	// 6.Acl
 	aclObj, err := t.relyAgent.CreateAcl()
 	if err != nil {
-		t.log.Error("create acl error", "bcName", t.ctx.BCName, "err", err)
+		t.log.Error("create acl error", "bcName", t.ctx.BcName, "err", err)
 		return fmt.Errorf("create acl error")
 	}
 	t.ctx.Acl = aclObj
 	// 设置acl manager到状态机
 	t.ctx.State.SetAclMG(t.ctx.Acl)
-	t.log.Debug("create acl succ", "bcName", t.ctx.BCName)
+	t.log.Debug("create acl succ", "bcName", t.ctx.BcName)
 
 	// 7.共识
 	cons, err := t.relyAgent.CreateConsensus()
 	if err != nil {
-		t.log.Error("create consensus error", "bcName", t.ctx.BCName, "err", err)
+		t.log.Error("create consensus error", "bcName", t.ctx.BcName, "err", err)
 		return fmt.Errorf("create consensus error")
 	}
 	t.ctx.Consensus = cons
-	t.log.Debug("create consensus succ", "bcName", t.ctx.BCName)
+	t.log.Debug("create consensus succ", "bcName", t.ctx.BcName)
 
 	// 8.提案
 	governTokenObj, err := t.relyAgent.CreateGovernToken()
 	if err != nil {
-		t.log.Error("create govern token error", "bcName", t.ctx.BCName, "err", err)
+		t.log.Error("create govern token error", "bcName", t.ctx.BcName, "err", err)
 		return fmt.Errorf("create govern token error")
 	}
 	t.ctx.GovernToken = governTokenObj
 	// 设置govern token manager到状态机
 	t.ctx.State.SetGovernTokenMG(t.ctx.GovernToken)
-	t.log.Debug("create govern token succ", "bcName", t.ctx.BCName)
+	t.log.Debug("create govern token succ", "bcName", t.ctx.BcName)
 
 	// 9.提案
 	proposalObj, err := t.relyAgent.CreateProposal()
 	if err != nil {
-		t.log.Error("create proposal error", "bcName", t.ctx.BCName, "err", err)
+		t.log.Error("create proposal error", "bcName", t.ctx.BcName, "err", err)
 		return fmt.Errorf("create proposal error")
 	}
 	t.ctx.Proposal = proposalObj
 	// 设置proposal manager到状态机
 	t.ctx.State.SetProposalMG(t.ctx.Proposal)
-	t.log.Debug("create proposal succ", "bcName", t.ctx.BCName)
+	t.log.Debug("create proposal succ", "bcName", t.ctx.BcName)
 
 	// 10.定时器任务
 	timerObj, err := t.relyAgent.CreateTimerTask()
 	if err != nil {
-		t.log.Error("create timer_task error", "bcName", t.ctx.BCName, "err", err)
+		t.log.Error("create timer_task error", "bcName", t.ctx.BcName, "err", err)
 		return fmt.Errorf("create timer_task error")
 	}
 	t.ctx.TimerTask = timerObj
 	// 设置timer manager到状态机
 	t.ctx.State.SetTimerTaskMG(t.ctx.TimerTask)
-	t.log.Debug("create timer_task succ", "bcName", t.ctx.BCName)
-	t.log.Debug("create chain succ", "bcName", t.ctx.BCName)
+	t.log.Debug("create timer_task succ", "bcName", t.ctx.BcName)
+	t.log.Debug("create chain succ", "bcName", t.ctx.BcName)
 	return nil
 }
 
 // 创建平行链实例
 func (t *Chain) CreateParaChain() error {
-	paraChainCtx, err := parachain.NewParaChainCtx(t.ctx.BCName, t.ctx)
+	paraChainCtx, err := parachain.NewParaChainCtx(t.ctx.BcName, t.ctx)
 	if err != nil {
 		return fmt.Errorf("create parachain ctx failed.err:%v", err)
 	}

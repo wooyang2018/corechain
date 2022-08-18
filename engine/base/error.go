@@ -4,22 +4,21 @@ import (
 	"fmt"
 )
 
+type Status int
+
 const (
 	// 处理成功类
-	ErrStatusSucc = 200
+	ErrStatusSucc Status = 200
 	// 拒绝处理类错误状态
-	ErrStatusRefused = 400
+	ErrStatusRefused Status = 400
 	// 内部错误类错误状态
-	ErrStatusInternalErr = 500
+	ErrStatusInternalErr Status = 500
 )
 
 type Error struct {
-	// 用于统计和监控的错误分类（类似http的2xx、4xx、5xx）
-	Status int
-	// 用于标识具体错误的详细错误码
-	Code int
-	// 用于说明具体错误的说明信息
-	Msg string
+	Status Status
+	Code   int    // 详细错误码
+	Msg    string //具体错误的说明信息
 }
 
 func CastError(err error) *Error {
@@ -58,8 +57,7 @@ func (t *Error) Equal(rhs *Error) bool {
 	return t.Code == rhs.Code
 }
 
-// define std error
-// 预留xxx9xx的错误码给上层业务扩展用，这里不要使用xxx9xx的错误码
+// define std error 预留xxx9xx的错误码
 var (
 	ErrSuccess      = &Error{ErrStatusSucc, 0, "success"}
 	ErrInternal     = &Error{ErrStatusInternalErr, 50000, "internal error"}

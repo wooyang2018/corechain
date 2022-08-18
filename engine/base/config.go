@@ -10,8 +10,7 @@ import (
 )
 
 const (
-	// root链默认链名
-	RootBlockChain = "xuper"
+	RootBlockChain = "corechain" //默认链名
 )
 
 type EngineConf struct {

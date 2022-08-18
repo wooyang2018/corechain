@@ -3,8 +3,9 @@ package leveldb
 import (
 	"errors"
 	"fmt"
-	"github.com/wooyang2018/corechain/storage"
 	"sync"
+
+	"github.com/wooyang2018/corechain/storage"
 )
 
 // KVParameter structure for kv instance parameters

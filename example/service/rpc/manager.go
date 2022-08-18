@@ -33,7 +33,7 @@ type RpcManager struct {
 	exitOnce *sync.Once
 }
 
-func NewRpcServMG(scfg *sconf.ServConf, en engineBase.BCEngine) (*RpcManager, error) {
+func NewRpcServMG(scfg *sconf.ServConf, en engineBase.BasicEngine) (*RpcManager, error) {
 	if scfg == nil || en == nil {
 		return nil, fmt.Errorf("param error")
 	}

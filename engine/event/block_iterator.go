@@ -8,6 +8,14 @@ import (
 	"github.com/wooyang2018/corechain/protos"
 )
 
+// Iterator is the event iterator, must be closed after use
+type Iterator interface {
+	Next() bool
+	Data() interface{}
+	Error() error
+	Close()
+}
+
 var _ Iterator = (*BlockIterator)(nil)
 
 // BlockIterator wraps around ledger as a iterator style interface
@@ -50,8 +58,7 @@ func (b *BlockIterator) Next() bool {
 
 func (b *BlockIterator) fetchBlock(num int64) (*protos.InternalBlock, error) {
 	for !b.closed {
-		// 确保utxo更新到了对应的高度
-		b.blockStore.WaitBlockHeight(num)
+		b.blockStore.WaitBlockHeight(num) // 确保utxo更新到了对应的高度
 		block, err := b.blockStore.QueryBlockByHeight(num)
 		if err == nil {
 			return block, err
@@ -59,7 +66,6 @@ func (b *BlockIterator) fetchBlock(num int64) (*protos.InternalBlock, error) {
 		if err != ledger.ErrBlockNotExist {
 			return nil, err
 		}
-		// TODO：utxo更新了，但账本找不到区块的情况，应该不会发生，发生了只能重试
 		time.Sleep(time.Second)
 	}
 	return nil, errors.New("fetchBlock: code unreachable")

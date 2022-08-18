@@ -82,7 +82,7 @@ func (t *Miner) getMaxBlockHeight(ctx xctx.Context) (string, int64, []byte, erro
 		return "", 0, nil, nil
 	}
 	opt := []network.MessageOption{
-		network.WithBCName(t.ctx.BCName),
+		network.WithBCName(t.ctx.BcName),
 		// network.WithLogId(ctx.GetLog().GetLogId()),
 	}
 	msg := network.NewMessage(protos.CoreMessage_GET_BLOCKCHAINSTATUS, nil, opt...)
@@ -259,7 +259,7 @@ func (t *Miner) getBlocksByHeight(ctx xctx.Context, height int64, size int) ([]*
 	}
 
 	input := &protos.GetBlockHeaderRequest{
-		Bcname: t.ctx.BCName,
+		Bcname: t.ctx.BcName,
 		Height: height,
 		Size:   int64(size),
 	}
@@ -282,7 +282,7 @@ func (t *Miner) getBlocksByHeight(ctx xctx.Context, height int64, size int) ([]*
 			opts = append(opts, netBase.WithFilter([]netBase.FilterStrategy{netBase.NearestBucketStrategy}))
 		}
 	}
-	msg := network.NewMessage(protos.CoreMessage_GET_BLOCK_HEADERS, input, network.WithBCName(t.ctx.BCName))
+	msg := network.NewMessage(protos.CoreMessage_GET_BLOCK_HEADERS, input, network.WithBCName(t.ctx.BcName))
 	responses, err := t.ctx.EngCtx.Net.SendMessageWithResponse(ctx, msg, opts...)
 	if err != nil {
 		ctx.GetLog().Warn("network get block header error", "err", err)
@@ -356,7 +356,7 @@ func (t *Miner) downloadMissingTxs(ctx xctx.Context, blockid []byte, txidx []int
 		return nil, nil
 	}
 	input := &protos.GetBlockTxsRequest{
-		Bcname:  t.ctx.BCName,
+		Bcname:  t.ctx.BcName,
 		Blockid: blockid,
 		Txs:     txidx,
 	}
@@ -371,7 +371,7 @@ func (t *Miner) downloadMissingTxs(ctx xctx.Context, blockid []byte, txidx []int
 		opts = append(opts, netBase.WithFilter([]netBase.FilterStrategy{netBase.NearestBucketStrategy}))
 	}
 
-	msg := network.NewMessage(protos.CoreMessage_GET_BLOCK_TXS, input, network.WithBCName(t.ctx.BCName))
+	msg := network.NewMessage(protos.CoreMessage_GET_BLOCK_TXS, input, network.WithBCName(t.ctx.BcName))
 	responses, err := t.ctx.EngCtx.Net.SendMessageWithResponse(ctx, msg, opts...)
 	if err != nil {
 		ctx.GetLog().Warn("confirm block chain status error", "err", err)
@@ -473,7 +473,7 @@ func (t *Miner) batchConfirmBlocks(ctx xctx.Context, blocks []*protos.InternalBl
 		trace("ConProcessConfirmBlock")
 		err = t.ctx.Consensus.SwitchConsensus(block.Height)
 		if err != nil {
-			ctx.GetLog().Warn("SwitchConsensus failed", "bcname", t.ctx.BCName,
+			ctx.GetLog().Warn("SwitchConsensus failed", "bcname", t.ctx.BcName,
 				"err", err, "blockId", utils.F(block.GetBlockid()))
 			// todo 这里暂时不返回错误
 		}
@@ -590,12 +590,12 @@ func (t *Miner) findForkPoint(ctx xctx.Context) (*protos.InternalBlock, error) {
 			return nil, err
 		}
 		input := &protos.GetBlockHeaderRequest{
-			Bcname: t.ctx.BCName,
+			Bcname: t.ctx.BcName,
 			Height: height,
 			Size:   1,
 		}
 
-		msg := network.NewMessage(protos.CoreMessage_GET_BLOCK_HEADERS, input, network.WithBCName(t.ctx.BCName))
+		msg := network.NewMessage(protos.CoreMessage_GET_BLOCK_HEADERS, input, network.WithBCName(t.ctx.BcName))
 		responses, err := t.ctx.EngCtx.Net.SendMessageWithResponse(ctx, msg, opts...)
 		if err != nil {
 			ctx.GetLog().Warn("query block header error", "err", err)

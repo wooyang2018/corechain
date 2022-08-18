@@ -33,13 +33,22 @@ type Chain interface {
 	SetRelyAgent(ChainRelyAgent) error
 }
 
-// 定义xuperos引擎对外暴露接口
-// 依赖接口而不是依赖具体实现
+// 区块链综合引擎
 type Engine interface {
-	BCEngine
+	BasicEngine
 	ChainManager
 	Context() *EngineCtx
 	CreateNetwork(*xconf.EnvConf) (netBase.Network, error)
+}
+
+// 区块链基础引擎
+type BasicEngine interface {
+	// 初始化引擎
+	Init(*xconf.EnvConf) error
+	// 启动引擎(阻塞)
+	Run()
+	// 幂等退出引擎
+	Exit()
 }
 
 // 定义链对各组件依赖接口约束
@@ -73,7 +82,7 @@ type AsyncworkerAgent interface {
 type TaskHandler func(ctx TaskContext) error
 
 type TaskContext interface {
-	// ParseArgs 用来解析任务参数，参数为对应任务参数类型的指针
+	// ParseArgs 解析任务参数，参数为对应任务参数类型的指针
 	ParseArgs(v interface{}) error
 	RetryTimes() int
 }

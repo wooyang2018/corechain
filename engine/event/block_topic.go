@@ -9,12 +9,25 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-var _ Topic = (*BlockTopic)(nil)
+// Topic is the factory of event Iterator
+type Topic interface {
+	// ParseFilter 从指定的bytes buffer反序列化topic过滤器
+	// 返回的参数会作为入参传递给NewIterator的filter参数
+	ParseFilter(buf []byte) (interface{}, error)
+
+	// MarshalEvent encode event payload returns from Iterator.Data()
+	MarshalEvent(x interface{}) ([]byte, error)
+
+	// NewIterator make a new Iterator base on filter
+	NewIterator(filter interface{}) (Iterator, error)
+}
 
 // BlockTopic handles block events
 type BlockTopic struct {
 	chainmg ChainManager
 }
+
+var _ Topic = (*BlockTopic)(nil)
 
 // NewBlockTopic instances BlockTopic from ChainManager
 func NewBlockTopic(chainmg ChainManager) *BlockTopic {
@@ -96,7 +109,7 @@ func (b *BlockTopic) newIterator(filter *blockFilter) (Iterator, error) {
 	}
 
 	biter := NewBlockIterator(blockStore, startBlockNum, endBlockNum)
-	return &filteredBlockIterator{
+	return &FilteredBlockIterator{
 		biter:  biter,
 		filter: filter,
 	}, nil

@@ -293,7 +293,7 @@ func (t *Miner) mining(ctx xctx.Context) error {
 	// 5.可插拔共识，根据区块高度确认是否需要切换升级共识实例
 	err = t.ctx.Consensus.SwitchConsensus(block.Height)
 	if err != nil {
-		ctx.GetLog().Warn("SwitchConsensus failed", "bcname", t.ctx.BCName,
+		ctx.GetLog().Warn("SwitchConsensus failed", "bcname", t.ctx.BcName,
 			"err", err, "blockId", utils.F(block.GetBlockid()))
 		// todo 这里暂时不返回错误
 	}

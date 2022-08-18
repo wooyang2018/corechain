@@ -1,4 +1,4 @@
-package base
+package engine
 
 import (
 	"fmt"
@@ -6,28 +6,19 @@ import (
 	"sync"
 
 	xconf "github.com/wooyang2018/corechain/common/config"
+	"github.com/wooyang2018/corechain/engine/base"
 	"github.com/wooyang2018/corechain/logger"
 )
 
-// 区块链基础引擎
-type BCEngine interface {
-	// 初始化引擎
-	Init(*xconf.EnvConf) error
-	// 启动引擎(阻塞)
-	Run()
-	// 退出引擎，需要幂等
-	Exit()
-}
-
 // 创建engine实例方法
-type NewBCEngineFunc func() BCEngine
+type NewBcEngineFunc func() base.BasicEngine
 
 var (
 	engineMu sync.RWMutex
-	engines  = make(map[string]NewBCEngineFunc)
+	engines  = make(map[string]NewBcEngineFunc)
 )
 
-func Register(name string, f NewBCEngineFunc) {
+func Register(name string, f NewBcEngineFunc) {
 	engineMu.Lock()
 	defer engineMu.Unlock()
 
@@ -51,7 +42,7 @@ func Engines() []string {
 	return list
 }
 
-func newBCEngine(name string) BCEngine {
+func newBCEngine(name string) base.BasicEngine {
 	engineMu.RLock()
 	defer engineMu.RUnlock()
 
@@ -63,7 +54,7 @@ func newBCEngine(name string) BCEngine {
 }
 
 // 采用工厂模式，对上层统一区块链执行引擎创建操作，方便框架开发
-func CreateBCEngine(egName string, envCfg *xconf.EnvConf) (BCEngine, error) {
+func CreateBCEngine(egName string, envCfg *xconf.EnvConf) (base.BasicEngine, error) {
 	// 检查参数
 	if egName == "" || envCfg == nil {
 		return nil, fmt.Errorf("create bc engine failed because some param unset")

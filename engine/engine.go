@@ -46,16 +46,16 @@ func (t *Engine) StopChains() {
 
 // 向工厂注册自己的创建方法
 func init() {
-	base.Register(base.BCEngineName, NewEngine)
+	Register(base.BCEngineName, NewEngine)
 }
 
-func NewEngine() base.BCEngine {
+func NewEngine() base.BasicEngine {
 	return &Engine{}
 }
 
 // 转换引擎句柄类型
 // 对外提供类型转义方法，以接口形式对外暴露
-func EngineConvert(engine base.BCEngine) (base.Engine, error) {
+func EngineConvert(engine base.BasicEngine) (base.Engine, error) {
 	if engine == nil {
 		return nil, base.ErrParameter
 	}

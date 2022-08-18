@@ -7,9 +7,9 @@ import (
 	"github.com/wooyang2018/corechain/protos"
 )
 
-var _ Iterator = (*filteredBlockIterator)(nil)
+var _ Iterator = (*FilteredBlockIterator)(nil)
 
-type filteredBlockIterator struct {
+type FilteredBlockIterator struct {
 	biter  *BlockIterator
 	filter *blockFilter
 	block  *protos.FilteredBlock
@@ -20,14 +20,14 @@ type filteredBlockIterator struct {
 	err    error
 }
 
-func newFilteredBlockIterator(iter *BlockIterator, filter *blockFilter) *filteredBlockIterator {
-	return &filteredBlockIterator{
+func newFilteredBlockIterator(iter *BlockIterator, filter *blockFilter) *FilteredBlockIterator {
+	return &FilteredBlockIterator{
 		biter:  iter,
 		filter: filter,
 	}
 }
 
-func (b *filteredBlockIterator) Next() bool {
+func (b *FilteredBlockIterator) Next() bool {
 	if b.closed || b.err != nil {
 		return false
 	}
@@ -39,11 +39,11 @@ func (b *filteredBlockIterator) Next() bool {
 	return cont
 }
 
-func (b *filteredBlockIterator) matchTx(tx *protos.Transaction) bool {
+func (b *FilteredBlockIterator) matchTx(tx *protos.Transaction) bool {
 	return matchTx(b.filter, tx)
 }
 
-func (b *filteredBlockIterator) toFilteredBlock(block *protos.InternalBlock) *protos.FilteredBlock {
+func (b *FilteredBlockIterator) toFilteredBlock(block *protos.InternalBlock) *protos.FilteredBlock {
 	fblock := new(protos.FilteredBlock)
 	fblock.Bcname = b.filter.GetBcname()
 	fblock.Blockid = hex.EncodeToString(block.GetBlockid())
@@ -75,7 +75,7 @@ func (b *filteredBlockIterator) toFilteredBlock(block *protos.InternalBlock) *pr
 	return fblock
 }
 
-func (b *filteredBlockIterator) parseFilteredEvents(tx *protos.Transaction) []*protos.ContractEvent {
+func (b *FilteredBlockIterator) parseFilteredEvents(tx *protos.Transaction) []*protos.ContractEvent {
 	if b.filter.GetExcludeTxEvent() {
 		return nil
 	}
@@ -96,7 +96,7 @@ func (b *filteredBlockIterator) parseFilteredEvents(tx *protos.Transaction) []*p
 	return ret
 }
 
-func (b *filteredBlockIterator) fetchBlock() (*protos.FilteredBlock, bool, error) {
+func (b *FilteredBlockIterator) fetchBlock() (*protos.FilteredBlock, bool, error) {
 	for b.biter.Next() {
 		block := b.biter.Block()
 		filteredBlock := b.toFilteredBlock(block)
@@ -108,15 +108,15 @@ func (b *filteredBlockIterator) fetchBlock() (*protos.FilteredBlock, bool, error
 	return nil, false, nil
 }
 
-func (b *filteredBlockIterator) Data() interface{} {
+func (b *FilteredBlockIterator) Data() interface{} {
 	return b.block
 }
 
-func (b *filteredBlockIterator) Error() error {
+func (b *FilteredBlockIterator) Error() error {
 	return b.err
 }
 
-func (b *filteredBlockIterator) Close() {
+func (b *FilteredBlockIterator) Close() {
 	b.closed = true
 	b.biter.Close()
 }
