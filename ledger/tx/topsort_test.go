@@ -189,7 +189,7 @@ func TestSplitBlock(t *testing.T) {
 	tx3 := &protos.Transaction{Txid: []byte("tx3"), TxInputs: []*protos.TxInput{&protos.TxInput{RefTxid: []byte("tx1")}}}
 	tx4 := &protos.Transaction{Txid: []byte("tx4")}
 	tx5 := &protos.Transaction{Txid: []byte("tx5"), TxInputs: []*protos.TxInput{&protos.TxInput{RefTxid: []byte("tx4")}}}
-	tx6 := &protos.Transaction{Txid: []byte("tx6"), TxInputs: []*protos.TxInput{&protos.TxInput{RefTxid: []byte("tx777")}}}
+	tx6 := &protos.Transaction{Txid: []byte("tx6"), TxInputs: []*protos.TxInput{&protos.TxInput{RefTxid: []byte("tx7")}}}
 	block := &protos.InternalBlock{Transactions: []*protos.Transaction{tx1, tx2, tx3, tx4, tx5, tx6}}
 	dags := SplitToDags(block)
 	if len(dags) != 3 {

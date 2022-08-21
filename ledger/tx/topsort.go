@@ -8,18 +8,17 @@ import (
 type TxGraph map[string][]string
 
 //TopSortDFS 对依赖关系图进行拓扑排序
-// 输入：依赖关系图，就是个map
+// 输入：TxGraph: 依赖关系图
 // 输出: order: 排序后的有序数组，依赖者排在前面，被依赖的排在后面
 //       cyclic: 如果发现有环形依赖关系则输出这个数组
 //
 // 实现参考： https://rosettacode.org/wiki/Topological_sort#Go
-// 在我们映射中，RefTx是边的源点
 func TopSortDFS(g TxGraph) (order []string, cyclic bool, childDAGSize []int) {
 	reverseG := TxGraph{}
 	for n, outputs := range g {
 		for _, m := range outputs {
 			if g[m] == nil {
-				g[m] = []string{} //预处理一下，coinbase交易可能没有依赖
+				g[m] = []string{} //预处理，coinbase交易可能没有依赖
 			}
 			if reverseG[m] == nil {
 				reverseG[m] = []string{}
@@ -35,7 +34,7 @@ func TopSortDFS(g TxGraph) (order []string, cyclic bool, childDAGSize []int) {
 	var visit func(string)
 	visit = func(n string) {
 		switch {
-		case temp[n]: //临时标记里面有，说明产生环了
+		case temp[n]: //临时标记里面有，说明有环
 			cycleFound = true
 			return
 		case perm[n]:
@@ -71,7 +70,7 @@ func TopSortDFS(g TxGraph) (order []string, cyclic bool, childDAGSize []int) {
 		}
 		subG = append(subG, n)
 	}
-	// dfs变量切分出多个连通的子图
+	// dfs切分出多个连通的子图
 	for n := range g {
 		if marked[n] {
 			continue

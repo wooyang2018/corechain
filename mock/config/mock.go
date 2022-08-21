@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"log"
 	"math"
 	"math/rand"
@@ -12,7 +11,6 @@ import (
 
 	xconf "github.com/wooyang2018/corechain/common/config"
 	"github.com/wooyang2018/corechain/common/utils"
-	engineUtils "github.com/wooyang2018/corechain/engine/utils"
 	"github.com/wooyang2018/corechain/logger"
 )
 
@@ -29,6 +27,9 @@ func GetMockEnvConf(paths ...string) (*xconf.EnvConf, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	RemoveLedger(econf)
+	logger.InitMLog(econf.GenConfFilePath(econf.LogConf), econf.GenDirAbsPath(econf.LogDir))
 
 	return econf, nil
 }
@@ -64,31 +65,6 @@ func InitFakeLogger() {
 	confFile := filepath.Join(dir, "conf/log.yaml")
 	logDir := filepath.Join(dir, "data/logger")
 	logger.InitMLog(confFile, logDir)
-}
-
-func MockEngineConf(paths ...string) (*xconf.EnvConf, error) {
-	path := "conf/env.yaml"
-	if len(paths) > 0 {
-		path = paths[0]
-	}
-
-	conf, err := GetMockEnvConf(path)
-	if err != nil {
-		return nil, fmt.Errorf("new env conf error: %v", err)
-	}
-
-	RemoveLedger(conf)
-
-	logger.InitMLog(conf.GenConfFilePath(conf.LogConf), conf.GenDirAbsPath(conf.LogDir))
-
-	genesisPath := conf.GenDataAbsPath("genesis/core.json")
-	err = engineUtils.CreateLedger("corechain", genesisPath, conf)
-	if err != nil {
-		log.Printf("create ledger failed.err:%v\n", err)
-		return nil, err
-	}
-
-	return conf, nil
 }
 
 func RemoveLedger(conf *xconf.EnvConf) error {

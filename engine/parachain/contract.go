@@ -7,8 +7,8 @@ import (
 
 	contractBase "github.com/wooyang2018/corechain/contract/base"
 	engineBase "github.com/wooyang2018/corechain/engine/base"
-	"github.com/wooyang2018/corechain/engine/utils"
 	"github.com/wooyang2018/corechain/ledger"
+	"github.com/wooyang2018/corechain/ledger/utils"
 	"github.com/wooyang2018/corechain/protos"
 )
 

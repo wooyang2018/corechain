@@ -10,6 +10,7 @@ import (
 	"github.com/wooyang2018/corechain/common/address"
 	"github.com/wooyang2018/corechain/common/utils"
 	"github.com/wooyang2018/corechain/engine/base"
+	ledgerUtils "github.com/wooyang2018/corechain/ledger/utils"
 	mock "github.com/wooyang2018/corechain/mock/config"
 	"github.com/wooyang2018/corechain/protos"
 	"github.com/wooyang2018/corechain/state/txhash"
@@ -90,7 +91,14 @@ func mockTransferTx(chain base.Chain) (*protos.Transaction, error) {
 }
 
 func TestChain_SubmitTx(t *testing.T) {
-	conf, err := mock.MockEngineConf("p2pv2/node1/conf/env.yaml")
+	conf, err := mock.GetMockEnvConf("p2pv2/node1/conf/env.yaml")
+
+	genesisPath := conf.GenDataAbsPath("genesis/core.json")
+	err = ledgerUtils.CreateLedger("corechain", genesisPath, conf)
+	if err != nil {
+		t.Fatalf("create ledger failed.err:%v\n", err)
+	}
+
 	engine, err := newEngine(conf)
 	if err != nil {
 		t.Logf("%v", err)
@@ -198,7 +206,14 @@ func mockContractTx(chain base.Chain) (*protos.Transaction, error) {
 }
 
 func TestChain_PreExec(t *testing.T) {
-	conf, err := mock.MockEngineConf("p2pv2/node1/conf/env.yaml")
+	conf, err := mock.GetMockEnvConf("p2pv2/node1/conf/env.yaml")
+
+	genesisPath := conf.GenDataAbsPath("genesis/core.json")
+	err = ledgerUtils.CreateLedger("corechain", genesisPath, conf)
+	if err != nil {
+		t.Fatalf("create ledger failed.err:%v\n", err)
+	}
+
 	engine, err := newEngine(conf)
 	if err != nil {
 		t.Logf("%v", err)

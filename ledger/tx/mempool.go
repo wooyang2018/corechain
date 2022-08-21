@@ -13,10 +13,10 @@ import (
 )
 
 const (
-	defaultMempoolUnconfirmedLen = 5000                             // 默认未确认交易表大小为5000。
-	defaultMempoolConfirmedLen   = defaultMempoolUnconfirmedLen / 2 // 默认确认交易表大小为2500。
-	defaultMempoolOrphansLen     = defaultMempoolUnconfirmedLen / 5 // 默认孤儿交易表大小为1000。
-	defaultMaxtxLimit            = 100000                           // 默认 mempool 中最多10w个未确认交易。
+	defaultMempoolUnconfirmedLen = 5000                             // 默认未确认交易表大小为5000
+	defaultMempoolConfirmedLen   = defaultMempoolUnconfirmedLen / 2 // 默认确认交易表大小为2500
+	defaultMempoolOrphansLen     = defaultMempoolUnconfirmedLen / 5 // 默认孤儿交易表大小为1000
+	defaultMaxtxLimit            = 100000                           // 默认mempool中最多10w个未确认交易
 	stoneNodeID                  = "stoneNodeID"
 )
 
@@ -32,12 +32,12 @@ type Mempool struct {
 	txLimit int
 	Tx      *TxHandler
 
-	// 所有的交易都在下面的三个集合中。三个集合中的元素不会重复。
-	confirmed   map[string]*Node // txID => *Node，所有的未确认交易树的 root，也就是确认交易。
-	unconfirmed map[string]*Node // txID => *Node，所有未确认交易的集合。
-	orphans     map[string]*Node // txID => *Node，所有的孤儿交易。
+	// 所有的交易不重复地存在下面的三个集合中
+	confirmed   map[string]*Node // txID => *Node，所有的未确认交易树的 root，也就是确认交易
+	unconfirmed map[string]*Node // txID => *Node，所有未确认交易的集合
+	orphans     map[string]*Node // txID => *Node，所有的孤儿交易
 
-	bucketKeyNodes map[string]map[string]*Node // 所有引用了某个 key 的交易作为一个键值对，无论只读或者读写。
+	bucketKeyNodes map[string]map[string]*Node // 所有引用了某个 key 的交易作为一个键值对
 
 	emptyTxIDNode *Node
 	stoneNode     *Node
@@ -61,7 +61,6 @@ func NewMempool(tx *TxHandler, log logger.Logger, txLimit int) *Mempool {
 		mlock:          &sync.Mutex{},
 	}
 
-	// go mlock.gc() // 目前此版本不会有孤儿交易进入 mempool
 	return m
 }
 
@@ -100,7 +99,8 @@ func (m *Mempool) Range(f func(tx *protos.Transaction) bool) {
 	m.log.Debug("Mempool Range", "confirmed", len(m.confirmed), "unconfirmed", len(m.unconfirmed), "orphans", len(m.orphans), "bucketKeyNodes", len(m.bucketKeyNodes))
 	var q deque.Deque
 	nodeInputSumMap := make(map[*Node]int, len(m.confirmed))
-	for _, n := range m.confirmed { // 先把 confirmed 中的交易放入要遍历的列表。
+	// 先把 confirmed 中的交易放入要遍历的列表
+	for _, n := range m.confirmed {
 		q.PushBack(n)
 	}
 
@@ -151,14 +151,13 @@ func (m *Mempool) GetTxCounnt() int {
 	return len(m.unconfirmed) + len(m.orphans)
 }
 
-// Full 交易池满了返回 true
 func (m *Mempool) Full() bool {
 	m.mlock.Lock()
 	defer m.mlock.Unlock()
 	return len(m.unconfirmed) >= m.txLimit
 }
 
-// PutTx put tx. TODO：后续判断新增的交易是否会导致循环依赖。
+// PutTx put tx.
 func (m *Mempool) PutTx(tx *protos.Transaction) error {
 	if tx == nil {
 		return errors.New("can not put nil tx into mempool")
@@ -172,7 +171,7 @@ func (m *Mempool) PutTx(tx *protos.Transaction) error {
 	txidHex := fmt.Sprintf("%x", tx.Txid)
 	m.log.Debug("Mempool PutTx", "txid", txidHex)
 
-	// tx 可能是确认交易、未确认交易以及孤儿交易，检查双花。
+	// tx可能是确认交易、未确认交易以及孤儿交易，检查双花。
 	txidStr := string(tx.Txid)
 	if _, ok := m.confirmed[txidStr]; ok {
 		m.log.Warn("tx already in mempool confirmd", "txid:", txidHex)
@@ -192,11 +191,11 @@ func (m *Mempool) PutTx(tx *protos.Transaction) error {
 	return m.putTx(tx, false)
 }
 
-// FindConflictByTx 找多所有与 tx 冲突的交易。返回数组中，前面是子交易，后面是父交易。
-// 保证事物原子性，此接口不删除交易，只返回交易列表，如果需要删除需要调用删除交易相关接口。
+// FindConflictByTx 找出所有与 tx 冲突的交易。返回数组中，前面是子交易，后面是父交易。
+// 保证事物原子性，此接口不删除交易，只返回交易列表。
 func (m *Mempool) FindConflictByTx(tx *protos.Transaction) []*protos.Transaction {
+	// 如果 mempool 中有此交易，说明没有冲突交易，在 PutTx 时会保证无冲突
 	if m.HasTx(string(tx.GetTxid())) {
-		// 如果 mempool 中有此交易，说明没有冲突交易，在 PutTx 时会保证冲突。
 		return nil
 	}
 	m.mlock.Lock()
@@ -213,16 +212,15 @@ func (m *Mempool) FindConflictByTx(tx *protos.Transaction) []*protos.Transaction
 	}
 
 	// 根据 tx 找到所有 key 版本冲突的交易以及子交易。
-	usedKeyVersion := getTxUsedKeyVersion(tx) // 找到当前交易所有用掉的 key 的 verison。
+	usedKeyVersion := getTxUsedKeyVersion(tx)
 	for k := range usedKeyVersion {
-		nodes, ok := m.bucketKeyNodes[k] // 找到某个 key 的所有相关 node。
+		nodes, ok := m.bucketKeyNodes[k]
 		if !ok {
 			continue
 		}
 
 		for _, n := range nodes {
-			// 判断当前 node 是否和区块中的交易有 key 的冲突，如果冲突找到其所以子交易。
-			// ranged 参数为之前已经遍历过的所有交易，因此再找到新的交易只能是之前的所有交易的父交易或者完全无关交易，因此可以 append 到最终冲突交易列表中。
+			// 判断当前 node 是否和区块中的交易有 key 的冲突，如果冲突 append 到最终冲突交易列表中。
 			keyConflictTxs := m.findKeyConflictTxs(n, usedKeyVersion, ranged)
 			conflictTxs = append(conflictTxs, keyConflictTxs...)
 		}
