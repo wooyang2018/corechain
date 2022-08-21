@@ -17,6 +17,7 @@ func newTaskContextImpl(buf []byte) *TaskContextImpl {
 		buf:        buf,
 	}
 }
+
 func (tc *TaskContextImpl) ParseArgs(v interface{}) error {
 	return tc.decodeFunc(tc.buf, v)
 }

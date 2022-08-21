@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/wooyang2018/corechain/engine/base"
 	"github.com/wooyang2018/corechain/engine/event"
@@ -22,7 +21,6 @@ const (
 )
 
 var (
-	// ErrRetry从TaskHandler返回指示这次任务应该被重试
 	ErrRetry  = errors.New("retry task")
 	eventType = protos.SubscribeType_BLOCK
 
@@ -32,14 +30,20 @@ var (
 	emptyCounterErr = errors.New("Haven't get valid router")
 )
 
+type asyncWorkerCursor struct {
+	BlockHeight int64 `json:"block_height,required"`
+	TxIndex     int64 `json:"tx_index,required"`
+	EventIndex  int64 `json:"event_index,required"`
+}
+
 type AsyncWorkerImpl struct {
-	bcname  string
+	bcName  string
 	mutex   sync.Mutex
 	methods map[string]map[string]base.TaskHandler // 句柄存储
 
-	filter      *protos.BlockFilter // 订阅event事件时的筛选正则
-	router      *event.Router       // 通过router进行事件订阅
-	finishTable storage.Database    //保存临时的block区块
+	filter      *protos.BlockFilter
+	router      *event.Router
+	finishTable storage.Database //用于存储Tx执行游标Cursor
 
 	close chan struct{}
 
@@ -53,7 +57,7 @@ func NewAsyncWorkerImpl(bcName string, e base.Engine, baseDB storage.Database) (
 	}
 	aw := &AsyncWorkerImpl{
 		filter: &protos.BlockFilter{
-			Bcname:   bcName,
+			BcName:   bcName,
 			Contract: `^\$`,
 		},
 		close:  make(chan struct{}, 1),
@@ -75,7 +79,6 @@ func (aw *AsyncWorkerImpl) RegisterHandler(contract string, event string, handle
 	}
 	aw.mutex.Lock()
 	defer aw.mutex.Unlock()
-	// 先查看method是否合法
 	if aw.methods == nil {
 		aw.methods = make(map[string]map[string]base.TaskHandler)
 	}
@@ -90,11 +93,10 @@ func (aw *AsyncWorkerImpl) RegisterHandler(contract string, event string, handle
 		return
 	}
 	methodMap[event] = handler
-	// 注册event订阅，以区块粒度，当上链时触发事件调用
 	aw.addBlockFilter(contract, event)
 }
 
-// addBlockFilter
+// addBlockFilter 注册event订阅，当区块上链时触发事件调用
 func (aw *AsyncWorkerImpl) addBlockFilter(contract, event string) {
 	if contract != "" {
 		aw.filter.Contract += "|" + contract
@@ -105,15 +107,13 @@ func (aw *AsyncWorkerImpl) addBlockFilter(contract, event string) {
 }
 
 func (aw *AsyncWorkerImpl) Start() (err error) {
-	// trick方法, 此处确保所有RegisterHandler处理完毕之后再起goroutine
-	time.Sleep(time.Second * 10)
-
 	// 尚未执行的存留异步任务查缺补漏
 	cursor, err := aw.reloadCursor()
 	if err != nil && err != emptyErr {
 		aw.log.Error("couldn't do async task because of a reload cursor error")
 		return err
 	}
+
 	// 若成功返回游标，则证明当前为重启异步任务逻辑，此时需要在事件订阅中明确游标
 	if err == nil {
 		bRange := protos.BlockRange{
@@ -132,7 +132,6 @@ func (aw *AsyncWorkerImpl) Start() (err error) {
 		return emptyCounterErr
 	}
 
-	// encfunc 提供iter.Data()对应的序列化方法, iter提供指向固定filter的迭代器
 	_, iter, err := aw.router.Subscribe(eventType, filterBuf)
 	if err != nil {
 		aw.log.Error("couldn't do async task because of a subscribe error", "err", err)
@@ -163,9 +162,9 @@ func (aw *AsyncWorkerImpl) Start() (err error) {
 			// 当且仅当断点有效，且当前高度为断点存储高度时，需要过滤部分已做异步任务
 			if cursor != nil && block.BlockHeight == cursor.BlockHeight {
 				aw.doAsyncTasks(block.Txs, block.BlockHeight, cursor)
-				continue
+			} else {
+				aw.doAsyncTasks(block.Txs, block.BlockHeight, nil)
 			}
-			aw.doAsyncTasks(block.Txs, block.BlockHeight, nil)
 		}
 	}()
 	return
@@ -178,13 +177,13 @@ func (aw *AsyncWorkerImpl) doAsyncTasks(txs []*protos.FilteredTransaction, heigh
 		if tx.Events == nil {
 			continue
 		}
-		// 断点之前的tx不需要再次执行了
+		// 过滤断点之前的tx
 		if cursor != nil && int64(index) < cursor.TxIndex {
 			continue
 		}
 		for eventIndex, event := range tx.Events {
 			lastEventIndex = int64(eventIndex)
-			// 断点之前的tx不需要再次执行了
+			// 过滤断点之前的tx
 			if cursor != nil && int64(index) == cursor.TxIndex && int64(eventIndex) <= cursor.EventIndex {
 				continue
 			}
@@ -230,17 +229,17 @@ func (aw *AsyncWorkerImpl) storeCursor(cursor asyncWorkerCursor) error {
 		aw.log.Warn("marshal cursor failed when storeCursor", "err", err, "cursor", cursor)
 		return err
 	}
-	err = aw.finishTable.Put([]byte(aw.bcname), cursorBuf)
+	err = aw.finishTable.Put([]byte(aw.bcName), cursorBuf)
 	if err != nil {
-		aw.log.Warn("finishTable put data error when storeCursor", "err", err, "bcname", aw.bcname, "cursor", cursor)
+		aw.log.Warn("finishTable put data error when storeCursor", "err", err, "bcName", aw.bcName, "cursor", cursor)
 		return err
 	}
 	return nil
 }
 
-// reload 从上一次执行恢复，需要在断点处开始无缺漏的执行到当前高度，后在启动新的订阅协程
+// reloadCursor 从finishTable中恢复游标，从此开始无缺漏的执行到最新高度
 func (aw *AsyncWorkerImpl) reloadCursor() (*asyncWorkerCursor, error) {
-	buf, err := aw.finishTable.Get([]byte(aw.bcname))
+	buf, err := aw.finishTable.Get([]byte(aw.bcName))
 	if err != nil && ledgerBase.NormalizeKVError(err) == ledgerBase.ErrKVNotFound {
 		return nil, emptyErr
 	}
@@ -260,7 +259,6 @@ func (aw *AsyncWorkerImpl) reloadCursor() (*asyncWorkerCursor, error) {
 }
 
 func (aw *AsyncWorkerImpl) getAsyncTask(contract, event string) (base.TaskHandler, error) {
-	// 串行调用，无需锁
 	if contract == "" {
 		return nil, fmt.Errorf("contract cannot be empty")
 	}
@@ -278,10 +276,4 @@ func (aw *AsyncWorkerImpl) getAsyncTask(contract, event string) (base.TaskHandle
 func (aw *AsyncWorkerImpl) Stop() {
 	close(aw.close)
 	aw.finishTable.Close()
-}
-
-type asyncWorkerCursor struct {
-	BlockHeight int64 `json:"block_height,required"`
-	TxIndex     int64 `json:"tx_index,required"`
-	EventIndex  int64 `json:"event_index,required"`
 }

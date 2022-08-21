@@ -4,7 +4,7 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/wooyang2018/corechain/engine/event"
+	"github.com/wooyang2018/corechain/engine/base"
 	"github.com/wooyang2018/corechain/ledger"
 	"github.com/wooyang2018/corechain/protos"
 	"github.com/wooyang2018/corechain/state"
@@ -58,6 +58,6 @@ func (m *mockBlockStore) AppendBlock(block *protos.InternalBlock) {
 }
 
 // GetBlockStore get BlockStore base bcname(the name of block chain)
-func (m *mockBlockStore) GetBlockStore(bcname string) (event.BlockStore, error) {
+func (m *mockBlockStore) GetBlockStore(bcname string) (base.BlockStore, error) {
 	return m, nil
 }

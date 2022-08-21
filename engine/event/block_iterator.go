@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/wooyang2018/corechain/engine/base"
 	"github.com/wooyang2018/corechain/ledger"
 	"github.com/wooyang2018/corechain/protos"
 )
@@ -16,28 +17,28 @@ type Iterator interface {
 	Close()
 }
 
-var _ Iterator = (*BlockIterator)(nil)
+var _ Iterator = (*blockIterator)(nil)
 
-// BlockIterator wraps around ledger as a iterator style interface
-type BlockIterator struct {
+// blockIterator wraps around ledger as a iterator style interface
+type blockIterator struct {
 	currNum    int64
 	endNum     int64
-	blockStore BlockStore
+	blockStore base.BlockStore
 	block      *protos.InternalBlock
 
 	closed bool
 	err    error
 }
 
-func NewBlockIterator(blockStore BlockStore, startNum, endNum int64) *BlockIterator {
-	return &BlockIterator{
+func NewBlockIterator(blockStore base.BlockStore, startNum, endNum int64) *blockIterator {
+	return &blockIterator{
 		currNum:    startNum,
 		endNum:     endNum,
 		blockStore: blockStore,
 	}
 }
 
-func (b *BlockIterator) Next() bool {
+func (b *blockIterator) Next() bool {
 	if b.closed && b.err != nil {
 		return false
 	}
@@ -56,7 +57,7 @@ func (b *BlockIterator) Next() bool {
 	return true
 }
 
-func (b *BlockIterator) fetchBlock(num int64) (*protos.InternalBlock, error) {
+func (b *blockIterator) fetchBlock(num int64) (*protos.InternalBlock, error) {
 	for !b.closed {
 		b.blockStore.WaitBlockHeight(num) // 确保utxo更新到了对应的高度
 		block, err := b.blockStore.QueryBlockByHeight(num)
@@ -71,18 +72,18 @@ func (b *BlockIterator) fetchBlock(num int64) (*protos.InternalBlock, error) {
 	return nil, errors.New("fetchBlock: code unreachable")
 }
 
-func (b *BlockIterator) Block() *protos.InternalBlock {
+func (b *blockIterator) Block() *protos.InternalBlock {
 	return b.block
 }
 
-func (b *BlockIterator) Data() interface{} {
+func (b *blockIterator) Data() interface{} {
 	return b.Block()
 }
 
-func (b *BlockIterator) Error() error {
+func (b *blockIterator) Error() error {
 	return b.err
 }
 
-func (b *BlockIterator) Close() {
+func (b *blockIterator) Close() {
 	b.closed = true
 }

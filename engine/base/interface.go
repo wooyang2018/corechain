@@ -86,3 +86,13 @@ type TaskContext interface {
 	ParseArgs(v interface{}) error
 	RetryTimes() int
 }
+
+// BlockStore is the interface of block store
+type BlockStore interface {
+	// TipBlockHeight returns the tip block height
+	TipBlockHeight() (int64, error)
+	// WaitBlockHeight wait until the height of current block height >= target
+	WaitBlockHeight(target int64) int64
+	// QueryBlockByHeight returns block at given height
+	QueryBlockByHeight(int64) (*protos.InternalBlock, error)
+}

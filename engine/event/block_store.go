@@ -1,20 +1,10 @@
 package event
 
 import (
+	"github.com/wooyang2018/corechain/engine/base"
 	"github.com/wooyang2018/corechain/ledger"
-	"github.com/wooyang2018/corechain/protos"
 	"github.com/wooyang2018/corechain/state"
 )
-
-// BlockStore is the interface of block store
-type BlockStore interface {
-	// TipBlockHeight returns the tip block height
-	TipBlockHeight() (int64, error)
-	// WaitBlockHeight wait until the height of current block height >= target
-	WaitBlockHeight(target int64) int64
-	// QueryBlockByHeight returns block at given height
-	QueryBlockByHeight(int64) (*protos.InternalBlock, error)
-}
 
 type blockStore struct {
 	*ledger.Ledger
@@ -22,7 +12,7 @@ type blockStore struct {
 }
 
 // NewBlockStore wraps ledger and utxovm as a BlockStore
-func NewBlockStore(ledger *ledger.Ledger, state *state.State) BlockStore {
+func NewBlockStore(ledger *ledger.Ledger, state *state.State) base.BlockStore {
 	return &blockStore{
 		Ledger: ledger,
 		State:  state,

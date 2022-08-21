@@ -29,7 +29,7 @@ message BlockRange {
 }
 
 message BlockFilter {
-  string bcname = 1;
+  string bc_name = 1;
   BlockRange range = 2;
   bool exclude_tx = 3;
   bool exclude_tx_event = 4;

@@ -22,22 +22,22 @@ type Topic interface {
 	NewIterator(filter interface{}) (Iterator, error)
 }
 
-// BlockTopic handles block events
-type BlockTopic struct {
+// blockTopic handles block events
+type blockTopic struct {
 	chainmg ChainManager
 }
 
-var _ Topic = (*BlockTopic)(nil)
+var _ Topic = (*blockTopic)(nil)
 
-// NewBlockTopic instances BlockTopic from ChainManager
-func NewBlockTopic(chainmg ChainManager) *BlockTopic {
-	return &BlockTopic{
+// NewBlockTopic instances blockTopic from ChainManager
+func NewBlockTopic(chainmg ChainManager) *blockTopic {
+	return &blockTopic{
 		chainmg: chainmg,
 	}
 }
 
 // NewFilterIterator make a new Iterator base on filter
-func (b *BlockTopic) NewFilterIterator(pbfilter *protos.BlockFilter) (Iterator, error) {
+func (b *blockTopic) NewFilterIterator(pbfilter *protos.BlockFilter) (Iterator, error) {
 	filter, err := newBlockFilter(pbfilter)
 	if err != nil {
 		return nil, err
@@ -47,7 +47,7 @@ func (b *BlockTopic) NewFilterIterator(pbfilter *protos.BlockFilter) (Iterator, 
 
 // ParseFilter 从指定的bytes buffer反序列化topic过滤器
 // 返回的参数会作为入参传递给NewIterator的filter参数
-func (b *BlockTopic) ParseFilter(buf []byte) (interface{}, error) {
+func (b *blockTopic) ParseFilter(buf []byte) (interface{}, error) {
 	pbfilter := new(protos.BlockFilter)
 	err := proto.Unmarshal(buf, pbfilter)
 	if err != nil {
@@ -58,13 +58,13 @@ func (b *BlockTopic) ParseFilter(buf []byte) (interface{}, error) {
 }
 
 // MarshalEvent encode event payload returns from Iterator.Data()
-func (b *BlockTopic) MarshalEvent(x interface{}) ([]byte, error) {
+func (b *blockTopic) MarshalEvent(x interface{}) ([]byte, error) {
 	msg := x.(proto.Message)
 	return proto.Marshal(msg)
 }
 
 // NewIterator make a new Iterator base on filter
-func (b *BlockTopic) NewIterator(ifilter interface{}) (Iterator, error) {
+func (b *blockTopic) NewIterator(ifilter interface{}) (Iterator, error) {
 	pbfilter, ok := ifilter.(*protos.BlockFilter)
 	if !ok {
 		return nil, errors.New("bad filter type for block event")
@@ -76,9 +76,8 @@ func (b *BlockTopic) NewIterator(ifilter interface{}) (Iterator, error) {
 	return b.newIterator(filter)
 }
 
-func (b *BlockTopic) newIterator(filter *blockFilter) (Iterator, error) {
-
-	blockStore, err := b.chainmg.GetBlockStore(filter.GetBcname())
+func (b *blockTopic) newIterator(filter *blockFilter) (Iterator, error) {
+	blockStore, err := b.chainmg.GetBlockStore(filter.GetBcName())
 	if err != nil {
 		return nil, err
 	}
@@ -109,7 +108,7 @@ func (b *BlockTopic) newIterator(filter *blockFilter) (Iterator, error) {
 	}
 
 	biter := NewBlockIterator(blockStore, startBlockNum, endBlockNum)
-	return &FilteredBlockIterator{
+	return &filteredBlockIterator{
 		biter:  biter,
 		filter: filter,
 	}, nil

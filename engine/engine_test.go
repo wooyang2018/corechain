@@ -2,67 +2,29 @@ package engine
 
 import (
 	"fmt"
-	"log"
-	"os"
 	"testing"
+
+	xconf "github.com/wooyang2018/corechain/common/config"
+	engineBase "github.com/wooyang2018/corechain/engine/base"
+	mock "github.com/wooyang2018/corechain/mock/config"
 
 	// import内核核心组件驱动
 	_ "github.com/wooyang2018/corechain/consensus/single"
 	_ "github.com/wooyang2018/corechain/contract/evm"
 	_ "github.com/wooyang2018/corechain/contract/kernel"
 	_ "github.com/wooyang2018/corechain/crypto/client"
-	"github.com/wooyang2018/corechain/engine/utils"
 	_ "github.com/wooyang2018/corechain/network/p2pv1"
+	_ "github.com/wooyang2018/corechain/network/p2pv2"
 	_ "github.com/wooyang2018/corechain/storage/leveldb"
-
-	xconf "github.com/wooyang2018/corechain/common/config"
-	engineBase "github.com/wooyang2018/corechain/engine/base"
-	"github.com/wooyang2018/corechain/logger"
-	mock "github.com/wooyang2018/corechain/mock/config"
 )
 
-func CreateLedgerWithConf(conf *xconf.EnvConf) error {
-	mockConf, err := mock.GetMockEnvConf()
-	if err != nil {
-		return fmt.Errorf("new mock env conf error: %v", err)
-	}
-	logger.InitMLog(mockConf.GenConfFilePath(mockConf.LogConf), mockConf.GenDirAbsPath(mockConf.LogDir))
-
-	genesisPath := mockConf.GenDataAbsPath("genesis/core.json")
-	err = utils.CreateLedger("corechain", genesisPath, conf)
-	if err != nil {
-		log.Printf("create ledger failed.err:%v\n", err)
-		return fmt.Errorf("create ledger failed")
-	}
-	return nil
-}
-
-func RemoveLedger(conf *xconf.EnvConf) error {
-	path := conf.GenDataAbsPath("blockchain")
-	if err := os.RemoveAll(path); err != nil {
-		log.Printf("remove ledger failed.err:%v\n", err)
-		return err
-	}
-	return nil
-}
-
-func MockEngine(path string) (engineBase.Engine, error) {
-	conf, err := mock.GetMockEnvConf(path)
-	if err != nil {
-		return nil, fmt.Errorf("new env conf error: %v", err)
-	}
-
-	RemoveLedger(conf)
-	if err = CreateLedgerWithConf(conf); err != nil {
-		return nil, err
-	}
-
-	engine := NewEngine()
-	if err := engine.Init(conf); err != nil {
+func newEngine(conf *xconf.EnvConf) (engineBase.Engine, error) {
+	basicEng := NewEngine()
+	if err := basicEng.Init(conf); err != nil {
 		return nil, fmt.Errorf("init engine error: %v", err)
 	}
 
-	eng, err := EngineConvert(engine)
+	eng, err := EngineConvert(basicEng)
 	if err != nil {
 		return nil, fmt.Errorf("engine convert error: %v", err)
 	}
@@ -71,10 +33,13 @@ func MockEngine(path string) (engineBase.Engine, error) {
 }
 
 func TestEngine(t *testing.T) {
-	engine, err := MockEngine("p2p/node1/conf/env.yaml")
+	conf, err := mock.MockEngineConf("conf/env.yaml")
 	if err != nil {
-		t.Errorf("%v\n", err)
-		return
+		t.Fatalf("%v\n", err)
+	}
+	engine, err := newEngine(conf)
+	if err != nil {
+		t.Fatalf("%v\n", err)
 	}
 	go engine.Run()
 	engine.Exit()

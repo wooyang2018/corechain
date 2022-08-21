@@ -47,7 +47,6 @@ func TestRouteBlockTopicRaw(t *testing.T) {
 	ledger := mock.NewMockBlockStore()
 	block := mock.NewBlockBuilder().Block()
 	ledger.AppendBlock(block)
-
 	router := NewRounterFromChainMG(ledger)
 
 	filter := &protos.BlockFilter{

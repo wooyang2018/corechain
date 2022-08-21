@@ -9,7 +9,7 @@ import (
 // ChainManager manage multiple block chain
 type ChainManager interface {
 	// GetBlockStore get BlockStore base bcname(the name of block chain)
-	GetBlockStore(bcname string) (BlockStore, error)
+	GetBlockStore(bcname string) (base.BlockStore, error)
 }
 
 type chainManager struct {
@@ -23,7 +23,7 @@ func NewChainManager(engine base.Engine) ChainManager {
 	}
 }
 
-func (c *chainManager) GetBlockStore(bcname string) (BlockStore, error) {
+func (c *chainManager) GetBlockStore(bcname string) (base.BlockStore, error) {
 	chain, err := c.engine.Get(bcname)
 	if err != nil {
 		return nil, fmt.Errorf("chain %s not found", bcname)

@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"path/filepath"
 	"sync"
+	"time"
 
 	xconf "github.com/wooyang2018/corechain/common/config"
 	"github.com/wooyang2018/corechain/common/timer"
@@ -215,6 +216,7 @@ func (t *Engine) loadChains() error {
 				t.log.Error("create parachain mgmt error", "bcName", rootChain, "err", err)
 				return fmt.Errorf("create parachain error")
 			}
+			time.Sleep(time.Second * 5) //确保所有RegisterHandler处理完毕
 			aw.Start()
 		}
 
